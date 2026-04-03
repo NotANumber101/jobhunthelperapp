@@ -12,14 +12,17 @@ public class ApplicationsPage(List<CompanyInformation> companies, List<JobApplic
     public void Display()
     {
         // view all companies
-        this.DisplayCompanyInformationTable();
+        DisplayCompanyInformationTable();
         // view all applications
-        this.DisplayApplicationsTable();
-
+        DisplayApplicationsTable();
+        ReturnToMainMenu();
+    }
+    private void ReturnToMainMenu()
+    {
         if (AnsiConsole.Confirm("Return to main menu?"))
         {
-            // AnsiConsole.Clear();
-            // AnsiConsole.MarkupLine("[gray]Returning to main menu...[/]");
+            AnsiConsole.Clear();
+            AnsiConsole.MarkupLine("[gray]Returning to main menu...[/]");
             MainMenuPage mainMenuPage = new MainMenuPage(companies, jobApplications, dsaProblems);
             mainMenuPage.Display();
 

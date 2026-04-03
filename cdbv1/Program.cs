@@ -45,6 +45,7 @@ List<DsaProblem> dsaProblems = new List<DsaProblem>();
 
 try
 {
+    // FETCH DATA
     await using var connection = await dataSource.OpenConnectionAsync();
     // SELECT 8 verifies Logging
     await using var loggingCommand = new NpgsqlCommand("SELECT 8", connection);
@@ -117,8 +118,9 @@ try
             jobApplications.Add(jobApp);
         }
     AnsiConsole.MarkupLine($"        -> [green]Done. {jobApplications.Count}[/]");
-    /// DSA_PROBLEM
-    ///////////////////////////////
+    //////////////////////////////
+    //// DSA_PROBLEM ////////////
+    ////////VVVVVVVVVVVV/////////
     AnsiConsole.MarkupLine("    -> [gray]Fetching dsa_problems...[/]");
     await using (var cmd = dataSource.CreateCommand("SELECT * FROM dsa_problem"))
     await using (var reader = await cmd.ExecuteReaderAsync())
@@ -145,22 +147,16 @@ catch (NpgsqlException e)
 if (AnsiConsole.Profile.Capabilities.Interactive)
 {
     Console.WriteLine("LOG: Interactive mode detected. Input Mode Enabled.");
-    // string itemNameInput = await helloWorld.WaitForInputAsync("Item", "name");
-    // Console.WriteLine($"You entered: {itemNameInput}");
-    // string itemDescriptionInput = await helloWorld.WaitForInputAsync("Item", "description");
-    // Console.WriteLine($"You entered: {itemDescriptionInput}");
 
-    // CLEAR CONSOLE
-    // AnsiConsole.Clear();
     ///////// Shared header
-    AnsiConsole.MarkupLine($"[red]--------------HEADER---------------[/]");
+    AnsiConsole.MarkupLine($"[red]--------------START PAGE---------------[/]");
     // AnsiConsole.MarkupLine($"[gray]{pageChoice} page[/]");
 
     MainMenuPage mainMenuPage = new MainMenuPage(companies, jobApplications, dsaProblems);
     mainMenuPage.Display();
 
     // idea: page navigation option on every footer/header.
-    AnsiConsole.MarkupLine($"[red]--------------FOOTER---------------[/]");
+    AnsiConsole.MarkupLine($"[red]--------------END PAGE---------------[/]");
 }
 else
 {

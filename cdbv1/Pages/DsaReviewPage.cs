@@ -3,7 +3,7 @@ using cdbv1.Models;
 using Spectre;
 using Spectre.Console;
 
-public class DsaReviewPage
+public class DsaReviewPage(List<CompanyInformation> companies, List<JobApplication> jobApplications, List<DsaProblem> dsaProblems)
 {
     public void Display()
     {
@@ -26,5 +26,39 @@ public class DsaReviewPage
         {
             Console.WriteLine("err");
         }
+        ReturnToMainMenu();
+    }
+    private void ReturnToMainMenu()
+    {
+        if (AnsiConsole.Confirm("Return to main menu?"))
+        {
+            AnsiConsole.Clear();
+            AnsiConsole.MarkupLine("[gray]Returning to main menu...[/]");
+            MainMenuPage mainMenuPage = new MainMenuPage(companies, jobApplications, dsaProblems);
+            mainMenuPage.Display();
+
+        }
+    }
+    public void NavigateTopicPage()
+    {
+
     }
 }
+
+
+////////
+/// 
+/// 
+/// what if i didnt need to pass the data to the menu page???
+/// 
+/// -- i wouldnt need to if i wasnt getting the data in the main()
+/// 
+/// -- so really, this is no big deal right now, because soon the 
+/// 
+/// -- application page will pull applications and main menu wont need to pass it
+/// 
+/// 
+/// 
+/// 
+/// 
+/// 

@@ -43,3 +43,17 @@ c#
     -> when to use
 -> enumerations (enum)
     -> when to use: Use enums when a value must be one of a fixed set of options
+-> LINQ
+
+
+
+
+Specific pages should inherit page
+page will have method: return to main menu
+
+
+
+Feature: Pagination
+Line items take up alot of space, so
+implement sorting, and pagination. Load only five
+at a time, then ask user, if they want to load more

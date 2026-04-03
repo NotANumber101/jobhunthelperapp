@@ -3,14 +3,33 @@ using cdbv1.Models;
 using Spectre;
 using Spectre.Console;
 
-public class DsaProblemsPage(List<DsaProblem> dsaProblems)
+public class DsaProblemsPage(List<CompanyInformation> companies, List<JobApplication> jobApplications, List<DsaProblem> dsaProblems)
 {
     public void Display()
     {
         AnsiConsole.MarkupLine($"[gray]DSA Problems[/]");
         // todo: multiselect -> breakdown problems by a. diffuclty b. type. attempted/notattempted
-        this.DisplayProblemsBarChart();
-        this.DisplayCompanyInformationTable();
+        DisplayProblemsBarChart();
+        DisplayCompanyInformationTable();
+        ReturnToMainMenu();
+
+    }
+    // TODO: Parent class: Page.method return to main menu
+    // because too much repeated code.
+    private void ReturnToMainMenu()
+    {
+        if (AnsiConsole.Confirm("Return to main menu?"))
+        {
+            AnsiConsole.Clear();
+            AnsiConsole.MarkupLine("[gray]Returning to main menu...[/]");
+            // todo: there is way too much data being passed around. This is okay for now, mvp
+            // THIS IS A PROBLEMMMMMMM. I DONT WANT TO KEEEP HAVING TO PASS ALL THIS DATA.
+            // naturally this will fall into place. when pages handle their own data, rather than
+            // what is happening now. which sucks, passing through the main menu page.
+            MainMenuPage mainMenuPage = new MainMenuPage(companies, jobApplications, dsaProblems);
+            mainMenuPage.Display();
+
+        }
     }
     private List<DsaProblem> FilterProblemSetByDifficulty(string diffuclty)
     {

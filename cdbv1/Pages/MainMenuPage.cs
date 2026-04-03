@@ -21,17 +21,19 @@ public class MainMenuPage(List<CompanyInformation> companies, List<JobApplicatio
         }
         else if (pageChoice == "Network")
         {
-            NetworkPage networkPage = new NetworkPage();
+            NetworkPage networkPage = new NetworkPage(companies, jobApplications, dsaProblems);
             networkPage.Display();
         }
         else if (pageChoice == "DSA Problems")
         {
-            DsaProblemsPage dsaProblemsPage = new DsaProblemsPage(dsaProblems);
+            // this is what im talking about...
+            // repeat on repeat.  gross
+            DsaProblemsPage dsaProblemsPage = new DsaProblemsPage(companies, jobApplications, dsaProblems);
             dsaProblemsPage.Display();
         }
         else if (pageChoice == "DSA Review")
         {
-            DsaReviewPage dsaReviewPage = new DsaReviewPage();
+            DsaReviewPage dsaReviewPage = new DsaReviewPage(companies, jobApplications, dsaProblems);
             dsaReviewPage.Display();
         }
         else
