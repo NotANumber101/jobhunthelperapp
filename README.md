@@ -1,3 +1,16 @@
+README
+
+REQUIRMENTS
+
+INSTALL
+
+Features
+
+
+
+
+
+
 use company name instead of id, thgen i dont need to map.
 
 
@@ -57,3 +70,19 @@ Feature: Pagination
 Line items take up alot of space, so
 implement sorting, and pagination. Load only five
 at a time, then ask user, if they want to load more
+
+
+
+feauture: the job description takes too much space in the table,
+and looks bad. so, i want to only load the first 20 or so characters of the string
+.. if i want to see the whole application, i should clear console, and load it, foramted, not in some table.
+
+
+
+feature 'dotnet run 'page'
+
+
+
+TODO: dsaproblem
+
+descruipt color = blue
