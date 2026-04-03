@@ -1,0 +1,11 @@
+
+services:
+  cdbv1:
+    image: cdbv1
+    build:
+      context: .
+      dockerfile: cdbv1/Dockerfile
+      args:
+        - configuration=Debug
+    volumes:
+      - ~/.vsdbg:/remote_debugger:rw
