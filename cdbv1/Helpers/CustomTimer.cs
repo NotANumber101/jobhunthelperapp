@@ -11,7 +11,7 @@ namespace cdbv1.Helpers
 
 
 
-
+        private static bool manualStop = false;
         private static System.Timers.Timer aTimer;
         private int timeAllowance = timeAllowance;
         private static int timeLeft;
@@ -22,29 +22,15 @@ namespace cdbv1.Helpers
 
         public void SolutionTimer()
         {
+                    SetTimer();
 
 
-
-
-
-
-            // 1 = 1 second
-
-
-
-            SetTimer();
-            DisplayTimerProgressBar();
-            timeLeft = timeAllowance;
-
-
-            Console.WriteLine("\nPress the Enter key to exit the application...\n");
+                                Console.WriteLine("\nPress the Enter key to exit the application...\n");
             // Console.WriteLine("The application started at {0:HH:mm:ss.fff}", DateTime.Now);
             Console.WriteLine($"start: time left: {timeLeft}");
             StopTimer();
 
-
-
-
+            
 
         }
         private static void StopTimer()
@@ -63,6 +49,7 @@ namespace cdbv1.Helpers
 
             aTimer.Stop();
             aTimer.Dispose();
+                        manualStop = true;
             Console.WriteLine("Terminating the application...");
         }
         private static void SetTimer()
@@ -78,19 +65,39 @@ namespace cdbv1.Helpers
             //         Thread.Sleep(interval);
             //     }
             // });
+
+
             int tenSecondInterval = 10000;
             // Create a timer with a two second interval.
             aTimer = new System.Timers.Timer(interval);
+            
             // Hook up the Elapsed event for the timer. 
             aTimer.Elapsed += OnTimedEvent;
             aTimer.AutoReset = true;
             aTimer.Enabled = true;
+            
         }
 
         private static void OnTimedEvent(Object source, ElapsedEventArgs e)
         {
             // Console.WriteLine("The Elapsed event was raised at {0:HH:mm:ss.fff}",
             //                   e.SignalTime);
+
+                        AnsiConsole.Progress()
+                .Start(ctx =>
+                {
+
+                    var task = ctx.AddTask("Timer started...", maxValue: 10000);
+      
+
+                    while (!ctx.IsFinished && !manualStop)
+                    {
+                        Thread.Sleep(10);
+                        task.Increment(1);
+                    }
+
+
+                });
             if (timeLeft <= 0)
             {
                 aTimer.Stop();
@@ -102,8 +109,8 @@ namespace cdbv1.Helpers
                 timeElapsed = timeElapsed + 2;
                 timeLeft = timeLeft - 2;
 
-                Console.WriteLine($"ElapsedTime: {timeElapsed}");
-                Console.WriteLine($"TimeLeft: {timeLeft}");
+                // Console.WriteLine($"ElapsedTime: {timeElapsed}");
+                // Console.WriteLine($"TimeLeft: {timeLeft}");
             }
         }
         public int GetTimeLeft()
@@ -113,17 +120,20 @@ namespace cdbv1.Helpers
 
         public void DisplayTimerProgressBar()
         {
-            AnsiConsole.Progress()
-                .Start(ctx =>
-                {
-                    var task = ctx.AddTask("Timer started...", maxValue: 100);
+            
+            // AnsiConsole.Progress()
+            //     .Start(ctx =>
+            //     {
+                    
+            //         var task = ctx.AddTask("Timer started...", maxValue: 100);
 
-                    while (!ctx.IsFinished)
-                    {
-                        Thread.Sleep(6000);
-                        task.Increment(10);
-                    }
-                });
+            //         while (!ctx.IsFinished && !manualStop)
+            //         {
+            //             Thread.Sleep(1);
+            //             task.Increment(10);
+            //         }
+
+            //     });
         }
     }
 }
