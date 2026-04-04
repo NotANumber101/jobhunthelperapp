@@ -61,10 +61,161 @@ CREATE TABLE dsa_postmortem (
   explanation TEXT
 );
 
--- rubric
+-- todo:rubric
+
+-- array
+
+INSERT INTO dsa_problem (name, description, difficulty, topic)
+  VALUES ('Contains Duplicates', 'Given an integer array nums, return true if any value appears more than once in the array, otherwise return false.', 'easy', 'array');
+
+INSERT INTO dsa_problem (name, description, difficulty, topic)
+  VALUES ('Valid Anagram', 'Given two strings s and t, return true if the two strings are anagrams of each other, otherwise return false.
+   An anagram is a string that contains the exact same characters as another string, but the order of the characters can be different.', 'easy', 'array');
 
 INSERT INTO dsa_problem (name, description, difficulty, topic)
   VALUES ('two sum', 'given an array of integers and a target integer, return the indices of the two numbers that add up to the target', 'easy', 'array');
+
+INSERT INTO dsa_problem (name, description, difficulty, topic)
+  VALUES ('Group Anagrams', 'Given an array of strings strs, group all anagrams together into sublists. You may return the output in any order.
+  An anagram is a string that contains the exact same characters as another string, but the order of the characters can be different.',
+  'medium',
+  'array'
+);
+
+INSERT INTO dsa_problem (name, description, difficulty, topic)
+  VALUES ('Top K Frequent Elements', 'Given an integer array nums and an integer k, return the k most frequent elements within the array.
+
+The test cases are generated such that the answer is always unique.
+
+You may return the output in any order.', 'medium', 'array');
+
+
+INSERT INTO dsa_problem (name, description, difficulty, topic)
+  VALUES ('Encode And Decode String', 'Design an algorithm to encode a list of strings to a string. The encoded string is then sent over the network and is decoded back to the original list of strings.
+
+Machine 1 (sender) has the function:
+
+string encode(vector<string> strs) {
+    // ... your code
+    return encoded_string;
+}
+Machine 2 (receiver) has the function:
+
+vector<string> decode(string s) {
+    //... your code
+    return strs;
+}
+So Machine 1 does:
+
+string encoded_string = encode(strs);
+and Machine 2 does:
+
+vector<string> strs2 = decode(encoded_string);
+strs2 in Machine 2 should be the same as strs in Machine 1.
+
+Implement the encode and decode methods.', 'medium', 'array');
+
+
+INSERT INTO dsa_problem (name, description, difficulty, topic)
+  VALUES ('Product Of Array Except Self',
+  'Given an integer array nums, return an array output where output[i] is the product of all the elements of nums except nums[i]. 
+  Each product is guaranteed to fit in a 32-bit integer.', 'medium', 'array');
+
+INSERT INTO dsa_problem (name, description, difficulty, topic)
+  VALUES ('Longest Consecutive Sequence', 'Given an array of integers nums, return the length of the longest consecutive sequence of elements that can be formed. 
+A consecutive sequence is a sequence of elements in which each element is exactly 1 greater than the previous element. The elements do not have to be consecutive in the original array.',
+'medium',
+'array');
+
+-- two pointers
+
+INSERT INTO dsa_problem (name, description, difficulty, topic)
+  VALUES ('Valid Palindrome', 'Given a string s, return true if it is a palindrome, otherwise return false.
+
+A palindrome is a string that reads the same forward and backward. It is also case-insensitive and ignores all non-alphanumeric characters.
+
+Note: Alphanumeric characters consist of letters (A-Z, a-z) and numbers (0-9).', 'easy', 'two pointers');
+
+INSERT INTO dsa_problem (name, description, difficulty, topic)
+  VALUES ('3 Sum', 'Given an integer array nums, return all the triplets [nums[i], nums[j], nums[k]] where nums[i] + nums[j] + nums[k] == 0, and the indices i, j and k are all distinct.
+
+The output should not contain any duplicate triplets. You may return the output and the triplets in any order.', 'medium', 'two pointers');
+
+INSERT INTO dsa_problem (name, description, difficulty, topic)
+  VALUES ('Container With Most Water', 'You are given an integer array heights where heights[i] represents the height of the 
+ith bar.
+
+You may choose any two bars to form a container. Return the maximum amount of water a container can store.', 'medium', 'two pointers');
+
+-- sliding window
+
+INSERT INTO dsa_problem (name, description, difficulty, topic)
+  VALUES ('Minimum Window Substring', 'Given two strings s and t, return the shortest substring of s such that every character in t, including duplicates, is present in the substring. If such a substring does not exist, return an empty string "".
+
+You may assume that the correct output is always unique.', 'hard', 'sliding window');
+
+-- stack
+
+INSERT INTO dsa_problem (name, description, difficulty, topic)
+  VALUES ('Valid Parentheses', 'You are given a string s consisting of the following characters: ( ) { } [ ].
+
+The input string s is valid if and only if:
+
+Every open bracket is closed by the same type of close bracket.
+Open brackets are closed in the correct order.
+Every close bracket has a corresponding open bracket of the same type.
+Return true if s is a valid string, and false otherwise.', 'easy', 'stack');
+
+-- binary search
+
+INSERT INTO dsa_problem (name, description, difficulty, topic)
+  VALUES ('Find Minimum In Rotated Sorted Array', 'test', 'medium', 'binary search');
+INSERT INTO dsa_problem (name, description, difficulty, topic)
+  VALUES ('Search In Rotated Sorted Array', 'test', 'medium', 'binary search');
+
+-- linked list
+
+INSERT INTO dsa_problem (name, description, difficulty, topic)
+  VALUES ('Reverse Linked List', 'test', 'easy', 'linked list');
+INSERT INTO dsa_problem (name, description, difficulty, topic)
+  VALUES ('Merge Two Sorted Lists', 'test', 'easy', 'linked list');
+INSERT INTO dsa_problem (name, description, difficulty, topic)
+  VALUES ('Linked List Cycle', 'test', 'easy', 'linked list');
+INSERT INTO dsa_problem (name, description, difficulty, topic)
+  VALUES ('Reorder List', 'test', 'medium', 'linked list');
+INSERT INTO dsa_problem (name, description, difficulty, topic)
+  VALUES ('Remove Node From End of Linked List', 'test', 'medium', 'linked list');
+INSERT INTO dsa_problem (name, description, difficulty, topic)
+  VALUES ('Merge K Sorted Lists', 'test', 'hard', 'linked list');
+
+-- tree
+INSERT INTO dsa_problem (name, description, difficulty, topic)
+  VALUES ('test', 'test', 'easy', 'tree');
+
+-- heap/priority queue
+INSERT INTO dsa_problem (name, description, difficulty, topic)
+  VALUES ('Find Median From Data Stream', 'test', 'hard', 'heap');
+
+-- backtracking
+
+-- tries
+
+-- graphs
+
+-- advanced graphs
+
+-- 1-D dynamic programming
+
+-- 2-D dynamic programming
+
+-- greedy
+
+-- intervals
+
+-- math & geometry
+
+-- bit manipulation
+
 
 
 
