@@ -17,27 +17,25 @@ public class DsaProblemsPage(List<CompanyInformation> companies, List<JobApplica
         // todo: multiselect -> breakdown problems by a. diffuclty b. type. attempted/notattempted
         NavigateDsaProblemsPage();
     }
-    private IEnumerable<DsaProblem> FilterProblemLinq(string difficultyIso, string topicIso)
+    private IEnumerable<DsaProblem> FilterProblems(string difficultyIso, string topicIso)
     {
         // Specify the data source.
         // int[] scores = [97, 92, 81, 60];
 
         // Define the query expression.
-        IEnumerable<DsaProblem> scoreQuery =
+        IEnumerable<DsaProblem> problemQuery =
             from problem in dsaProblems
             where problem.Difficulty == difficultyIso
             where problem.Topic == topicIso
             select problem;
 
         // Execute the query.
-        foreach (var i in scoreQuery)
-        {
-            Console.WriteLine(i.Name + " ");
-        }
+        // foreach (var p in problemQuery)
+        // {
 
-        return scoreQuery;
-
-        // Output: 97 92 81
+        // }
+        return problemQuery;
+        // return resultList;
     }
     private async Task NavigateDsaProblemsPage()
     {
@@ -59,16 +57,14 @@ public class DsaProblemsPage(List<CompanyInformation> companies, List<JobApplica
 
             AnsiConsole.MarkupLine($"[gray]View Problems[/]");
             DisplayProblemsBarChart();
-            DisplayProblemsTable(dsaProblems);
+            DisplayProblemsTable(dsaProblems, true);
         }
         else if (pageChoice == "Solve Problem")
         {
             AnsiConsole.MarkupLine($"[gray]Solve Problems[/]");
 
-            IEnumerable<DsaProblem> filteredProblems = SelectProblemFilter();
-            DisplayProblemsTable(filteredProblems);
-
-
+            IEnumerable<DsaProblem> filteredProblems = DisplaySelectProblemFilter();
+            DisplayProblemsTable(filteredProblems, true);
 
             // if (AnsiConsole.Confirm("Start timer?"))
             // {
@@ -82,11 +78,7 @@ public class DsaProblemsPage(List<CompanyInformation> companies, List<JobApplica
             ReturnToMainMenu();
         }
     }
-    private void GetProblemTopics()
-    {
-
-    }
-    private void DisplayProblemsTable(IEnumerable<DsaProblem> problems)
+    private void DisplayProblemsTable(IEnumerable<DsaProblem> problems, bool staleOnly)
     {
         var problemsTable = new Table().ShowRowSeparators();
         problemsTable.AddColumn("Name");
@@ -95,16 +87,30 @@ public class DsaProblemsPage(List<CompanyInformation> companies, List<JobApplica
         problemsTable.AddColumn("DateCompleted");
         foreach (var problem in problems)
         {
-            if (IsStale(problem))
+            if (staleOnly)
             {
+                if (IsStale(problem))
+                {
+
+                    problemsTable.AddRow(
+                        problem.Name,
+                        problem.Difficulty,
+                        problem.Topic,
+                        problem.DateCompleted.ToString()
+                    );
+                }
                 Console.WriteLine($"{problem.Name} IS STALE");
-            }
-            problemsTable.AddRow(
+
+            } else
+            {
+                            problemsTable.AddRow(
                 problem.Name,
                 problem.Difficulty,
                 problem.Topic,
                 problem.DateCompleted.ToString()
             );
+            }
+
         }
         AnsiConsole.Write(problemsTable);
     }
@@ -123,8 +129,11 @@ public class DsaProblemsPage(List<CompanyInformation> companies, List<JobApplica
         }
         return false;
     }
-    private IEnumerable<DsaProblem> SelectProblemFilter()
+    private IEnumerable<DsaProblem> DisplaySelectProblemFilter()
     {
+        // ask user input: stale only? 
+        // filter 
+
         var difficultyFilterOptions = new List<string> { "easy", "medium", "hard" };
         var difficultyFilterSelected = AnsiConsole.Prompt(
             new SelectionPrompt<string>()
@@ -146,7 +155,7 @@ public class DsaProblemsPage(List<CompanyInformation> companies, List<JobApplica
                 .AddChoices(topicFilterOptions));
         AnsiConsole.MarkupLine($"[blue]Your selected options: {difficultyFilterSelected} | {topicFilterSelected}[/]");
         // hard coded for now
-        return FilterProblemLinq(difficultyFilterSelected, topicFilterSelected);
+        return FilterProblems(difficultyFilterSelected, topicFilterSelected);
         // return dsaProblems[0];
     }
     private void ReturnToMainMenu()
