@@ -66,30 +66,26 @@ CREATE TABLE dsa_postmortem (
 
 -- array
 
-INSERT INTO dsa_problem (name, description, difficulty, topic)
+INSERT INTO dsa_problem (name, description, difficulty, topic, date_completed)
   VALUES ('Contains Duplicates', 'Given an integer array nums, return true if any value appears more than once in the array, otherwise return false.',
-  'easy', 'array');
+  'easy', 'array', '3-20-2026');
+
+INSERT INTO dsa_problem (name, description, difficulty, topic, date_completed)
+  VALUES ('Valid Anagram', 'Given two strings s and t, return true if the two strings are anagrams of each other, otherwise return false. An anagram is a string that contains the exact same characters as another string, but the order of the characters can be different.',
+  'easy', 'array', '4-4-2026');
+
+INSERT INTO dsa_problem (name, description, difficulty, topic, date_completed)
+  VALUES ('two sum', 'given an array of integers and a target integer, return the indices of the two numbers that add up to the target',
+  'easy', 'array', '4-10-2026');
 
 INSERT INTO dsa_problem (name, description, difficulty, topic)
-  VALUES ('Valid Anagram', 'Given two strings s and t, return true if the two strings are anagrams of each other, otherwise return false.
-   An anagram is a string that contains the exact same characters as another string, but the order of the characters can be different.', 'easy', 'array');
-
-INSERT INTO dsa_problem (name, description, difficulty, topic)
-  VALUES ('two sum', 'given an array of integers and a target integer, return the indices of the two numbers that add up to the target', 'easy', 'array');
-
-INSERT INTO dsa_problem (name, description, difficulty, topic)
-  VALUES ('Group Anagrams', 'Given an array of strings strs, group all anagrams together into sublists. You may return the output in any order.
-  An anagram is a string that contains the exact same characters as another string, but the order of the characters can be different.',
+  VALUES ('Group Anagrams', 'Given an array of strings strs, group all anagrams together into sublists. You may return the output in any order. An anagram is a string that contains the exact same characters as another string, but the order of the characters can be different.',
   'medium',
   'array'
 );
 
 INSERT INTO dsa_problem (name, description, difficulty, topic)
-  VALUES ('Top K Frequent Elements', 'Given an integer array nums and an integer k, return the k most frequent elements within the array.
-
-The test cases are generated such that the answer is always unique.
-
-You may return the output in any order.', 'medium', 'array');
+  VALUES ('Top K Frequent Elements', 'Given an integer array nums and an integer k, return the k most frequent elements within the array. The test cases are generated such that the answer is always unique. You may return the output in any order.', 'medium', 'array');
 
 
 INSERT INTO dsa_problem (name, description, difficulty, topic)

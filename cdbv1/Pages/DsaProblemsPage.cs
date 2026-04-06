@@ -65,10 +65,10 @@ public class DsaProblemsPage(List<CompanyInformation> companies, List<JobApplica
         {
             AnsiConsole.MarkupLine($"[gray]Solve Problems[/]");
 
-            IEnumerable<DsaProblem> problems = SelectProblemFilter();
-            DisplayProblemsTable(problems);
-            DateTime thisDay = DateTime.Today;
-            Console.WriteLine(thisDay.ToString());
+            IEnumerable<DsaProblem> filteredProblems = SelectProblemFilter();
+            DisplayProblemsTable(filteredProblems);
+
+
 
             // if (AnsiConsole.Confirm("Start timer?"))
             // {
@@ -84,7 +84,7 @@ public class DsaProblemsPage(List<CompanyInformation> companies, List<JobApplica
     }
     private void GetProblemTopics()
     {
-        
+
     }
     private void DisplayProblemsTable(IEnumerable<DsaProblem> problems)
     {
@@ -95,8 +95,10 @@ public class DsaProblemsPage(List<CompanyInformation> companies, List<JobApplica
         problemsTable.AddColumn("DateCompleted");
         foreach (var problem in problems)
         {
-            Console.WriteLine($"date: {problem.DateCompleted}");
-            // var date = problem.Date.ToString();
+            if (IsStale(problem))
+            {
+                Console.WriteLine($"{problem.Name} IS STALE");
+            }
             problemsTable.AddRow(
                 problem.Name,
                 problem.Difficulty,
@@ -105,6 +107,21 @@ public class DsaProblemsPage(List<CompanyInformation> companies, List<JobApplica
             );
         }
         AnsiConsole.Write(problemsTable);
+    }
+    private bool IsStale(DsaProblem problem)
+    {
+        DateTime thisDay = DateTime.Today;
+        Console.WriteLine($"Today is: {thisDay}");
+        Console.WriteLine($"TIME: {problem.Name} has not been completed in ");
+        Console.WriteLine($"TIME: {(problem.DateCompleted - thisDay).TotalDays}");
+        if (problem != null)
+        {
+            if ((problem.DateCompleted - thisDay).TotalDays < -14)
+            {
+                return true;
+            }
+        }
+        return false;
     }
     private IEnumerable<DsaProblem> SelectProblemFilter()
     {
@@ -170,8 +187,7 @@ public class DsaProblemsPage(List<CompanyInformation> companies, List<JobApplica
         List<DsaProblem> mediumSet = new() { };
         // testing out this filter method for the hard set.
         // But perhaps it makes more sense to filter in one pass
-        // TODO LINQ
-        List<DsaProblem> hardSet = FilterProblemSetByDifficulty("hard");
+        // List<DsaProblem> hardSet = FilterProblemSetByDifficulty("hard");
         // sort problems 
         foreach (var problem in dsaProblems)
         {
@@ -197,6 +213,6 @@ public class DsaProblemsPage(List<CompanyInformation> companies, List<JobApplica
             .Label("[green]Problems[/]")
             .AddItem("Easy", easySet.Count, Color.Green)
             .AddItem("Medium", mediumSet.Count, Color.Yellow)
-            .AddItem("Hard", hardSet.Count, Color.Red));
+            .AddItem("Hard", FilterProblemSetByDifficulty("hard").Count, Color.Red));
     }
 }
