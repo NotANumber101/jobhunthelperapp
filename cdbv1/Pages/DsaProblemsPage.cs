@@ -66,10 +66,10 @@ public class DsaProblemsPage(List<CompanyInformation> companies, List<JobApplica
             AnsiConsole.MarkupLine($"[gray]Solve Problems[/]");
 
             IEnumerable<DsaProblem> problems = SelectProblemFilter();
-            foreach(var problem in problems)
+            foreach (var problem in problems)
             {
-                            AnsiConsole.MarkupLine($"[blue]Problem: {problem.Name}[/]");
-            AnsiConsole.MarkupLine($"[blue]{problem.Description}[/]");
+                AnsiConsole.MarkupLine($"[blue]Problem: {problem.Name}[/]");
+                AnsiConsole.MarkupLine($"[blue]{problem.Description}[/]");
             }
             AnsiConsole.MarkupLine("[red]Timer: 10m[/]");
 
