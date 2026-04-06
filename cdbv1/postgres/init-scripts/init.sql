@@ -46,7 +46,8 @@ CREATE TABLE dsa_problem (
   name VARCHAR(100),
   description TEXT,
   difficulty VARCHAR(10),
-  topic VARCHAR(40)
+  topic VARCHAR(40),
+  date_completed DATE NOT NULL DEFAULT CURRENT_DATE
 );
 
 CREATE TABLE dsa_solution (
@@ -66,7 +67,8 @@ CREATE TABLE dsa_postmortem (
 -- array
 
 INSERT INTO dsa_problem (name, description, difficulty, topic)
-  VALUES ('Contains Duplicates', 'Given an integer array nums, return true if any value appears more than once in the array, otherwise return false.', 'easy', 'array');
+  VALUES ('Contains Duplicates', 'Given an integer array nums, return true if any value appears more than once in the array, otherwise return false.',
+  'easy', 'array');
 
 INSERT INTO dsa_problem (name, description, difficulty, topic)
   VALUES ('Valid Anagram', 'Given two strings s and t, return true if the two strings are anagrams of each other, otherwise return false.
@@ -178,7 +180,7 @@ INSERT INTO dsa_problem (name, description, difficulty, topic)
   VALUES ('Search In Rotated Sorted Array', 'test', 'medium', 'binary search');
 
 -- linked list
-
+ 
 INSERT INTO dsa_problem (name, description, difficulty, topic)
   VALUES ('Reverse Linked List', 'test', 'easy', 'linked list');
 INSERT INTO dsa_problem (name, description, difficulty, topic)

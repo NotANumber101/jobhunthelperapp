@@ -67,6 +67,8 @@ public class DsaProblemsPage(List<CompanyInformation> companies, List<JobApplica
 
             IEnumerable<DsaProblem> problems = SelectProblemFilter();
             DisplayProblemsTable(problems);
+            DateTime thisDay = DateTime.Today;
+            Console.WriteLine(thisDay.ToString());
 
             // if (AnsiConsole.Confirm("Start timer?"))
             // {
@@ -90,12 +92,16 @@ public class DsaProblemsPage(List<CompanyInformation> companies, List<JobApplica
         problemsTable.AddColumn("Name");
         problemsTable.AddColumn("Difficulty");
         problemsTable.AddColumn("Topic");
+        problemsTable.AddColumn("DateCompleted");
         foreach (var problem in problems)
         {
+            Console.WriteLine($"date: {problem.DateCompleted}");
+            // var date = problem.Date.ToString();
             problemsTable.AddRow(
                 problem.Name,
                 problem.Difficulty,
-                problem.Topic
+                problem.Topic,
+                problem.DateCompleted.ToString()
             );
         }
         AnsiConsole.Write(problemsTable);

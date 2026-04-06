@@ -129,7 +129,7 @@ try
             DsaProblem dsaProblem = new(
                 reader.GetInt32(0), reader.GetString(1),
                 reader.GetString(2), reader.GetString(3),
-                reader.GetString(4)
+                reader.GetString(4), reader.GetDateTime(5)
             );
             dsaProblems.Add(dsaProblem);
         }
