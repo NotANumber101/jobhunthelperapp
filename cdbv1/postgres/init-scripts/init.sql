@@ -148,11 +148,15 @@ ith bar.
 You may choose any two bars to form a container. Return the maximum amount of water a container can store.', 'medium', 'two pointers');
 
 -- sliding window
-
 INSERT INTO dsa_problem (name, description, difficulty, topic)
-  VALUES ('Minimum Window Substring', 'Given two strings s and t, return the shortest substring of s such that every character in t, including duplicates, is present in the substring. If such a substring does not exist, return an empty string "".
-
-You may assume that the correct output is always unique.', 'hard', 'sliding window');
+  VALUES ('Best Time to Buy And Sell Stock', 'test', 'easy', 'sliding window');
+INSERT INTO dsa_problem (name, description, difficulty, topic)
+  VALUES ('Longest Substring Without Repeating Characters', 'test', 'medium', 'sliding window');
+INSERT INTO dsa_problem (name, description, difficulty, topic)
+  VALUES ('Longest Repeating Character Replacement', 'test', 'medium', 'sliding window');
+INSERT INTO dsa_problem (name, description, difficulty, topic)
+  VALUES ('Minimum Window Substring',
+  'Given two strings s and t, return the shortest substring of s such that every character in t, including duplicates, is present in the substring. If such a substring does not exist, return an empty string. You may assume that the correct output is always unique.', 'hard', 'sliding window');
 
 -- stack
 
@@ -189,32 +193,83 @@ INSERT INTO dsa_problem (name, description, difficulty, topic)
   VALUES ('Merge K Sorted Lists', 'test', 'hard', 'linked list');
 
 -- tree
-INSERT INTO dsa_problem (name, description, difficulty, topic)
-  VALUES ('test', 'test', 'easy', 'tree');
+-- INSERT INTO dsa_problem (name, description, difficulty, topic) VALUES ('test', 'test', 'easy', 'tree');
+INSERT INTO dsa_problem (name, description, difficulty, topic) VALUES ('Invert Binary Tree', 'test', 'easy', 'tree');
+INSERT INTO dsa_problem (name, description, difficulty, topic) VALUES ('Maximum Depth of Binary Tree', 'test', 'easy', 'tree');
+INSERT INTO dsa_problem (name, description, difficulty, topic) VALUES ('Same Tree', 'test', 'easy', 'tree');
+INSERT INTO dsa_problem (name, description, difficulty, topic) VALUES ('Subtree of Another Tree', 'test', 'easy', 'tree');
+INSERT INTO dsa_problem (name, description, difficulty, topic) VALUES ('Lowest Common Ancestor of a Binary Search Tree', 'test', 'easy', 'tree');
+INSERT INTO dsa_problem (name, description, difficulty, topic) VALUES ('Binary Tree Level Order Traversal', 'test', 'easy', 'tree');
+INSERT INTO dsa_problem (name, description, difficulty, topic) VALUES ('Validate Binary Search Tree', 'test', 'easy', 'tree');
+INSERT INTO dsa_problem (name, description, difficulty, topic) VALUES ('Kth Smallest Element In a Bst', 'test', 'easy', 'tree');
+INSERT INTO dsa_problem (name, description, difficulty, topic) VALUES ('Construct Binary Tree From Preorder And Inorder Traversal', 'test', 'easy', 'tree');
+INSERT INTO dsa_problem (name, description, difficulty, topic) VALUES ('Binary Tree Maximum Path Sum', 'test', 'easy', 'tree');
+INSERT INTO dsa_problem (name, description, difficulty, topic) VALUES ('Serialize And Deserialize Binary Tree', 'test', 'easy', 'tree');
 
 -- heap/priority queue
-INSERT INTO dsa_problem (name, description, difficulty, topic)
-  VALUES ('Find Median From Data Stream', 'test', 'hard', 'heap');
+INSERT INTO dsa_problem (name, description, difficulty, topic) VALUES ('Find Median From Data Stream', 'test', 'hard', 'heap');
 
 -- backtracking
+INSERT INTO dsa_problem (name, description, difficulty, topic) VALUES ('Combination Sum', 'test', 'medium', 'backtracking');
+INSERT INTO dsa_problem (name, description, difficulty, topic) VALUES ('Word Search', 'test', 'medium', 'backtracking');
 
 -- tries
+INSERT INTO dsa_problem (name, description, difficulty, topic) VALUES ('Implement Trie Prefix Tree', 'test', 'medium', 'tries');
+INSERT INTO dsa_problem (name, description, difficulty, topic) VALUES ('Design Add And Search Words Data Structure', 'test', 'medium', 'tries');
+INSERT INTO dsa_problem (name, description, difficulty, topic) VALUES ('Word Search 2', 'test', 'hard', 'tries');
 
 -- graphs
+INSERT INTO dsa_problem (name, description, difficulty, topic) VALUES ('Number Of Islands', 'test', 'medium', 'graphs');
+INSERT INTO dsa_problem (name, description, difficulty, topic) VALUES ('Clone Graph', 'test', 'medium', 'graphs');
+INSERT INTO dsa_problem (name, description, difficulty, topic) VALUES ('Pacific Atlantic Water Flow', 'test', 'medium', 'graphs');
+INSERT INTO dsa_problem (name, description, difficulty, topic) VALUES ('Course Schedule', 'test', 'medium', 'graphs');
+INSERT INTO dsa_problem (name, description, difficulty, topic) VALUES ('Graph Valid Tree', 'test', 'medium', 'graphs');
+INSERT INTO dsa_problem (name, description, difficulty, topic) VALUES ('Number of Connected Components In An Undirected Graph', 'test', 'medium', 'graphs');
 
 -- advanced graphs
+INSERT INTO dsa_problem (name, description, difficulty, topic) VALUES ('Alien Dictionary', 'test', 'hard', 'advanced graphs');
 
 -- 1-D dynamic programming
+INSERT INTO dsa_problem (name, description, difficulty, topic) VALUES ('Climbing Stairs', 'test', 'easy', '1D dynamic programming');
+INSERT INTO dsa_problem (name, description, difficulty, topic) VALUES ('House Robber', 'test', 'medium', '1D dynamic programming');
+INSERT INTO dsa_problem (name, description, difficulty, topic) VALUES ('House Robber 2', 'test', 'medium', '1D dynamic programming');
+INSERT INTO dsa_problem (name, description, difficulty, topic) VALUES ('Longest Palindromic Substring', 'test', 'medium', '1D dynamic programming');
+INSERT INTO dsa_problem (name, description, difficulty, topic) VALUES ('Palindromic Substrings', 'test', 'medium', '1D dynamic programming');
+INSERT INTO dsa_problem (name, description, difficulty, topic) VALUES ('Decode Ways', 'test', 'medium', '1D dynamic programming');
+INSERT INTO dsa_problem (name, description, difficulty, topic) VALUES ('Coin Change', 'test', 'medium', '1D dynamic programming');
+INSERT INTO dsa_problem (name, description, difficulty, topic) VALUES ('Maximum Product Subarray', 'test', 'medium', '1D dynamic programming');
+INSERT INTO dsa_problem (name, description, difficulty, topic) VALUES ('Word Break', 'test', 'medium', '1D dynamic programming');
+INSERT INTO dsa_problem (name, description, difficulty, topic) VALUES ('Longest Increasing Subsequence', 'test', 'medium', '1D dynamic programming');
+
+-- todo
 
 -- 2-D dynamic programming
+INSERT INTO dsa_problem (name, description, difficulty, topic) VALUES ('Unique Paths', 'test', 'medium', '2D dynamic programming');
+INSERT INTO dsa_problem (name, description, difficulty, topic) VALUES ('Longest Common Subsequence', 'test', 'medium', '2D dynamic programming');
 
 -- greedy
+INSERT INTO dsa_problem (name, description, difficulty, topic) VALUES ('Maximum Subarray', 'test', 'medium', 'greedy');
+INSERT INTO dsa_problem (name, description, difficulty, topic) VALUES ('Jump Game', 'test', 'medium', 'greedy');
 
 -- intervals
+INSERT INTO dsa_problem (name, description, difficulty, topic) VALUES ('Meeting Rooms', 'test', 'easy', 'intervals');
+INSERT INTO dsa_problem (name, description, difficulty, topic) VALUES ('Meeting Rooms 2', 'test', 'medium', 'intervals');
+INSERT INTO dsa_problem (name, description, difficulty, topic) VALUES ('Insert Interval', 'test', 'medium', 'intervals');
+INSERT INTO dsa_problem (name, description, difficulty, topic) VALUES ('Merge Intervals', 'test', 'medium', 'intervals');
+INSERT INTO dsa_problem (name, description, difficulty, topic) VALUES ('Non Overlapping Intervals', 'test', 'medium', 'intervals');
 
 -- math & geometry
+INSERT INTO dsa_problem (name, description, difficulty, topic) VALUES ('Rotate Image', 'test', 'medium', 'math and geometry');
+INSERT INTO dsa_problem (name, description, difficulty, topic) VALUES ('Spiral Matrix', 'test', 'medium', 'math and geometry');
+INSERT INTO dsa_problem (name, description, difficulty, topic) VALUES ('Set Matrix Zones', 'test', 'medium', 'math and geometry');
 
 -- bit manipulation
+INSERT INTO dsa_problem (name, description, difficulty, topic) VALUES ('Number of 1 Bits', 'test', 'easy', 'bit manipulation');
+INSERT INTO dsa_problem (name, description, difficulty, topic) VALUES ('Counting Bits', 'test', 'easy', 'bit manipulation');
+INSERT INTO dsa_problem (name, description, difficulty, topic) VALUES ('Reverse Bits', 'test', 'easy', 'bit manipulation');
+INSERT INTO dsa_problem (name, description, difficulty, topic) VALUES ('Missing Number', 'test', 'easy', 'bit manipulation');
+INSERT INTO dsa_problem (name, description, difficulty, topic) VALUES ('Sum of Two Integerss', 'test', 'medium', 'bit manipulation');
+
 
 
 

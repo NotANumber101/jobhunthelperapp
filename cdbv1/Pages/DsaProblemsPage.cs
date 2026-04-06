@@ -8,20 +8,37 @@ using cdbv1.Helpers;
 public class DsaProblemsPage(List<CompanyInformation> companies, List<JobApplication> jobApplications, List<DsaProblem> dsaProblems)
 {
     // private static System.Timers.Timer aTimer;
-    private static CustomTimer aTimer;
+    private static CustomTimer aTimer = new CustomTimer(100);
 
 
     public void Display()
     {
         AnsiConsole.MarkupLine($"[gray]DSA Problems[/]");
         // todo: multiselect -> breakdown problems by a. diffuclty b. type. attempted/notattempted
-        DisplayProblemsBarChart();
-
         NavigateDsaProblemsPage();
-
     }
-    // TODO: Parent class: Page.method return to main menu
-    // because too much repeated code.
+    private IEnumerable<DsaProblem> FilterProblemLinq(string difficultyIso, string topicIso)
+    {
+        // Specify the data source.
+        // int[] scores = [97, 92, 81, 60];
+
+        // Define the query expression.
+        IEnumerable<DsaProblem> scoreQuery =
+            from problem in dsaProblems
+            where problem.Difficulty == difficultyIso
+            where problem.Topic == topicIso
+            select problem;
+
+        // Execute the query.
+        foreach (var i in scoreQuery)
+        {
+            Console.WriteLine(i.Name + " ");
+        }
+
+        return scoreQuery;
+
+        // Output: 97 92 81
+    }
     private async Task NavigateDsaProblemsPage()
     {
         var pageOptions = new List<string> { "Add New Problem", "View Problems", "Solve Problem", "Main Menu" };
@@ -39,54 +56,52 @@ public class DsaProblemsPage(List<CompanyInformation> companies, List<JobApplica
         }
         else if (pageChoice == "View Problems")
         {
-            AnsiConsole.MarkupLine($"[gray]View Problems[/]");
-            AnsiConsole.MarkupLine($"[gray]Coming soon...[/]");
 
+            AnsiConsole.MarkupLine($"[gray]View Problems[/]");
+            DisplayProblemsBarChart();
+            DisplayProblemsTable();
         }
         else if (pageChoice == "Solve Problem")
         {
-
-            // Random randomizer = new Random();
             AnsiConsole.MarkupLine($"[gray]Solve Problems[/]");
 
-            DsaProblem selectedProblem = SelectProblemFilter();
+            IEnumerable<DsaProblem> problems = SelectProblemFilter();
+            foreach(var problem in problems)
+            {
+                            AnsiConsole.MarkupLine($"[blue]Problem: {problem.Name}[/]");
+            AnsiConsole.MarkupLine($"[blue]{problem.Description}[/]");
+            }
+            AnsiConsole.MarkupLine("[red]Timer: 10m[/]");
 
-            AnsiConsole.MarkupLine($"[blue]Problem: {selectedProblem.Name}[/]");
-            AnsiConsole.MarkupLine($"{selectedProblem.Description}");
-
-            // use selections to buld LINQ query
-
-            // print list size. ie 20 problems found matching filter!
-            // pick problem
-
-            // todo: implement spectre timer
-
-
-
-            // timer and display problem
+            // timer
             int tenMinute = 60000 * 10;
             // CustomTimer timer = new CustomTimer(tenMinute);
-            aTimer = new CustomTimer(tenMinute);
-            AnsiConsole.MarkupLine("Timer: 10m");
+            // aTimer = new CustomTimer(tenMinute);
             if (AnsiConsole.Confirm("Start timer?"))
             {
+                AnsiConsole.Clear();
+                // AnsiConsole.MarkupLine($"[blue]{.Description}[/]");
                 aTimer.SolutionTimer();
             }
-
-            // fix layout
-            // TODO Move counter into a grid layout
-
-
-
         }
         else if (pageChoice == "Main Menu")
         {
             ReturnToMainMenu();
         }
-        // NavigateDsaProblemsPage();
     }
-
-    private DsaProblem SelectProblemFilter()
+    private void DisplayProblemsTable()
+    {
+        var problemsTable = new Table().ShowRowSeparators();
+        problemsTable.AddColumn("Name");
+        foreach (var problem in dsaProblems)
+        {
+            problemsTable.AddRow(
+                problem.Name
+            );
+        }
+        AnsiConsole.Write(problemsTable);
+    }
+    private IEnumerable<DsaProblem> SelectProblemFilter()
     {
         var difficultyFilterOptions = new List<string> { "easy", "medium", "hard" };
         var difficultyFilterSelected = AnsiConsole.Prompt(
@@ -106,7 +121,8 @@ public class DsaProblemsPage(List<CompanyInformation> companies, List<JobApplica
                 .AddChoices(topicFilterOptions));
         AnsiConsole.MarkupLine($"[blue]Your selected options: {difficultyFilterSelected} | {topicFilterSelected}[/]");
         // hard coded for now
-        return dsaProblems[0];
+        return FilterProblemLinq(difficultyFilterSelected, topicFilterSelected);
+        // return dsaProblems[0];
     }
     private void ReturnToMainMenu()
     {
@@ -114,10 +130,6 @@ public class DsaProblemsPage(List<CompanyInformation> companies, List<JobApplica
         {
             AnsiConsole.Clear();
             AnsiConsole.MarkupLine("[gray]Returning to main menu...[/]");
-            // todo: there is way too much data being passed around. This is okay for now, mvp
-            // THIS IS A PROBLEMMMMMMM. I DONT WANT TO KEEEP HAVING TO PASS ALL THIS DATA.
-            // naturally this will fall into place. when pages handle their own data, rather than
-            // what is happening now. which sucks, passing through the main menu page.
             MainMenuPage mainMenuPage = new MainMenuPage(companies, jobApplications, dsaProblems);
             mainMenuPage.Display();
 
@@ -146,7 +158,6 @@ public class DsaProblemsPage(List<CompanyInformation> companies, List<JobApplica
     }
     private void DisplayProblemsBarChart()
     {
-        //
         List<DsaProblem> easySet = new() { };
         List<DsaProblem> mediumSet = new() { };
         // testing out this filter method for the hard set.
@@ -165,66 +176,19 @@ public class DsaProblemsPage(List<CompanyInformation> companies, List<JobApplica
             {
                 mediumSet.Add(problem);
             }
+            else if (problem.Difficulty.ToLower() == "hard")
+            {
+                continue;
+            }
             else
             {
-                AnsiConsole.WriteLine("DsaProblem: Unknown Difficulty");
+                AnsiConsole.WriteLine($"DsaProblem:{problem.Name} has Unknown Difficulty");
             }
         }
-        // incraseing count manually to simulate larger data set
         AnsiConsole.Write(new BarChart()
             .Label("[green]Problems[/]")
-            .AddItem("Easy", easySet.Count + 10, Color.Blue)
-            .AddItem("Medium", mediumSet.Count + 20, Color.Yellow)
-            .AddItem("Hard", hardSet.Count + 14, Color.Green));
+            .AddItem("Easy", easySet.Count, Color.Green)
+            .AddItem("Medium", mediumSet.Count, Color.Yellow)
+            .AddItem("Hard", hardSet.Count, Color.Red));
     }
 }
-
-
-
-
-
-
-//    public static void Main()
-//    {
-//       SetTimer();
-
-//       Console.WriteLine("\nPress the Enter key to exit the application...\n");
-//       Console.WriteLine("The application started at {0:HH:mm:ss.fff}", DateTime.Now);
-//       Console.ReadLine();
-//       aTimer.Stop();
-//       aTimer.Dispose();
-
-//       Console.WriteLine("Terminating the application...");
-//    }
-
-//    private static void SetTimer()
-//    {
-//         // Create a timer with a two second interval.
-//         aTimer = new System.Timers.Timer(2000);
-//         // Hook up the Elapsed event for the timer. 
-//         aTimer.Elapsed += OnTimedEvent;
-//         aTimer.AutoReset = true;
-//         aTimer.Enabled = true;
-//     }
-
-//     private static void OnTimedEvent(Object source, ElapsedEventArgs e)
-//     {
-//         Console.WriteLine("The Elapsed event was raised at {0:HH:mm:ss.fff}",
-//                           e.SignalTime);
-//     }
-
-// The example displays output like the following:
-//       Press the Enter key to exit the application...
-//
-//       The application started at 09:40:29.068
-//       The Elapsed event was raised at 09:40:31.084
-//       The Elapsed event was raised at 09:40:33.100
-//       The Elapsed event was raised at 09:40:35.100
-//       The Elapsed event was raised at 09:40:37.116
-//       The Elapsed event was raised at 09:40:39.116
-//       The Elapsed event was raised at 09:40:41.117
-//       The Elapsed event was raised at 09:40:43.132
-//       The Elapsed event was raised at 09:40:45.133
-//       The Elapsed event was raised at 09:40:47.148
-//
-//       Terminating the application...

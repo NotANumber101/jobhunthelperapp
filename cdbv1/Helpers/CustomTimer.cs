@@ -11,15 +11,16 @@ namespace cdbv1.Helpers
         private int timeAllowance = timeAllowance;
         private static int timeLeft;
         private static int timeElapsed = 0;
-        private static int interval = 1000;
+        // private static int interval = 1000;
         // 10 = 10 seconds
         // private static int timeLeft = timeAllowance;
 
-        public void SolutionTimer()
+        public async Task SolutionTimer()
         {
+
             SetTimer();
+            DisplayTimer();
             Console.WriteLine("\nPress the Enter key to exit the application...\n");
-            Console.WriteLine($"start: time left: {timeLeft}");
             StopTimer();
         }
         private static void StopTimer()
@@ -28,49 +29,72 @@ namespace cdbv1.Helpers
             aTimer.Stop();
             aTimer.Dispose();
             manualStop = true;
+
+            AnsiConsole.Clear();
             Console.WriteLine("Terminating the application...");
         }
         private static void SetTimer()
         {
-            int tenSecondInterval = 10000;
-            // Create a timer with a two second interval.
+            int interval = 1000;
+            // Create a timer with a 1 second interval.
             aTimer = new System.Timers.Timer(interval);
+
+
 
             // Hook up the Elapsed event for the timer. 
             aTimer.Elapsed += OnTimedEvent;
+            timeLeft -= interval;
             aTimer.AutoReset = true;
             aTimer.Enabled = true;
+            
         }
         private static void OnTimedEvent(Object source, ElapsedEventArgs e)
         {
-            AnsiConsole.Progress()
-                .Start(ctx =>
-                {
-                    var task = ctx.AddTask("Timer started...", maxValue: 10000);
-                    while (!ctx.IsFinished && !manualStop)
-                    {
-                        Thread.Sleep(10);
-                        task.Increment(1);
-                    }
-                });
-            if (timeLeft <= 0)
-            {
-                aTimer.Stop();
-                aTimer.Dispose();
-            }
-            else
-            {
-                timeElapsed = timeElapsed + 2;
-                timeLeft = timeLeft - 2;
+            // AnsiConsole.Progress()
+            //     .Start(ctx =>
+            //     {
+            //         var task = ctx.AddTask("Timer started...", maxValue: 10000);
+            //         aTimer.Enabled = true;
+            //         while (!ctx.IsFinished && !manualStop)
+            //         {
+            //             Thread.Sleep(10);
+            //             task.Increment(1);
+            //         }
+            //     });
+            // if (timeLeft <= 0)
+            // {
+            //     aTimer.Stop();
+            //     aTimer.Dispose();
+            // }
+            // else
+            // {
+                timeElapsed = timeElapsed + 1;
+                    Console.ReadKey();
+
                 // Console.WriteLine($"ElapsedTime: {timeElapsed}");
                 // Console.WriteLine($"TimeLeft: {timeLeft}");
-            }
+            // }
         }
-        public int GetTimeLeft()
+        public static void DisplayTimer()
         {
-            return timeLeft;
-        }
+            AnsiConsole.Progress()
+                .StartAsync(async ctx =>
+                {
+                    
+                    var task = ctx.AddTask("Timer started...", maxValue: 100);
 
-        // public void DisplayTimerProgressBar() {}
+                    while (!ctx.IsFinished && !manualStop)
+                    {
+                    
+                        Thread.Sleep(10);
+                        // task.Increment(timeElapsed);
+                        task.Value = timeElapsed;
+                    }
+                    // Console.ReadKey();
+                    // aTimer.Stop();
+                    // aTimer.Dispose();
+                });
+
+        }
     }
 }
