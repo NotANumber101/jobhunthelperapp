@@ -64,7 +64,16 @@ public class DsaProblemsPage(List<CompanyInformation> companies, List<JobApplica
             AnsiConsole.MarkupLine($"[gray]Solve Problems[/]");
 
             IEnumerable<DsaProblem> filteredProblems = DisplaySelectProblemFilter();
-            DisplayProblemsTable(filteredProblems, true);
+
+            if (AnsiConsole.Confirm("Stale only?"))
+            {
+                AnsiConsole.Clear();
+                DisplayProblemsTable(filteredProblems, true);
+            } else
+            {
+                AnsiConsole.Clear();
+                DisplayProblemsTable(filteredProblems, false);
+            }
 
             // if (AnsiConsole.Confirm("Start timer?"))
             // {
@@ -101,14 +110,15 @@ public class DsaProblemsPage(List<CompanyInformation> companies, List<JobApplica
                 }
                 Console.WriteLine($"{problem.Name} IS STALE");
 
-            } else
+            }
+            else
             {
-                            problemsTable.AddRow(
-                problem.Name,
-                problem.Difficulty,
-                problem.Topic,
-                problem.DateCompleted.ToString()
-            );
+                problemsTable.AddRow(
+    problem.Name,
+    problem.Difficulty,
+    problem.Topic,
+    problem.DateCompleted.ToString()
+);
             }
 
         }

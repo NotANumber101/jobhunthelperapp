@@ -78,14 +78,14 @@ INSERT INTO dsa_problem (name, description, difficulty, topic, date_completed)
   VALUES ('two sum', 'given an array of integers and a target integer, return the indices of the two numbers that add up to the target',
   'easy', 'array', '4-10-2026');
 
-INSERT INTO dsa_problem (name, description, difficulty, topic)
+INSERT INTO dsa_problem (name, description, difficulty, topic, date_completed)
   VALUES ('Group Anagrams', 'Given an array of strings strs, group all anagrams together into sublists. You may return the output in any order. An anagram is a string that contains the exact same characters as another string, but the order of the characters can be different.',
-  'medium',
-  'array'
+  'medium', 'array', '3-20-2026'
 );
 
-INSERT INTO dsa_problem (name, description, difficulty, topic)
-  VALUES ('Top K Frequent Elements', 'Given an integer array nums and an integer k, return the k most frequent elements within the array. The test cases are generated such that the answer is always unique. You may return the output in any order.', 'medium', 'array');
+INSERT INTO dsa_problem (name, description, difficulty, topic, date_completed)
+  VALUES ('Top K Frequent Elements', 'Given an integer array nums and an integer k, return the k most frequent elements within the array. The test cases are generated such that the answer is always unique. You may return the output in any order.',
+  'medium', 'array', '3-20-2026');
 
 
 INSERT INTO dsa_problem (name, description, difficulty, topic)
@@ -114,47 +114,40 @@ strs2 in Machine 2 should be the same as strs in Machine 1.
 Implement the encode and decode methods.', 'medium', 'array');
 
 
-INSERT INTO dsa_problem (name, description, difficulty, topic)
+INSERT INTO dsa_problem (name, description, difficulty, topic, date_completed)
   VALUES ('Product Of Array Except Self',
   'Given an integer array nums, return an array output where output[i] is the product of all the elements of nums except nums[i]. 
-  Each product is guaranteed to fit in a 32-bit integer.', 'medium', 'array');
+  Each product is guaranteed to fit in a 32-bit integer.', 'medium', 'array', '3-20-2026');
 
-INSERT INTO dsa_problem (name, description, difficulty, topic)
+INSERT INTO dsa_problem (name, description, difficulty, topic, date_completed)
   VALUES ('Longest Consecutive Sequence', 'Given an array of integers nums, return the length of the longest consecutive sequence of elements that can be formed. 
 A consecutive sequence is a sequence of elements in which each element is exactly 1 greater than the previous element. The elements do not have to be consecutive in the original array.',
-'medium',
-'array');
+'medium', 'array', '3-20-2026');
 
 -- two pointers
 
-INSERT INTO dsa_problem (name, description, difficulty, topic)
-  VALUES ('Valid Palindrome', 'Given a string s, return true if it is a palindrome, otherwise return false.
+INSERT INTO dsa_problem (name, description, difficulty, topic, date_completed)
+  VALUES ('Valid Palindrome', 'Given a string s, return true if it is a palindrome, otherwise return false. A palindrome is a string that reads the same forward and backward. It is also case-insensitive and ignores all non-alphanumeric characters. Note: Alphanumeric characters consist of letters (A-Z, a-z) and numbers (0-9).',
+  'easy', 'two pointers', '3-20-2026');
 
-A palindrome is a string that reads the same forward and backward. It is also case-insensitive and ignores all non-alphanumeric characters.
+INSERT INTO dsa_problem (name, description, difficulty, topic, date_completed)
+  VALUES ('3 Sum', 'Given an integer array nums, return all the triplets [nums[i], nums[j], nums[k]] where nums[i] + nums[j] + nums[k] == 0, and the indices i, j and k are all distinct. The output should not contain any duplicate triplets. You may return the output and the triplets in any order.',
+'medium', 'two pointers', '3-20-2026');
 
-Note: Alphanumeric characters consist of letters (A-Z, a-z) and numbers (0-9).', 'easy', 'two pointers');
-
-INSERT INTO dsa_problem (name, description, difficulty, topic)
-  VALUES ('3 Sum', 'Given an integer array nums, return all the triplets [nums[i], nums[j], nums[k]] where nums[i] + nums[j] + nums[k] == 0, and the indices i, j and k are all distinct.
-
-The output should not contain any duplicate triplets. You may return the output and the triplets in any order.', 'medium', 'two pointers');
-
-INSERT INTO dsa_problem (name, description, difficulty, topic)
-  VALUES ('Container With Most Water', 'You are given an integer array heights where heights[i] represents the height of the 
-ith bar.
-
-You may choose any two bars to form a container. Return the maximum amount of water a container can store.', 'medium', 'two pointers');
+INSERT INTO dsa_problem (name, description, difficulty, topic, date_completed)
+  VALUES ('Container With Most Water', 'You are given an integer array heights where heights[i] represents the height of the ith bar. You may choose any two bars to form a container. Return the maximum amount of water a container can store.',
+  'medium', 'two pointers', '3-20-2026');
 
 -- sliding window
-INSERT INTO dsa_problem (name, description, difficulty, topic)
-  VALUES ('Best Time to Buy And Sell Stock', 'test', 'easy', 'sliding window');
-INSERT INTO dsa_problem (name, description, difficulty, topic)
-  VALUES ('Longest Substring Without Repeating Characters', 'test', 'medium', 'sliding window');
-INSERT INTO dsa_problem (name, description, difficulty, topic)
-  VALUES ('Longest Repeating Character Replacement', 'test', 'medium', 'sliding window');
-INSERT INTO dsa_problem (name, description, difficulty, topic)
-  VALUES ('Minimum Window Substring',
-  'Given two strings s and t, return the shortest substring of s such that every character in t, including duplicates, is present in the substring. If such a substring does not exist, return an empty string. You may assume that the correct output is always unique.', 'hard', 'sliding window');
+INSERT INTO dsa_problem (name, description, difficulty, topic, date_completed)
+  VALUES ('Best Time to Buy And Sell Stock', 'test', 'easy', 'sliding window', '3-20-2026');
+INSERT INTO dsa_problem (name, description, difficulty, topic, date_completed)
+  VALUES ('Longest Substring Without Repeating Characters', 'test', 'medium', 'sliding window', '3-20-2026');
+INSERT INTO dsa_problem (name, description, difficulty, topic, date_completed)
+  VALUES ('Longest Repeating Character Replacement', 'test', 'medium', 'sliding window', '3-20-2026');
+INSERT INTO dsa_problem (name, description, difficulty, topic, date_completed)
+  VALUES ('Minimum Window Substring', 'Given two strings s and t, return the shortest substring of s such that every character in t, including duplicates, is present in the substring. If such a substring does not exist, return an empty string. You may assume that the correct output is always unique.',
+  'hard', 'sliding window', '3-20-2026');
 
 -- stack
 
@@ -177,18 +170,18 @@ INSERT INTO dsa_problem (name, description, difficulty, topic)
 
 -- linked list
  
-INSERT INTO dsa_problem (name, description, difficulty, topic)
-  VALUES ('Reverse Linked List', 'test', 'easy', 'linked list');
-INSERT INTO dsa_problem (name, description, difficulty, topic)
-  VALUES ('Merge Two Sorted Lists', 'test', 'easy', 'linked list');
-INSERT INTO dsa_problem (name, description, difficulty, topic)
-  VALUES ('Linked List Cycle', 'test', 'easy', 'linked list');
-INSERT INTO dsa_problem (name, description, difficulty, topic)
-  VALUES ('Reorder List', 'test', 'medium', 'linked list');
-INSERT INTO dsa_problem (name, description, difficulty, topic)
-  VALUES ('Remove Node From End of Linked List', 'test', 'medium', 'linked list');
-INSERT INTO dsa_problem (name, description, difficulty, topic)
-  VALUES ('Merge K Sorted Lists', 'test', 'hard', 'linked list');
+INSERT INTO dsa_problem (name, description, difficulty, topic, date_completed)
+  VALUES ('Reverse Linked List', 'test', 'easy', 'linked list', '3-20-2026');
+INSERT INTO dsa_problem (name, description, difficulty, topic, date_completed)
+  VALUES ('Merge Two Sorted Lists', 'test', 'easy', 'linked list', '3-20-2026');
+INSERT INTO dsa_problem (name, description, difficulty, topic, date_completed)
+  VALUES ('Linked List Cycle', 'test', 'easy', 'linked list', '3-20-2026');
+INSERT INTO dsa_problem (name, description, difficulty, topic, date_completed)
+  VALUES ('Reorder List', 'test', 'medium', 'linked list', '3-20-2026');
+INSERT INTO dsa_problem (name, description, difficulty, topic, date_completed)
+  VALUES ('Remove Node From End of Linked List', 'test', 'medium', 'linked list', '3-20-2026');
+INSERT INTO dsa_problem (name, description, difficulty, topic, date_completed)
+  VALUES ('Merge K Sorted Lists', 'test', 'hard', 'linked list', '3-20-2026');
 
 -- tree
 -- INSERT INTO dsa_problem (name, description, difficulty, topic) VALUES ('test', 'test', 'easy', 'tree');
