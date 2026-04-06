@@ -47,7 +47,7 @@ CREATE TABLE dsa_problem (
   description TEXT,
   difficulty VARCHAR(10),
   topic VARCHAR(40),
-  date_completed DATE NOT NULL DEFAULT CURRENT_DATE
+  date_completed DATE NOT NULL DEFAULT '3-20-2026'
 );
 
 CREATE TABLE dsa_solution (
@@ -185,24 +185,24 @@ INSERT INTO dsa_problem (name, description, difficulty, topic, date_completed)
 
 -- tree
 -- INSERT INTO dsa_problem (name, description, difficulty, topic) VALUES ('test', 'test', 'easy', 'tree');
-INSERT INTO dsa_problem (name, description, difficulty, topic) VALUES ('Invert Binary Tree', 'test', 'easy', 'tree');
+INSERT INTO dsa_problem (name, description, difficulty, topic, date_completed) VALUES ('Invert Binary Tree', 'test', 'easy', 'tree', '3-20-2026');
 INSERT INTO dsa_problem (name, description, difficulty, topic) VALUES ('Maximum Depth of Binary Tree', 'test', 'easy', 'tree');
-INSERT INTO dsa_problem (name, description, difficulty, topic) VALUES ('Same Tree', 'test', 'easy', 'tree');
-INSERT INTO dsa_problem (name, description, difficulty, topic) VALUES ('Subtree of Another Tree', 'test', 'easy', 'tree');
-INSERT INTO dsa_problem (name, description, difficulty, topic) VALUES ('Lowest Common Ancestor of a Binary Search Tree', 'test', 'easy', 'tree');
-INSERT INTO dsa_problem (name, description, difficulty, topic) VALUES ('Binary Tree Level Order Traversal', 'test', 'easy', 'tree');
+INSERT INTO dsa_problem (name, description, difficulty, topic, date_completed) VALUES ('Same Tree', 'test', 'easy', 'tree', '4-4-2026');
+INSERT INTO dsa_problem (name, description, difficulty, topic, date_completed) VALUES ('Subtree of Another Tree', 'test', 'easy', 'tree', '4-4-2026');
+INSERT INTO dsa_problem (name, description, difficulty, topic, date_completed) VALUES ('Lowest Common Ancestor of a Binary Search Tree', 'test', 'easy', 'tree', '3-20-2026');
+INSERT INTO dsa_problem (name, description, difficulty, topic, date_completed) VALUES ('Binary Tree Level Order Traversal', 'test', 'easy', 'tree', '3-20-2026');
 INSERT INTO dsa_problem (name, description, difficulty, topic) VALUES ('Validate Binary Search Tree', 'test', 'easy', 'tree');
-INSERT INTO dsa_problem (name, description, difficulty, topic) VALUES ('Kth Smallest Element In a Bst', 'test', 'easy', 'tree');
-INSERT INTO dsa_problem (name, description, difficulty, topic) VALUES ('Construct Binary Tree From Preorder And Inorder Traversal', 'test', 'easy', 'tree');
+INSERT INTO dsa_problem (name, description, difficulty, topic, date_completed) VALUES ('Kth Smallest Element In a Bst', 'test', 'easy', 'tree', '4-4-2026');
+INSERT INTO dsa_problem (name, description, difficulty, topic, date_completed) VALUES ('Construct Binary Tree From Preorder And Inorder Traversal', 'test', 'easy', 'tree', '3-20-2026');
 INSERT INTO dsa_problem (name, description, difficulty, topic) VALUES ('Binary Tree Maximum Path Sum', 'test', 'easy', 'tree');
 INSERT INTO dsa_problem (name, description, difficulty, topic) VALUES ('Serialize And Deserialize Binary Tree', 'test', 'easy', 'tree');
 
 -- heap/priority queue
-INSERT INTO dsa_problem (name, description, difficulty, topic) VALUES ('Find Median From Data Stream', 'test', 'hard', 'heap');
+INSERT INTO dsa_problem (name, description, difficulty, topic, date_completed) VALUES ('Find Median From Data Stream', 'test', 'hard', 'heap', '3-20-2026');
 
 -- backtracking
-INSERT INTO dsa_problem (name, description, difficulty, topic) VALUES ('Combination Sum', 'test', 'medium', 'backtracking');
-INSERT INTO dsa_problem (name, description, difficulty, topic) VALUES ('Word Search', 'test', 'medium', 'backtracking');
+INSERT INTO dsa_problem (name, description, difficulty, topic, date_completed) VALUES ('Combination Sum', 'test', 'medium', 'backtracking', '3-20-2026');
+INSERT INTO dsa_problem (name, description, difficulty, topic, date_completed) VALUES ('Word Search', 'test', 'medium', 'backtracking', '3-20-2026');
 
 -- tries
 INSERT INTO dsa_problem (name, description, difficulty, topic) VALUES ('Implement Trie Prefix Tree', 'test', 'medium', 'tries');

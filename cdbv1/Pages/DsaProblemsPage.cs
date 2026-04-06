@@ -26,20 +26,13 @@ public class DsaProblemsPage(List<CompanyInformation> companies, List<JobApplica
     private async Task NavigateDsaProblemsPage()
     {
         AnsiConsole.Clear();
-        var pageOptions = new List<string> { "Add New Problem", "View Problems", "Solve Problem", "Main Menu" };
+        var pageOptions = new List<string> {"View Problems", "Solve Problem", "Main Menu" };
         var pageChoice = AnsiConsole.Prompt(
             new SelectionPrompt<string>()
                 .Title("Select a page to view:")
                 .PageSize(10)
                 .AddChoices(pageOptions));
-
-        if (pageChoice == "Add New Problem")
-        {
-            AnsiConsole.MarkupLine($"[gray]Add New Problem[/]");
-            AnsiConsole.MarkupLine($"[gray]Coming soon...[/]");
-
-        }
-        else if (pageChoice == "View Problems")
+        if (pageChoice == "View Problems")
         {
 
             AnsiConsole.MarkupLine($"[gray]View Problems[/]");
@@ -64,7 +57,10 @@ public class DsaProblemsPage(List<CompanyInformation> companies, List<JobApplica
             {
                 AnsiConsole.Clear();
                 AnsiConsole.MarkupLine("[red] Starting... new problem[/]");
-                Console.WriteLine("Enter solution algorithm: ");
+                Console.WriteLine("Please enter Problem Name");
+                string pName = Console.ReadLine();
+                Console.WriteLine($"Problem Name: {pName}");
+                Console.WriteLine("Please enter your solutuion aglorithm");
                 string solution = Console.ReadLine();
                 Console.WriteLine($"solution: {solution}");
                 // TODO: Create solution db, insert new solution with current date/time
@@ -79,7 +75,7 @@ public class DsaProblemsPage(List<CompanyInformation> companies, List<JobApplica
             else
             {
                 await NavigateDsaProblemsPage();
-                AnsiConsole.MarkupLine("[red] returning to problem selection tool");
+                AnsiConsole.MarkupLine("[red]returning to problem selection tool...");
             }
         }
         else if (pageChoice == "Main Menu")
@@ -123,9 +119,6 @@ public class DsaProblemsPage(List<CompanyInformation> companies, List<JobApplica
     private bool IsStale(DsaProblem problem)
     {
         DateTime thisDay = DateTime.Today;
-        Console.WriteLine($"Today is: {thisDay}");
-        Console.WriteLine($"TIME: {problem.Name} has not been completed in ");
-        Console.WriteLine($"TIME: {(problem.DateCompleted - thisDay).TotalDays}");
         if (problem != null)
         {
             if ((problem.DateCompleted - thisDay).TotalDays < -14)
