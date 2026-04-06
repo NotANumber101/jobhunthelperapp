@@ -59,44 +59,43 @@ public class DsaProblemsPage(List<CompanyInformation> companies, List<JobApplica
 
             AnsiConsole.MarkupLine($"[gray]View Problems[/]");
             DisplayProblemsBarChart();
-            DisplayProblemsTable();
+            DisplayProblemsTable(dsaProblems);
         }
         else if (pageChoice == "Solve Problem")
         {
             AnsiConsole.MarkupLine($"[gray]Solve Problems[/]");
 
             IEnumerable<DsaProblem> problems = SelectProblemFilter();
-            foreach (var problem in problems)
-            {
-                AnsiConsole.MarkupLine($"[blue]Problem: {problem.Name}[/]");
-                AnsiConsole.MarkupLine($"[blue]{problem.Description}[/]");
-            }
-            AnsiConsole.MarkupLine("[red]Timer: 10m[/]");
+            DisplayProblemsTable(problems);
 
-            // timer
-            int tenMinute = 60000 * 10;
-            // CustomTimer timer = new CustomTimer(tenMinute);
-            // aTimer = new CustomTimer(tenMinute);
-            if (AnsiConsole.Confirm("Start timer?"))
-            {
-                AnsiConsole.Clear();
-                // AnsiConsole.MarkupLine($"[blue]{.Description}[/]");
-                aTimer.SolutionTimer();
-            }
+            // if (AnsiConsole.Confirm("Start timer?"))
+            // {
+            //     AnsiConsole.Clear();
+            //     // AnsiConsole.MarkupLine($"[blue]{.Description}[/]");
+            //     aTimer.SolutionTimer();
+            // }
         }
         else if (pageChoice == "Main Menu")
         {
             ReturnToMainMenu();
         }
     }
-    private void DisplayProblemsTable()
+    private void GetProblemTopics()
+    {
+        
+    }
+    private void DisplayProblemsTable(IEnumerable<DsaProblem> problems)
     {
         var problemsTable = new Table().ShowRowSeparators();
         problemsTable.AddColumn("Name");
-        foreach (var problem in dsaProblems)
+        problemsTable.AddColumn("Difficulty");
+        problemsTable.AddColumn("Topic");
+        foreach (var problem in problems)
         {
             problemsTable.AddRow(
-                problem.Name
+                problem.Name,
+                problem.Difficulty,
+                problem.Topic
             );
         }
         AnsiConsole.Write(problemsTable);
@@ -113,7 +112,10 @@ public class DsaProblemsPage(List<CompanyInformation> companies, List<JobApplica
         // option: select completed with in certain time window
 
         // TODO: multi select
-        var topicFilterOptions = new List<string> { "string", "array", "graph", "random" };
+        var topicFilterOptions = new List<string> { "string", "array", "two pointers",
+        "sliding window", "stack", "binary search", "linked list",
+        "tree", "heap", "backtracking", "tries", "graphs", "1D dynamic programming",
+        "2D dynamic programming", "greedy", "intervals", "math and geometry", "bit manipulation"};
         var topicFilterSelected = AnsiConsole.Prompt(
             new SelectionPrompt<string>()
                 .Title("Select topic")
