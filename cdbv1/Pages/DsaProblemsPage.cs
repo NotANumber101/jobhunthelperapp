@@ -7,38 +7,25 @@ using cdbv1.Helpers;
 
 public class DsaProblemsPage(List<CompanyInformation> companies, List<JobApplication> jobApplications, List<DsaProblem> dsaProblems)
 {
-    // private static System.Timers.Timer aTimer;
-    private static CustomTimer aTimer = new CustomTimer(100);
-
-
-    public void Display()
+    // private static CustomTimer aTimer = new CustomTimer(100);
+    public async Task Display()
     {
         AnsiConsole.MarkupLine($"[gray]DSA Problems[/]");
-        // todo: multiselect -> breakdown problems by a. diffuclty b. type. attempted/notattempted
-        NavigateDsaProblemsPage();
+        await NavigateDsaProblemsPage();
     }
     private IEnumerable<DsaProblem> FilterProblems(string difficultyIso, string topicIso)
     {
-        // Specify the data source.
-        // int[] scores = [97, 92, 81, 60];
-
-        // Define the query expression.
         IEnumerable<DsaProblem> problemQuery =
             from problem in dsaProblems
             where problem.Difficulty == difficultyIso
             where problem.Topic == topicIso
             select problem;
 
-        // Execute the query.
-        // foreach (var p in problemQuery)
-        // {
-
-        // }
         return problemQuery;
-        // return resultList;
     }
     private async Task NavigateDsaProblemsPage()
     {
+        AnsiConsole.Clear();
         var pageOptions = new List<string> { "Add New Problem", "View Problems", "Solve Problem", "Main Menu" };
         var pageChoice = AnsiConsole.Prompt(
             new SelectionPrompt<string>()
@@ -67,20 +54,33 @@ public class DsaProblemsPage(List<CompanyInformation> companies, List<JobApplica
 
             if (AnsiConsole.Confirm("Stale only?"))
             {
-                AnsiConsole.Clear();
                 DisplayProblemsTable(filteredProblems, true);
-            } else
+            }
+            else
             {
-                AnsiConsole.Clear();
                 DisplayProblemsTable(filteredProblems, false);
             }
-
-            // if (AnsiConsole.Confirm("Start timer?"))
-            // {
-            //     AnsiConsole.Clear();
-            //     // AnsiConsole.MarkupLine($"[blue]{.Description}[/]");
-            //     aTimer.SolutionTimer();
-            // }
+            if (AnsiConsole.Confirm("Ready?"))
+            {
+                AnsiConsole.Clear();
+                AnsiConsole.MarkupLine("[red] Starting... new problem[/]");
+                Console.WriteLine("Enter solution algorithm: ");
+                string solution = Console.ReadLine();
+                Console.WriteLine($"solution: {solution}");
+                // TODO: Create solution db, insert new solution with current date/time
+                ///////////// TIMER /////////////
+                // if (AnsiConsole.Confirm("Start timer?"))
+                // {
+                //     AnsiConsole.Clear();
+                //     // AnsiConsole.MarkupLine($"[blue]{.Description}[/]");
+                //     aTimer.SolutionTimer();
+                // }
+            }
+            else
+            {
+                await NavigateDsaProblemsPage();
+                AnsiConsole.MarkupLine("[red] returning to problem selection tool");
+            }
         }
         else if (pageChoice == "Main Menu")
         {
@@ -100,7 +100,6 @@ public class DsaProblemsPage(List<CompanyInformation> companies, List<JobApplica
             {
                 if (IsStale(problem))
                 {
-
                     problemsTable.AddRow(
                         problem.Name,
                         problem.Difficulty,
@@ -108,19 +107,16 @@ public class DsaProblemsPage(List<CompanyInformation> companies, List<JobApplica
                         problem.DateCompleted.ToString()
                     );
                 }
-                Console.WriteLine($"{problem.Name} IS STALE");
-
             }
             else
             {
                 problemsTable.AddRow(
-    problem.Name,
-    problem.Difficulty,
-    problem.Topic,
-    problem.DateCompleted.ToString()
-);
+                    problem.Name,
+                    problem.Difficulty,
+                    problem.Topic,
+                    problem.DateCompleted.ToString()
+                );
             }
-
         }
         AnsiConsole.Write(problemsTable);
     }
@@ -141,18 +137,13 @@ public class DsaProblemsPage(List<CompanyInformation> companies, List<JobApplica
     }
     private IEnumerable<DsaProblem> DisplaySelectProblemFilter()
     {
-        // ask user input: stale only? 
-        // filter 
-
         var difficultyFilterOptions = new List<string> { "easy", "medium", "hard" };
         var difficultyFilterSelected = AnsiConsole.Prompt(
             new SelectionPrompt<string>()
                 .Title("Select difficulty")
                 .PageSize(10)
                 .AddChoices(difficultyFilterOptions));
-
         // option: select completed with in certain time window
-
         // TODO: multi select
         var topicFilterOptions = new List<string> { "string", "array", "two pointers",
         "sliding window", "stack", "binary search", "linked list",
@@ -176,7 +167,6 @@ public class DsaProblemsPage(List<CompanyInformation> companies, List<JobApplica
             AnsiConsole.MarkupLine("[gray]Returning to main menu...[/]");
             MainMenuPage mainMenuPage = new MainMenuPage(companies, jobApplications, dsaProblems);
             mainMenuPage.Display();
-
         }
     }
     private List<DsaProblem> FilterProblemSetByDifficulty(string diffuclty)
@@ -197,7 +187,6 @@ public class DsaProblemsPage(List<CompanyInformation> companies, List<JobApplica
                 }
             }
         }
-
         return difficultSet;
     }
     private void DisplayProblemsBarChart()
