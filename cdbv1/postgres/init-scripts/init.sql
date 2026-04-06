@@ -72,7 +72,7 @@ INSERT INTO dsa_problem (name, description, difficulty, topic, date_completed)
 
 INSERT INTO dsa_problem (name, description, difficulty, topic, date_completed)
   VALUES ('Valid Anagram', 'Given two strings s and t, return true if the two strings are anagrams of each other, otherwise return false. An anagram is a string that contains the exact same characters as another string, but the order of the characters can be different.',
-  'easy', 'array', '4-4-2026');
+  'easy', 'array', '3-20-2026');
 
 INSERT INTO dsa_problem (name, description, difficulty, topic, date_completed)
   VALUES ('two sum', 'given an array of integers and a target integer, return the indices of the two numbers that add up to the target',
