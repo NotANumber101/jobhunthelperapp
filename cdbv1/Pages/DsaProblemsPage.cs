@@ -6,10 +6,8 @@ using cdbv1.Helpers;
 using Npgsql;
 using Microsoft.Extensions.Logging;
 
-using cdbv1.Pages;
 namespace cdbv1.Pages;
 
-// public class DsaProblemsPage(List<CompanyInformation> companies, List<JobApplication> jobApplications, List<DsaProblem> dsaProblems)
 public class DsaProblemsPage() : Page
 
 {
@@ -107,44 +105,60 @@ public class DsaProblemsPage() : Page
     }
     private async Task GetAllDsaProblems()
     {
-        DbInfoController dbIc = new();
-        var dbsb = new DbSourceBuilder("localhost");
-        await using var dataSource = dbsb.Builder().Build();
-        AnsiConsole.MarkupLine("[gray]Fetching data...[/]");
-        AnsiConsole.MarkupLine("    -> [gray]Fetching dsa_problems...[/]");
-        await using (var cmd = dataSource.CreateCommand("SELECT * FROM dsa_problem"))
-        await using (var reader = await cmd.ExecuteReaderAsync())
-            while (await reader.ReadAsync())
-            {
-                DsaProblem dsaProblem = new(
-                    reader.GetInt32(0), reader.GetString(1),
-                    reader.GetString(2), reader.GetString(3),
-                    reader.GetString(4), reader.GetDateTime(5)
-                );
-                dsaProblems.Add(dsaProblem);
-            }
-        AnsiConsole.MarkupLine($"        -> [green]Done. {dsaProblems.Count}[/]");
+        try
+        {
+            DbInfoController dbIc = new();
+            var dbsb = new DbSourceBuilder("localhost");
+            await using var dataSource = dbsb.Builder().Build();
+            AnsiConsole.MarkupLine("[gray]Fetching data...[/]");
+            AnsiConsole.MarkupLine("    -> [gray]Fetching dsa_problems...[/]");
+            await using (var cmd = dataSource.CreateCommand("SELECT * FROM dsa_problem"))
+            await using (var reader = await cmd.ExecuteReaderAsync())
+                while (await reader.ReadAsync())
+                {
+                    DsaProblem dsaProblem = new(
+                        reader.GetInt32(0), reader.GetString(1),
+                        reader.GetString(2), reader.GetString(3),
+                        reader.GetString(4), reader.GetDateTime(5)
+                    );
+                    dsaProblems.Add(dsaProblem);
+                }
+            AnsiConsole.MarkupLine($"        -> [green]Done. {dsaProblems.Count}[/]");
+        }
+        catch (NpgsqlException e)
+        {
+            Console.WriteLine(e.Message);
+        }
+
     }
     private async Task CreateNewSolution(int problemId, string solution)
     {
-        DbInfoController dbIc = new();
-        var dbsb = new DbSourceBuilder("localhost");
-        await using var dataSource = dbsb.Builder().Build();
-        AnsiConsole.MarkupLine("[gray]Inserting data...[/]");
-        AnsiConsole.MarkupLine("    -> [gray]Inserting new solution...[/]");
-        await using var connection = await dataSource.OpenConnectionAsync();
-        await using var transaction = await connection.BeginTransactionAsync();
+        try
+        {
+            DbInfoController dbIc = new();
+            var dbsb = new DbSourceBuilder("localhost");
+            await using var dataSource = dbsb.Builder().Build();
+            AnsiConsole.MarkupLine("[gray]Inserting data...[/]");
+            AnsiConsole.MarkupLine("    -> [gray]Inserting new solution...[/]");
+            await using var connection = await dataSource.OpenConnectionAsync();
+            await using var transaction = await connection.BeginTransactionAsync();
 
-        DateOnly today = DateOnly.FromDateTime(DateTime.Now);
-        // await using var command1 = new NpgsqlCommand($"INSERT INTO dsa_solution (problem_id, solution, date_completed) VALUES ({problemId}, '{solution}', '{today}');", connection, transaction);
-        await using var command1 = new NpgsqlCommand(dbIc.CreateNewDsaSolution(problemId, solution), connection, transaction);
-        await command1.ExecuteNonQueryAsync();
-        // var cmd = new NpgsqlCommand("UPDATE foo SET bar=@bar WHERE baz=@baz; UPDATE foo SET bar=@bar WHERE baz=@baz");
-        await using var command2 = new NpgsqlCommand(dbIc.UpdateDsaProblemDateCompletedTodayId(problemId), connection, transaction);
-        await command2.ExecuteNonQueryAsync();
+            DateOnly today = DateOnly.FromDateTime(DateTime.Now);
+            // await using var command1 = new NpgsqlCommand($"INSERT INTO dsa_solution (problem_id, solution, date_completed) VALUES ({problemId}, '{solution}', '{today}');", connection, transaction);
+            await using var command1 = new NpgsqlCommand(dbIc.CreateNewDsaSolution(problemId, solution), connection, transaction);
+            await command1.ExecuteNonQueryAsync();
+            // var cmd = new NpgsqlCommand("UPDATE foo SET bar=@bar WHERE baz=@baz; UPDATE foo SET bar=@bar WHERE baz=@baz");
+            await using var command2 = new NpgsqlCommand(dbIc.UpdateDsaProblemDateCompletedTodayId(problemId), connection, transaction);
+            await command2.ExecuteNonQueryAsync();
 
-        await transaction.CommitAsync();
-        AnsiConsole.MarkupLine($"        -> [green]Done.[/][gray]ProblemId:{problemId} has new solution.[/]");
+            await transaction.CommitAsync();
+            AnsiConsole.MarkupLine($"        -> [green]Done.[/][gray]ProblemId:{problemId} has new solution.[/]");
+        }
+        catch (NpgsqlException e)
+        {
+            Console.WriteLine(e.Message);
+        }
+
     }
     private void DisplayProblemsTable(IEnumerable<DsaProblem> problems, bool staleOnly)
     {

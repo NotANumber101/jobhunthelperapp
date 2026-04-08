@@ -4,8 +4,9 @@ using Spectre;
 using Spectre.Console;
 using cdbv1;
 using cdbv1.Helpers;
-namespace cdbv1.Pages;
+using Npgsql;
 
+namespace cdbv1.Pages;
 public class ApplicationsPage() : Page
 {
     private List<CompanyInformation> companies = [];
@@ -34,46 +35,61 @@ public class ApplicationsPage() : Page
     // }
     private async Task GetAllCompanies()
     {
-        DbInfoController dbIc = new();
-        var dbsb = new DbSourceBuilder("localhost");
-        await using var dataSource = dbsb.Builder().Build();
-        AnsiConsole.MarkupLine("[gray]Fetching data...[/]");
-        AnsiConsole.MarkupLine("    -> [gray]Fetching company_information...[/]");
-        await using (var cmd = dataSource.CreateCommand("SELECT * FROM company_information"))
-        await using (var reader = await cmd.ExecuteReaderAsync())
-            while (await reader.ReadAsync())
-            {
-                var company = new CompanyInformation()
+        try
+        {
+            DbInfoController dbIc = new();
+            var dbsb = new DbSourceBuilder("localhost");
+            await using var dataSource = dbsb.Builder().Build();
+            AnsiConsole.MarkupLine("[gray]Fetching data...[/]");
+            AnsiConsole.MarkupLine("    -> [gray]Fetching company_information...[/]");
+            await using (var cmd = dataSource.CreateCommand("SELECT * FROM company_information"))
+            await using (var reader = await cmd.ExecuteReaderAsync())
+                while (await reader.ReadAsync())
                 {
-                    Id = reader.GetInt32(0),
-                    Name = reader.GetString(1),
-                    Description = reader.GetString(2),
-                    JobBoardLink = reader.GetString(3)
-                };
-                companies.Add(company);
-            }
-        AnsiConsole.MarkupLine($"        -> [green]Done. {companies.Count}[/]");
+                    var company = new CompanyInformation()
+                    {
+                        Id = reader.GetInt32(0),
+                        Name = reader.GetString(1),
+                        Description = reader.GetString(2),
+                        JobBoardLink = reader.GetString(3)
+                    };
+                    companies.Add(company);
+                }
+            AnsiConsole.MarkupLine($"        -> [green]Done. {companies.Count}[/]");
+        }
+        catch (NpgsqlException e)
+        {
+            Console.WriteLine(e.Message);
+        }
+
     }
 
     private async Task GetAllApplications()
     {
-        DbInfoController dbIc = new();
-        var dbsb = new DbSourceBuilder("localhost");
-        await using var dataSource = dbsb.Builder().Build();
-        AnsiConsole.MarkupLine("    -> [gray]Fetching job_applications...[/]");
-        await using (var cmd = dataSource.CreateCommand("SELECT * FROM application"))
-        await using (var reader = await cmd.ExecuteReaderAsync())
-            while (await reader.ReadAsync())
-            {
-                JobApplication jobApp = new(
-                    reader.GetInt32(0), reader.GetInt32(1),
-                    reader.GetString(2), reader.GetString(3),
-                    reader.GetString(4), reader.GetString(5),
-                    reader.GetString(6)
-                );
-                jobApplications.Add(jobApp);
-            }
-        AnsiConsole.MarkupLine($"        -> [green]Done. {jobApplications.Count}[/]");
+        try
+        {
+            DbInfoController dbIc = new();
+            var dbsb = new DbSourceBuilder("localhost");
+            await using var dataSource = dbsb.Builder().Build();
+            AnsiConsole.MarkupLine("    -> [gray]Fetching job_applications...[/]");
+            await using (var cmd = dataSource.CreateCommand("SELECT * FROM application"))
+            await using (var reader = await cmd.ExecuteReaderAsync())
+                while (await reader.ReadAsync())
+                {
+                    JobApplication jobApp = new(
+                        reader.GetInt32(0), reader.GetInt32(1),
+                        reader.GetString(2), reader.GetString(3),
+                        reader.GetString(4), reader.GetString(5),
+                        reader.GetString(6)
+                    );
+                    jobApplications.Add(jobApp);
+                }
+            AnsiConsole.MarkupLine($"        -> [green]Done. {jobApplications.Count}[/]");
+        }
+        catch (NpgsqlException e)
+        {
+            Console.WriteLine(e.Message);
+        }
     }
     private void DisplayCompanyInformationTable()
     {

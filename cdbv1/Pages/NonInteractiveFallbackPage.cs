@@ -1,41 +1,35 @@
 using System;
-using cdbv1.Models;
 using Spectre;
 using Spectre.Console;
 using cdbv1.Helpers;
 using Npgsql;
-using Microsoft.Extensions.Logging;
 
-using cdbv1.Pages;
 namespace cdbv1.Pages;
 
-// public class DsaProblemsPage(List<CompanyInformation> companies, List<JobApplication> jobApplications, List<DsaProblem> dsaProblems)
 public class NonInteractiveFallbackPage() : Page
 
 {
     public async Task Display()
     {
-        DbInfoController dbIc = new();
-        var dbsb = new DbSourceBuilder("db,localhost");
         try
         {
+            DbInfoController dbIc = new();
+            var dbsb = new DbSourceBuilder("db,localhost");
             await using var dataSource = dbsb.Builder().BuildMultiHost();
-            //////////////////////////////////////////////////////////////////////////////////////
-            //////////////////////////////////////////////////////////////////////////////////////
-            ///// Get all database names
+            // Table: Database names
             var databaseNames = new Table().ShowRowSeparators();
             databaseNames.AddColumn("Databases", col => col.Centered());
-            await using (var cmd = dataSource.CreateCommand("SELECT datname FROM pg_database WHERE datistemplate = false;"))
+
+            await using (var cmd = dataSource.CreateCommand(dbIc.GetDbNames()))
             await using (var reader = await cmd.ExecuteReaderAsync())
                 while (await reader.ReadAsync())
                 {
                     databaseNames.AddRow(reader.GetString(0));
                 }
             AnsiConsole.Write(databaseNames);
-            ////////////////////////////////////////////////////////////////////////////////////
-            ////////////////////////////////////////////////////////////////////////////////////
-            /// Get db table names and table fields 
-            var myDbTree = new Tree("job_app database TABLES");
+            
+            // Tree: Table Names
+            var myDbTree = new Tree("Database Tables Tree...");
             await using (var getDbTableNames = dataSource.CreateCommand(dbIc.GetDbTableNamesSql()))
             await using (var tNameReader = await getDbTableNames.ExecuteReaderAsync())
                 while (await tNameReader.ReadAsync())
@@ -55,8 +49,8 @@ public class NonInteractiveFallbackPage() : Page
         {
             Console.WriteLine(e.Message);
         }
-        Console.WriteLine("NON-FATAL ERROR OCCURED: INTERACTIVE MODE IS DISABLED... Exiting...");
+        Console.WriteLine("NON-FATAL ERROR OCCURED: INTERACTIVE MODE IS DISABLED...");
+        Console.WriteLine("Nothing left to do.");
+        Console.WriteLine("Exiting...");
     }
-
-
 }
