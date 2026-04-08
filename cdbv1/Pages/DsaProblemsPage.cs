@@ -9,7 +9,9 @@ using Microsoft.Extensions.Logging;
 using cdbv1.Pages;
 namespace cdbv1.Pages;
 
-public class DsaProblemsPage(List<CompanyInformation> companies, List<JobApplication> jobApplications, List<DsaProblem> dsaProblems)
+// public class DsaProblemsPage(List<CompanyInformation> companies, List<JobApplication> jobApplications, List<DsaProblem> dsaProblems)
+public class DsaProblemsPage(List<CompanyInformation> companies, List<JobApplication> jobApplications, List<DsaProblem> dsaProblems) : Page
+
 {
     public async Task Display()
     {
@@ -28,6 +30,11 @@ public class DsaProblemsPage(List<CompanyInformation> companies, List<JobApplica
     private async Task NavigateDsaProblemsPage()
     {
         AnsiConsole.Clear();
+        HelloWorld();
+        ///////// TODO
+        /// 1. View Solutions page.
+        ///           -> Shows list of all problems, select which one, to load solutions for that problem
+        ///           -> Solutions also show post mortem
         var pageOptions = new List<string> { "View Problems", "Solve Problem", "Main Menu" };
         var pageChoice = AnsiConsole.Prompt(
             new SelectionPrompt<string>()
@@ -60,20 +67,24 @@ public class DsaProblemsPage(List<CompanyInformation> companies, List<JobApplica
                     AnsiConsole.MarkupLine("[red] Starting... new problem[/]");
                     DsaProblem randomProblem = filteredProblems.ElementAt(0);
                     AnsiConsole.MarkupLine($"ProblemID: {randomProblem.Id} | Name: [green]{randomProblem.Name}[/]");
+                    AnsiConsole.MarkupLine($"Difficulty: {randomProblem.Difficulty} | Topic: [green]{randomProblem.Topic}[/]");
                     AnsiConsole.WriteLine("");
                     Console.WriteLine($"Description:{randomProblem.Description}");
                     AnsiConsole.WriteLine("");
                     AnsiConsole.WriteLine("Example:");
                     AnsiConsole.MarkupLine($"[green]Data[/]");
-                    string solution = AnsiConsole.Ask<string>($"[green]Please enter your solution: [/]?");
+                    string solution = AnsiConsole.Ask<string>($"[green]Please enter your solution: [/]");
+                    ////// TODO
+                    /// POST MORTEM
+                    string postmortem = AnsiConsole.Ask<string>($"[green]Postmortem: [/]");
                     try
                     {
-                        
+                        await CreateNewSolution(randomProblem.Id, solution);
                     } catch (NpgsqlException e)
                     {
                         Console.Write(e.Message);
                     }
-                    await CreateNewSolution(randomProblem.Id, solution);
+
                 }
                 else
                 {
@@ -93,18 +104,19 @@ public class DsaProblemsPage(List<CompanyInformation> companies, List<JobApplica
     }
     private async Task CreateNewSolution(int problemId, string solution)
     {
-
-        var connectionString = "Host=localhost;Port=5432;Username=postgres;Password=password;Database=test_db";
-        await using var dataSource = NpgsqlDataSource.Create(connectionString);
+        DbInfoController dbIc = new();
+        var dbsb = new DbSourceBuilder("localhost");
+        await using var dataSource = dbsb.Builder().Build();
 
         await using var connection = await dataSource.OpenConnectionAsync();
         await using var transaction = await connection.BeginTransactionAsync();
 
         DateOnly today = DateOnly.FromDateTime(DateTime.Now);
-        await using var command1 = new NpgsqlCommand($"INSERT INTO dsa_solution (problem_id, solution, date_completed) VALUES ({problemId}, '{solution}', '{today}');", connection, transaction);
+        // await using var command1 = new NpgsqlCommand($"INSERT INTO dsa_solution (problem_id, solution, date_completed) VALUES ({problemId}, '{solution}', '{today}');", connection, transaction);
+        await using var command1 = new NpgsqlCommand(dbIc.CreateNewDsaSolution(problemId, solution), connection, transaction);
         await command1.ExecuteNonQueryAsync();
         // var cmd = new NpgsqlCommand("UPDATE foo SET bar=@bar WHERE baz=@baz; UPDATE foo SET bar=@bar WHERE baz=@baz");
-        await using var command2 = new NpgsqlCommand($"UPDATE dsa_problem SET date_completed='{today}' WHERE id={problemId}", connection, transaction);
+        await using var command2 = new NpgsqlCommand(dbIc.UpdateDsaProblemDateCompletedTodayId(problemId), connection, transaction);
         await command2.ExecuteNonQueryAsync();
 
         await transaction.CommitAsync();

@@ -5,7 +5,8 @@ using System.Text;
 namespace cdbv1.Helpers
 {
     // internal class?
-    public class DbInfoController
+    public class DbInfoController()
+
     {
 
         public string GetDbTableNamesSql()
@@ -21,5 +22,21 @@ namespace cdbv1.Helpers
             + $"WHERE TABLE_NAME = '{tableName}' "
             + "ORDER BY ORDINAL_POSITION;";
         }
+        public string CreateNewDsaSolution(int problemId, string solution)
+        {
+            DateOnly today = DateOnly.FromDateTime(DateTime.Now);
+            return $"INSERT INTO dsa_solution (problem_id, solution, date_completed) VALUES ({problemId}, '{solution}', '{today}');";
+        }
+        public string UpdateDsaProblemDateCompletedTodayId(int problemId)
+        {
+            DateOnly today = DateOnly.FromDateTime(DateTime.Now);
+            return $"UPDATE dsa_problem SET date_completed='{today}' WHERE id={problemId}";
+        }
+        // private async void Connect()
+        // {
+        //     var dbsb = new DbSourceBuilder("db,localhost");
+
+        //     await using var dataSource = dbsb.Builder().BuildMultiHost();
+        // }
     }
 }

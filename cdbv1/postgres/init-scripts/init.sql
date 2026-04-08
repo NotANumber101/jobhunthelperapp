@@ -60,7 +60,14 @@ CREATE TABLE dsa_solution (
 CREATE TABLE dsa_postmortem (
   id SERIAL,
   solution_id INT,
-  explanation TEXT
+  design_time_ms INT,
+  code_time_ms INT,
+  mistakes TEXT,
+  analysis TEXT,
+  rubric_problem_solving_score INT,
+  rubric_coding_score INT,
+  rubric_verification_score INT,
+  rubric_communication_score INT
 );
 
 INSERT INTO dsa_solution (problem_id, solution, date_completed)
