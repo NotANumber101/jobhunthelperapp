@@ -8,46 +8,15 @@ using cdbv1.Pages;
 
 using System;
 
-string host = "db";
-
-if (AnsiConsole.Profile.Capabilities.Interactive)
-{
-    // Open terminal, go to Projects/cdbv1/cdbv1 and run `dotnet run`
-    host = "localhost";
-}
-else
-{
-    // Open docker, go to container and verify tables printed
-    Console.WriteLine("Interactive mode: DISABLED");
-    host = "db";
-}
-
 AsyncPrompt helloWorld = new();
 DbInfoController dbIc = new();
+var dbsb = new DbSourceBuilder("db,localhost");
 
-AnsiConsole.WriteLine($"LOG: Host={host}");
-// var connectionString = $"Host={host};Port=5432;Username=postgres;Password=password;Database=test_db";
-var connectionString = $"Host=db,localhost;Port=5432;Username=postgres;Password=password;Database=test_db";
-
-using ILoggerFactory factory = LoggerFactory.Create(builder => builder.AddConsole());
-var npgsqlDataSourceBuilder = new NpgsqlDataSourceBuilder(connectionString);
-npgsqlDataSourceBuilder
-    .EnableParameterLogging(true);
-// uncomment below to enable logging
-// .UseLoggerFactory(factory);
-
-// DATA SOURCE
-// await using var dataSource = npgsqlDataSourceBuilder.Build();
-await using var dataSource = npgsqlDataSourceBuilder.BuildMultiHost();
-
-
+await using var dataSource = dbsb.Builder().BuildMultiHost();
 // DATA LISTS
 List<CompanyInformation> companies = [];
 List<JobApplication> jobApplications = [];
 List<DsaProblem> dsaProblems = [];
-// set permanent company ids because these companies will always exist on my list of desired companies. Mayaswell reserve ids for them
-// use uniqu
-// spacexId = 999, anduril 888, palantir 777
 
 try
 {
@@ -57,20 +26,7 @@ try
     await using var loggingCommand = new NpgsqlCommand("SELECT 8", connection);
     _ = await loggingCommand.ExecuteScalarAsync();
     AnsiConsole.MarkupLine("Database Connection: [green]OK![/]");
-    // loading all data required now for simplicity(mvp)
-    // TODO: use spinner to visualize fetching data
     AnsiConsole.MarkupLine("[gray]Fetching data...[/]");
-    // TODO: use multiple spinners to visualize fetching data
-    // no matter what order or the speed laoded, just have them complete one by one in order
-
-
-
-    // await using var command = dataSource.CreateCommand("INSERT INTO dsa_solution (solution) VALUES ('fsafgdsgsdgsdgsd')");
-    // await command.ExecuteNonQueryAsync();
-    // Console.WriteLine("EXECUTED");
-
-
-
     //////////////////////////////
     //// COMPANY_INFORMATION ////
     ////////VVVVVVVVVVVV/////////
