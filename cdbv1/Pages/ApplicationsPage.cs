@@ -3,40 +3,77 @@ using cdbv1.Models;
 using Spectre;
 using Spectre.Console;
 using cdbv1;
+using cdbv1.Helpers;
 namespace cdbv1.Pages;
+
 public class ApplicationsPage() : Page
 {
-    // Initialize capacity field to a default value of 10:
-    private int _capacity = 10;
     private List<CompanyInformation> companies = [];
     private List<JobApplication> jobApplications = [];
+    // static ApplicationsPage() {}
     public async Task Display()
     {
         // view all companies
+        await GetAllCompanies();
         DisplayCompanyInformationTable();
         // view all applications
+        await GetAllApplications();
         DisplayApplicationsTable();
-        await MainMenu();
         
-    }
-    // private async Task ReturnToMainMenu()
-    // {
-    //     if (AnsiConsole.Confirm("Return to main menu?"))
-    //     {
-    //         AnsiConsole.Clear();
-    //         AnsiConsole.MarkupLine("[gray]Returning to main menu...[/]");
-            
+        await MainMenu();
 
-    //     }
+    }
+    // private void AddNewApplication()
+    // {
+    //     // select company (spectre select)
+    //     // if company not in list
+    //     // add company 
+    //     // else add companyid to application model
+    //     // build application model
+    //     // try push application to db
     // }
-    private void AddNewApplication()
+    private async Task GetAllCompanies()
     {
-        // select company (spectre select)
-        // if company not in list
-        // add company 
-        // else add companyid to application model
-        // build application model
-        // try push application to db
+        DbInfoController dbIc = new();
+        var dbsb = new DbSourceBuilder("localhost");
+        await using var dataSource = dbsb.Builder().Build();
+        AnsiConsole.MarkupLine("    -> [gray]Fetching company_information...[/]");
+        // List<CompanyInformation> companies = new List<CompanyInformation>();
+        await using (var cmd = dataSource.CreateCommand("SELECT * FROM company_information"))
+        await using (var reader = await cmd.ExecuteReaderAsync())
+            while (await reader.ReadAsync())
+            {
+                var company = new CompanyInformation()
+                {
+                    Id = reader.GetInt32(0),
+                    Name = reader.GetString(1),
+                    Description = reader.GetString(2),
+                    JobBoardLink = reader.GetString(3)
+                };
+                companies.Add(company);
+            }
+        AnsiConsole.MarkupLine($"        -> [green]Done. {companies.Count}[/]");
+    }
+
+    private async Task GetAllApplications()
+    {
+        DbInfoController dbIc = new();
+        var dbsb = new DbSourceBuilder("localhost");
+        await using var dataSource = dbsb.Builder().Build();
+        AnsiConsole.MarkupLine("    -> [gray]Fetching job_applications...[/]");
+        await using (var cmd = dataSource.CreateCommand("SELECT * FROM application"))
+        await using (var reader = await cmd.ExecuteReaderAsync())
+            while (await reader.ReadAsync())
+            {
+                JobApplication jobApp = new(
+                    reader.GetInt32(0), reader.GetInt32(1),
+                    reader.GetString(2), reader.GetString(3),
+                    reader.GetString(4), reader.GetString(5),
+                    reader.GetString(6)
+                );
+                jobApplications.Add(jobApp);
+            }
+        AnsiConsole.MarkupLine($"        -> [green]Done. {jobApplications.Count}[/]");
     }
     private void DisplayCompanyInformationTable()
     {

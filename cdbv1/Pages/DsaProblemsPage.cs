@@ -19,6 +19,7 @@ public class DsaProblemsPage() : Page
     {
 
         AnsiConsole.MarkupLine($"[gray]DSA Problems[/]");
+        await GetAllDsaProblems();
         await NavigateDsaProblemsPage();
     }
     private IEnumerable<DsaProblem> FilterProblems(string difficultyIso, string topicIso)
@@ -105,6 +106,26 @@ public class DsaProblemsPage() : Page
         {
             await MainMenu();
         }
+    }
+    private async Task GetAllDsaProblems()
+    {
+        DbInfoController dbIc = new();
+        var dbsb = new DbSourceBuilder("localhost");
+        await using var dataSource = dbsb.Builder().Build();
+        
+        AnsiConsole.MarkupLine("    -> [gray]Fetching dsa_problems...[/]");
+        await using (var cmd = dataSource.CreateCommand("SELECT * FROM dsa_problem"))
+        await using (var reader = await cmd.ExecuteReaderAsync())
+            while (await reader.ReadAsync())
+            {
+                DsaProblem dsaProblem = new(
+                    reader.GetInt32(0), reader.GetString(1),
+                    reader.GetString(2), reader.GetString(3),
+                    reader.GetString(4), reader.GetDateTime(5)
+                );
+                dsaProblems.Add(dsaProblem);
+            }
+        AnsiConsole.MarkupLine($"        -> [green]Done. {dsaProblems.Count}[/]");
     }
     private async Task CreateNewSolution(int problemId, string solution)
     {

@@ -29,22 +29,22 @@ try
     //////////////////////////////
     //// COMPANY_INFORMATION ////
     ////////VVVVVVVVVVVV/////////
-    AnsiConsole.MarkupLine("    -> [gray]Fetching company_information...[/]");
-    // List<CompanyInformation> companies = new List<CompanyInformation>();
-    await using (var cmd = dataSource.CreateCommand("SELECT * FROM company_information"))
-    await using (var reader = await cmd.ExecuteReaderAsync())
-        while (await reader.ReadAsync())
-        {
-            var company = new CompanyInformation()
-            {
-                Id = reader.GetInt32(0),
-                Name = reader.GetString(1),
-                Description = reader.GetString(2),
-                JobBoardLink = reader.GetString(3)
-            };
-            companies.Add(company);
-        }
-    AnsiConsole.MarkupLine($"        -> [green]Done. {companies.Count}[/]");
+    // AnsiConsole.MarkupLine("    -> [gray]Fetching company_information...[/]");
+    // // List<CompanyInformation> companies = new List<CompanyInformation>();
+    // await using (var cmd = dataSource.CreateCommand("SELECT * FROM company_information"))
+    // await using (var reader = await cmd.ExecuteReaderAsync())
+    //     while (await reader.ReadAsync())
+    //     {
+    //         var company = new CompanyInformation()
+    //         {
+    //             Id = reader.GetInt32(0),
+    //             Name = reader.GetString(1),
+    //             Description = reader.GetString(2),
+    //             JobBoardLink = reader.GetString(3)
+    //         };
+    //         companies.Add(company);
+    //     }
+    // AnsiConsole.MarkupLine($"        -> [green]Done. {companies.Count}[/]");
     // TODO REPLACE THE BELOW CODE WITH A TABLE
     // THE TABLE APPEARS FOR 2 seconds and dissapears?
     // foreach(var company in companies)
@@ -73,37 +73,37 @@ try
     //////////////////////////////
     //// JOB_APPLICATION ////////
     ////////VVVVVVVVVVVV/////////
-    AnsiConsole.MarkupLine("    -> [gray]Fetching job_applications...[/]");
-    // List<JobApplication> jobApplications = new List<JobApplication>();
-    await using (var cmd = dataSource.CreateCommand("SELECT * FROM application"))
-    await using (var reader = await cmd.ExecuteReaderAsync())
-        while (await reader.ReadAsync())
-        {
-            JobApplication jobApp = new(
-                reader.GetInt32(0), reader.GetInt32(1),
-                reader.GetString(2), reader.GetString(3),
-                reader.GetString(4), reader.GetString(5),
-                reader.GetString(6)
-            );
-            jobApplications.Add(jobApp);
-        }
-    AnsiConsole.MarkupLine($"        -> [green]Done. {jobApplications.Count}[/]");
+    // AnsiConsole.MarkupLine("    -> [gray]Fetching job_applications...[/]");
+    // // List<JobApplication> jobApplications = new List<JobApplication>();
+    // await using (var cmd = dataSource.CreateCommand("SELECT * FROM application"))
+    // await using (var reader = await cmd.ExecuteReaderAsync())
+    //     while (await reader.ReadAsync())
+    //     {
+    //         JobApplication jobApp = new(
+    //             reader.GetInt32(0), reader.GetInt32(1),
+    //             reader.GetString(2), reader.GetString(3),
+    //             reader.GetString(4), reader.GetString(5),
+    //             reader.GetString(6)
+    //         );
+    //         jobApplications.Add(jobApp);
+    //     }
+    // AnsiConsole.MarkupLine($"        -> [green]Done. {jobApplications.Count}[/]");
     //////////////////////////////
     //// DSA_PROBLEM ////////////
     ////////VVVVVVVVVVVV/////////
-    AnsiConsole.MarkupLine("    -> [gray]Fetching dsa_problems...[/]");
-    await using (var cmd = dataSource.CreateCommand("SELECT * FROM dsa_problem"))
-    await using (var reader = await cmd.ExecuteReaderAsync())
-        while (await reader.ReadAsync())
-        {
-            DsaProblem dsaProblem = new(
-                reader.GetInt32(0), reader.GetString(1),
-                reader.GetString(2), reader.GetString(3),
-                reader.GetString(4), reader.GetDateTime(5)
-            );
-            dsaProblems.Add(dsaProblem);
-        }
-    AnsiConsole.MarkupLine($"        -> [green]Done. {dsaProblems.Count}[/]");
+    // AnsiConsole.MarkupLine("    -> [gray]Fetching dsa_problems...[/]");
+    // await using (var cmd = dataSource.CreateCommand("SELECT * FROM dsa_problem"))
+    // await using (var reader = await cmd.ExecuteReaderAsync())
+    //     while (await reader.ReadAsync())
+    //     {
+    //         DsaProblem dsaProblem = new(
+    //             reader.GetInt32(0), reader.GetString(1),
+    //             reader.GetString(2), reader.GetString(3),
+    //             reader.GetString(4), reader.GetDateTime(5)
+    //         );
+    //         dsaProblems.Add(dsaProblem);
+    //     }
+    // AnsiConsole.MarkupLine($"        -> [green]Done. {dsaProblems.Count}[/]");
 }
 catch (NpgsqlException e)
 {
