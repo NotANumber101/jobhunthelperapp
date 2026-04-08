@@ -22,6 +22,8 @@ INSTALL
 ROADMAP
 
     [ ] Feature: Postmortem (active)
+    [ ] Feature: DSA SOLUTION PAGE (active)
+                -> view all solutions, sorted by most recent
 
     [ ] Feature: Timer
     [ ] Feature: Testing
@@ -39,3 +41,12 @@ ROADMAP
         Feature: Flashcards
         Feature: Problem Scheduler
         Feature: migrate DB to file
+
+BUGS
+    [ ] DsaProblemPage. Adding solution. If non of the problems are stale, and the table is empty. They problems are still selected.
+        So instead of erroring out, it picks a non stale. This behaviour is actually agreeable.
+
+
+
+
+design_time_ms code_time_ms mistakes analysis rubric_problem_solving_score rubric_coding_score rubric_verification_score rubric_communication_score

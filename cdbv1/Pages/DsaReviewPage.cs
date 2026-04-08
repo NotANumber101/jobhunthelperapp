@@ -14,17 +14,23 @@ public class DsaReviewPage() : Page
         .Title("[green]Please select topic[/]")
         .AddChoices("string", "array", "recursion", "graph", "bigo"));
 
-        AnsiConsole.MarkupLine($"[gray]{DsaReviewPageChoice} page[/]");
+        AnsiConsole.MarkupLine($"[gray]{DsaReviewPageChoice.ToUpper()} Review[/]");
 
+        ///////// TODO
+        /// Switch statements will look nice here
         if (DsaReviewPageChoice == "string")
         {
-
+            await StringReviewPage();
         }
         else
         {
-            Console.WriteLine("err");
+            Console.WriteLine("WARN: This page is incomplete");
         }
         await MainMenuWithConfirm();
+    }
+    public async Task StringReviewPage()
+    {
+        
     }
     public async Task NavigateTopicPage()
     {

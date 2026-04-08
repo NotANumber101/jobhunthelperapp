@@ -30,7 +30,7 @@ namespace cdbv1.Helpers
         public string CreateNewDsaSolution(int problemId, string solution)
         {
             DateOnly today = DateOnly.FromDateTime(DateTime.Now);
-            return $"INSERT INTO dsa_solution (problem_id, solution, date_completed) VALUES ({problemId}, '{solution}', '{today}');";
+            return $"INSERT INTO dsa_solution (problem_id, solution, date_completed) VALUES ({problemId}, '{solution}', '{today}') RETURNING id;";
         }
         public string UpdateDsaProblemDateCompletedTodayId(int problemId)
         {

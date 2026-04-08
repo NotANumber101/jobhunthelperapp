@@ -31,7 +31,7 @@ public class DsaProblemsPage() : Page
     }
     private async Task NavigateDsaProblemsPage()
     {
-        AnsiConsole.Clear();
+        // AnsiConsole.Clear();
         HelloWorld();
         ///////// TODO
         /// 1. View Solutions page.
@@ -48,6 +48,7 @@ public class DsaProblemsPage() : Page
             AnsiConsole.MarkupLine($"[gray]View Problems[/]");
             DisplayProblemsBarChart();
             DisplayProblemsTable(dsaProblems, false);
+            await MainMenuWithConfirm();
         }
         else if (pageChoice == "Solve Problem")
         {
@@ -76,31 +77,49 @@ public class DsaProblemsPage() : Page
                     string solution = AnsiConsole.Ask<string>($"[green]Please enter your solution: [/]");
                     ////// TODO
                     /// POST MORTEM
-                    string postmortem = AnsiConsole.Ask<string>($"[green]Postmortem: [/]");
+            string pmMistakes = AnsiConsole.Ask<string>($"[green]Post-Mortem | Mistakes:[/] ");
+            string pmAnalysis = AnsiConsole.Ask<string>($"[green]Post-Mortem | Analysis:[/] ");
+            int pmRubricCodingScore = 0;
+            int pmRubricCommunicationScore = 0;
+            int pmRubricProblemSolvingScore = 0;
+            int pmRubricVerificationScore = 0;
+
+            PostMortem postMortem = new()
+            {
+                DesignTimeMs = 10000,
+                CodeTimeMs = 60000,
+                Mistakes = pmMistakes,
+                Analysis = pmAnalysis,
+                RubricCodingScore = pmRubricCodingScore,
+                RubricCommunicationScore = pmRubricCommunicationScore,
+                RubricProblemSolvingScore = pmRubricProblemSolvingScore,
+                RubricVerificationScore = pmRubricVerificationScore
+            };
                     try
                     {
-                        await CreateNewSolution(randomProblem.Id, solution);
+                        await CreateNewSolution(randomProblem.Id, solution, postMortem);
+                        await MainMenuWithConfirm();
                     }
                     catch (NpgsqlException e)
                     {
                         Console.Write(e.Message);
                     }
-
                 }
                 else
                 {
                     AnsiConsole.MarkupLine("[red]No Problems found. Please Try again.[/]");
+                    await NavigateDsaProblemsPage();
                 }
             }
             else
             {
                 await NavigateDsaProblemsPage();
-                AnsiConsole.MarkupLine("[red]returning to problem selection tool...[/]");
+                // AnsiConsole.MarkupLine("[red]returning to problem selection tool...[/]");
             }
         }
         else if (pageChoice == "Main Menu")
         {
-            await MainMenuWithConfirm();
+            await MainMenu();
         }
     }
     private async Task GetAllDsaProblems()
@@ -129,9 +148,8 @@ public class DsaProblemsPage() : Page
         {
             Console.WriteLine(e.Message);
         }
-
     }
-    private async Task CreateNewSolution(int problemId, string solution)
+    private async Task CreateNewSolution(int problemId, string solution, PostMortem postMortem)
     {
         try
         {
@@ -144,12 +162,25 @@ public class DsaProblemsPage() : Page
             await using var transaction = await connection.BeginTransactionAsync();
 
             DateOnly today = DateOnly.FromDateTime(DateTime.Now);
-            // await using var command1 = new NpgsqlCommand($"INSERT INTO dsa_solution (problem_id, solution, date_completed) VALUES ({problemId}, '{solution}', '{today}');", connection, transaction);
             await using var command1 = new NpgsqlCommand(dbIc.CreateNewDsaSolution(problemId, solution), connection, transaction);
-            await command1.ExecuteNonQueryAsync();
+            int solutionId = (int)command1.ExecuteScalar();
+
+            postMortem.SolutionId = solutionId;
+
+            Console.WriteLine($"SolutionId: {solutionId} inserted!");
+            // await command1.ExecuteNonQueryAsync();
             // var cmd = new NpgsqlCommand("UPDATE foo SET bar=@bar WHERE baz=@baz; UPDATE foo SET bar=@bar WHERE baz=@baz");
             await using var command2 = new NpgsqlCommand(dbIc.UpdateDsaProblemDateCompletedTodayId(problemId), connection, transaction);
             await command2.ExecuteNonQueryAsync();
+
+
+            await using var command3 = new NpgsqlCommand(
+                $"INSERT INTO dsa_postmortem (solution_id, design_time_ms, code_time_ms, mistakes, analysis, rubric_problem_solving_score, rubric_coding_score, rubric_verification_score, rubric_communication_score) VALUES ({solutionId}, {postMortem.DesignTimeMs}, {postMortem.CodeTimeMs}, '{postMortem.Mistakes}', '{postMortem.Analysis}', {postMortem.RubricCodingScore}, {postMortem.RubricCommunicationScore}, {postMortem.RubricProblemSolvingScore}, {postMortem.RubricVerificationScore});",
+            connection, transaction);
+            // WOW IM DUMB AS FUCK. I spent an hour debuging this bull fuck.
+            // I was connected to command2.
+            // I should have been conneted to command3 which is the command im making. Dum,b asss.
+            await command3.ExecuteNonQueryAsync();
 
             await transaction.CommitAsync();
             AnsiConsole.MarkupLine($"        -> [green]Done.[/][gray]ProblemId:{problemId} has new solution.[/]");
