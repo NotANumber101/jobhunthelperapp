@@ -54,21 +54,24 @@ public class DsaProblemsPage(List<CompanyInformation> companies, List<JobApplica
             }
             if (AnsiConsole.Confirm("Ready?"))
             {
-                AnsiConsole.Clear();
+                if (filteredProblems.Any())
+                {
+                                    AnsiConsole.Clear();
                 AnsiConsole.MarkupLine("[red] Starting... new problem[/]");
                 // if (filteredProblems.Count() > 0)
                 // {
                 DsaProblem randomProblem = filteredProblems.ElementAt(0);
-                AnsiConsole.MarkupLine($"Name: [green]{randomProblem.Name}[/]");
+                AnsiConsole.MarkupLine($"ProblemID: {randomProblem.Id}Name: [green]{randomProblem.Name}[/]");
                 AnsiConsole.WriteLine("");
                 AnsiConsole.MarkupLine($"Description: [green]{randomProblem.Description}[/]");
                 AnsiConsole.WriteLine("");
                 AnsiConsole.WriteLine("Example:");
                 AnsiConsole.MarkupLine($"[green][/]");
-                // string solution = AnsiConsole.Ask<string>($"[green]Please enter your solution: [/]?");
-                DateTime tdate = DateTime.Today;
+                string solution = AnsiConsole.Ask<string>($"[green]Please enter your solution: [/]?");
 
-                await CreateNewSolution(randomProblem.Id, "solution", tdate);
+                await CreateNewSolution(randomProblem.Id, solution);
+                }
+
 
 
                 // CreateNewSolution(randomProblem.Id, "solution", DateTime.Today);
@@ -88,7 +91,7 @@ public class DsaProblemsPage(List<CompanyInformation> companies, List<JobApplica
             else
             {
                 await NavigateDsaProblemsPage();
-                AnsiConsole.MarkupLine("[red]returning to problem selection tool...");
+                AnsiConsole.MarkupLine("[red]returning to problem selection tool...[/]");
             }
         }
         else if (pageChoice == "Main Menu")
@@ -96,17 +99,20 @@ public class DsaProblemsPage(List<CompanyInformation> companies, List<JobApplica
             await ReturnToMainMenu();
         }
     }
-    private async Task CreateNewSolution(int problemId, string solution, DateTime solutionDate)
+    private async Task CreateNewSolution(int problemId, string solution)
     {
+        
         var connectionString = "Host=localhost;Port=5432;Username=postgres;Password=password;Database=test_db";
         await using var dataSource = NpgsqlDataSource.Create(connectionString);
+
         await using var connection = await dataSource.OpenConnectionAsync();
         await using var transaction = await connection.BeginTransactionAsync();
 
-        await using var command1 = new NpgsqlCommand("INSERT INTO dsa_solution (solution) VALUES ('a')", connection, transaction);
+        DateOnly today = DateOnly.FromDateTime(DateTime.Now);
+        await using var command1 = new NpgsqlCommand($"INSERT INTO dsa_solution (problem_id, solution, date_completed) VALUES ({problemId}, '{solution}', '{today}');", connection, transaction);
         await command1.ExecuteNonQueryAsync();
-
-        await using var command2 = new NpgsqlCommand("INSERT INTO dsa_solution (solution) VALUES ('a')", connection, transaction);
+// var cmd = new NpgsqlCommand("UPDATE foo SET bar=@bar WHERE baz=@baz; UPDATE foo SET bar=@bar WHERE baz=@baz");
+        await using var command2 = new NpgsqlCommand($"UPDATE dsa_problem SET date_completed='{today}' WHERE id={problemId}", connection, transaction);
         await command2.ExecuteNonQueryAsync();
 
         await transaction.CommitAsync();

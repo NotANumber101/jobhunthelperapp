@@ -4,11 +4,11 @@ using System.Text;
 
 namespace cdbv1.Models
 {
-    public class DsaSolution()
+    public class DsaSolution(string Solution)
     {
         public int Id { get; set; }
         public int ProblemId {get; set; }
-        public string Solution {get; set;}
+        public string Solution {get; set; } = Solution;
         public DateTime DateCompleted {get; set; }
     }
 }

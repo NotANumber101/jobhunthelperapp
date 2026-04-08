@@ -52,7 +52,9 @@ CREATE TABLE dsa_problem (
 
 CREATE TABLE dsa_solution (
   id SERIAL,
-  solution VARCHAR(1000)
+  problem_id INT,
+  solution VARCHAR(1000),
+  date_completed DATE NOT NULL DEFAULT '1-11-2026'
 );
 
 CREATE TABLE dsa_postmortem (
@@ -61,8 +63,8 @@ CREATE TABLE dsa_postmortem (
   explanation TEXT
 );
 
-INSERT INTO dsa_solution (solution)
-  VALUES ('this is the solution for Contains Duplicates');
+INSERT INTO dsa_solution (problem_id, solution, date_completed)
+  VALUES (1, 'this is the solution for Contains Duplicates', '3-20-2026');
 
 -- todo:rubric
 

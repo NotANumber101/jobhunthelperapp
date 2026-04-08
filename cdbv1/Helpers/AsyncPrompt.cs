@@ -12,6 +12,10 @@ namespace cdbv1.Helpers
                 return AnsiConsole.Ask<string>($"{noun} [green]{adjective}: [/]?");
             });
         }
+        public async Task Solution()
+        {
+            
+        }
 
     }
 }
