@@ -12,6 +12,7 @@ public class HomePage() : Page
 
         AnsiConsole.Write(header1);
         AnsiConsole.Write(header2);
+        AnsiConsole.WriteLine();
         await MainMenu();
     }
 }

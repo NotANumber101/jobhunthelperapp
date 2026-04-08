@@ -17,7 +17,7 @@ try
     // SELECT 8 verifies Logging
     await using var loggingCommand = new NpgsqlCommand("SELECT 8", connection);
     _ = await loggingCommand.ExecuteScalarAsync();
-    AnsiConsole.MarkupLine("Database Connection: [green]OK![/]");
+    AnsiConsole.MarkupLine("LOG: Database Connection: [green]OK![/]");
 }
 catch (NpgsqlException e)
 {
@@ -27,7 +27,7 @@ catch (NpgsqlException e)
 }
 if (AnsiConsole.Profile.Capabilities.Interactive)
 {
-    AnsiConsole.MarkupLine("[green]LOG: Interactive mode detected.Input Mode Enabled.[/]");
+    AnsiConsole.MarkupLine("LOG: Interactive mode detected.[green]Input Mode Enabled.[/]");
     HomePage homePage = new();
     await homePage.Display();
 }

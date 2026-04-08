@@ -29,7 +29,7 @@ public class Page()
         var pageOptions = new List<string> { "Applications", "Network", "DSA Problems", "DSA Review" };
         var pageChoice = AnsiConsole.Prompt(
             new SelectionPrompt<string>()
-                .Title("Select a page to view:")
+                .Title("[green]Select a page to view:[/]")
                 .PageSize(10)
                 .AddChoices(pageOptions));
 
