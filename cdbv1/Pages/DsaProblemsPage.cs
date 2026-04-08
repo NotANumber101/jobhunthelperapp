@@ -10,11 +10,14 @@ using cdbv1.Pages;
 namespace cdbv1.Pages;
 
 // public class DsaProblemsPage(List<CompanyInformation> companies, List<JobApplication> jobApplications, List<DsaProblem> dsaProblems)
-public class DsaProblemsPage(List<CompanyInformation> companies, List<JobApplication> jobApplications, List<DsaProblem> dsaProblems) : Page
+public class DsaProblemsPage() : Page
 
 {
+    List<DsaProblem> dsaProblems = [];
     public async Task Display()
+
     {
+
         AnsiConsole.MarkupLine($"[gray]DSA Problems[/]");
         await NavigateDsaProblemsPage();
     }
@@ -80,7 +83,8 @@ public class DsaProblemsPage(List<CompanyInformation> companies, List<JobApplica
                     try
                     {
                         await CreateNewSolution(randomProblem.Id, solution);
-                    } catch (NpgsqlException e)
+                    }
+                    catch (NpgsqlException e)
                     {
                         Console.Write(e.Message);
                     }
@@ -99,7 +103,7 @@ public class DsaProblemsPage(List<CompanyInformation> companies, List<JobApplica
         }
         else if (pageChoice == "Main Menu")
         {
-            await ReturnToMainMenu();
+            await MainMenu();
         }
     }
     private async Task CreateNewSolution(int problemId, string solution)
@@ -189,16 +193,6 @@ public class DsaProblemsPage(List<CompanyInformation> companies, List<JobApplica
         // hard coded for now
         return FilterProblems(difficultyFilterSelected, topicFilterSelected);
         // return dsaProblems[0];
-    }
-    private async Task ReturnToMainMenu()
-    {
-        if (AnsiConsole.Confirm("Return to main menu?"))
-        {
-            AnsiConsole.Clear();
-            AnsiConsole.MarkupLine("[gray]Returning to main menu...[/]");
-            MainMenuPage mainMenuPage = new MainMenuPage(companies, jobApplications, dsaProblems);
-            await mainMenuPage.Display();
-        }
     }
     private List<DsaProblem> FilterProblemSetByDifficulty(string diffuclty)
     {

@@ -5,7 +5,7 @@ using Spectre.Console;
 
 using cdbv1;
 namespace cdbv1.Pages;
-public class NetworkPage(List<CompanyInformation> companies, List<JobApplication> jobApplications, List<DsaProblem> dsaProblems)
+public class NetworkPage() : Page
 {
     public async Task Display()
     {
@@ -20,11 +20,7 @@ public class NetworkPage(List<CompanyInformation> companies, List<JobApplication
     {
         if (AnsiConsole.Confirm("Return to main menu?"))
         {
-            AnsiConsole.Clear();
-            AnsiConsole.MarkupLine("[gray]Returning to main menu...[/]");
-            MainMenuPage mainMenuPage = new MainMenuPage(companies, jobApplications, dsaProblems);
-            await mainMenuPage.Display();
-
+            await MainMenu();
         }
     }
 }

@@ -6,7 +6,7 @@ using Spectre.Console;
 using cdbv1;
 namespace cdbv1.Pages;
 
-public class DsaReviewPage(List<CompanyInformation> companies, List<JobApplication> jobApplications, List<DsaProblem> dsaProblems)
+public class DsaReviewPage() : Page
 {
     public async Task Display()
     {
@@ -29,18 +29,7 @@ public class DsaReviewPage(List<CompanyInformation> companies, List<JobApplicati
         {
             Console.WriteLine("err");
         }
-        await ReturnToMainMenu();
-    }
-    private async Task ReturnToMainMenu()
-    {
-        if (AnsiConsole.Confirm("Return to main menu?"))
-        {
-            AnsiConsole.Clear();
-            AnsiConsole.MarkupLine("[gray]Returning to main menu...[/]");
-            MainMenuPage mainMenuPage = new MainMenuPage(companies, jobApplications, dsaProblems);
-            await mainMenuPage.Display();
-
-        }
+        await MainMenu();
     }
     public async Task NavigateTopicPage()
     {

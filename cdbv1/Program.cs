@@ -107,8 +107,8 @@ try
 }
 catch (NpgsqlException e)
 {
-    AnsiConsole.MarkupLine("[red]WARN[/] Unable to retrieve data...");
-    AnsiConsole.MarkupLine("[red]ERROR[/] Database server connection has failed.");
+    AnsiConsole.MarkupLine("[red]WARN[/]: Unable to retrieve data...");
+    AnsiConsole.MarkupLine("[red]ERROR[/]: Database server connection has failed.");
     Console.WriteLine(e.Message);
 }
 ////////////// PAGES - NAVIGATION /////////////////
@@ -116,17 +116,9 @@ catch (NpgsqlException e)
 /// if iteractive mode is disabled, only database information is logged
 if (AnsiConsole.Profile.Capabilities.Interactive)
 {
-    Console.WriteLine("LOG: Interactive mode detected. Input Mode Enabled.");
-
-    ///////// Shared header
-    AnsiConsole.MarkupLine($"[red]--------------START PAGE---------------[/]");
-    // AnsiConsole.MarkupLine($"[gray]{pageChoice} page[/]");
-
-    MainMenuPage mainMenuPage = new MainMenuPage(companies, jobApplications, dsaProblems);
-    await mainMenuPage.Display();
-
-    // idea: page navigation option on every footer/header.
-    AnsiConsole.MarkupLine($"[red]--------------END PAGE---------------[/]");
+    AnsiConsole.MarkupLine("[green]LOG[/]: Interactive mode detected.Input Mode Enabled.");
+    HomePage homePage = new HomePage();
+    await homePage.Display();
 }
 else
 {
