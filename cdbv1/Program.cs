@@ -26,7 +26,9 @@ AsyncPrompt helloWorld = new();
 DbInfoController dbIc = new();
 
 AnsiConsole.WriteLine($"LOG: Host={host}");
-var connectionString = $"Host={host};Port=5432;Username=postgres;Password=password;Database=test_db";
+// var connectionString = $"Host={host};Port=5432;Username=postgres;Password=password;Database=test_db";
+var connectionString = $"Host=db,localhost;Port=5432;Username=postgres;Password=password;Database=test_db";
+
 using ILoggerFactory factory = LoggerFactory.Create(builder => builder.AddConsole());
 var npgsqlDataSourceBuilder = new NpgsqlDataSourceBuilder(connectionString);
 npgsqlDataSourceBuilder
@@ -35,7 +37,9 @@ npgsqlDataSourceBuilder
 // .UseLoggerFactory(factory);
 
 // DATA SOURCE
-await using var dataSource = npgsqlDataSourceBuilder.Build();
+// await using var dataSource = npgsqlDataSourceBuilder.Build();
+await using var dataSource = npgsqlDataSourceBuilder.BuildMultiHost();
+
 
 // DATA LISTS
 List<CompanyInformation> companies = [];
