@@ -25,7 +25,7 @@ public class DsaReviewPage() : Page
         {
             Console.WriteLine("err");
         }
-        await MainMenu();
+        await MainMenuWithConfirm();
     }
     public async Task NavigateTopicPage()
     {

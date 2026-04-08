@@ -75,8 +75,6 @@ public class DsaProblemsPage() : Page
                     AnsiConsole.WriteLine("");
                     Console.WriteLine($"Description:{randomProblem.Description}");
                     AnsiConsole.WriteLine("");
-                    AnsiConsole.WriteLine("Example:");
-                    AnsiConsole.MarkupLine($"[green]Data[/]");
                     string solution = AnsiConsole.Ask<string>($"[green]Please enter your solution: [/]");
                     ////// TODO
                     /// POST MORTEM
@@ -104,7 +102,7 @@ public class DsaProblemsPage() : Page
         }
         else if (pageChoice == "Main Menu")
         {
-            await MainMenu();
+            await MainMenuWithConfirm();
         }
     }
     private async Task GetAllDsaProblems()
@@ -112,7 +110,7 @@ public class DsaProblemsPage() : Page
         DbInfoController dbIc = new();
         var dbsb = new DbSourceBuilder("localhost");
         await using var dataSource = dbsb.Builder().Build();
-        
+        AnsiConsole.MarkupLine("[gray]Fetching data...[/]");
         AnsiConsole.MarkupLine("    -> [gray]Fetching dsa_problems...[/]");
         await using (var cmd = dataSource.CreateCommand("SELECT * FROM dsa_problem"))
         await using (var reader = await cmd.ExecuteReaderAsync())
@@ -132,7 +130,8 @@ public class DsaProblemsPage() : Page
         DbInfoController dbIc = new();
         var dbsb = new DbSourceBuilder("localhost");
         await using var dataSource = dbsb.Builder().Build();
-
+        AnsiConsole.MarkupLine("[gray]Inserting data...[/]");
+        AnsiConsole.MarkupLine("    -> [gray]Inserting new solution...[/]");
         await using var connection = await dataSource.OpenConnectionAsync();
         await using var transaction = await connection.BeginTransactionAsync();
 
@@ -145,6 +144,7 @@ public class DsaProblemsPage() : Page
         await command2.ExecuteNonQueryAsync();
 
         await transaction.CommitAsync();
+        AnsiConsole.MarkupLine($"        -> [green]Done.[/][gray]ProblemId:{problemId} has new solution.[/]");
     }
     private void DisplayProblemsTable(IEnumerable<DsaProblem> problems, bool staleOnly)
     {

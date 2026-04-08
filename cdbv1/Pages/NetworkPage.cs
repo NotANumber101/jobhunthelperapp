@@ -11,6 +11,6 @@ public class NetworkPage() : Page
     {
         AnsiConsole.MarkupLine($"[gray]NETWORK PAGE[/]");
         AnsiConsole.MarkupLine($"[gray]Coming soon...[/]");
-        await MainMenu();
+        await MainMenuWithConfirm();
     }
 }

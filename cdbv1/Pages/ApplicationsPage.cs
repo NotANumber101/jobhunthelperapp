@@ -19,8 +19,8 @@ public class ApplicationsPage() : Page
         // view all applications
         await GetAllApplications();
         DisplayApplicationsTable();
-        
-        await MainMenu();
+
+        await MainMenuWithConfirm();
 
     }
     // private void AddNewApplication()
@@ -37,8 +37,8 @@ public class ApplicationsPage() : Page
         DbInfoController dbIc = new();
         var dbsb = new DbSourceBuilder("localhost");
         await using var dataSource = dbsb.Builder().Build();
+        AnsiConsole.MarkupLine("[gray]Fetching data...[/]");
         AnsiConsole.MarkupLine("    -> [gray]Fetching company_information...[/]");
-        // List<CompanyInformation> companies = new List<CompanyInformation>();
         await using (var cmd = dataSource.CreateCommand("SELECT * FROM company_information"))
         await using (var reader = await cmd.ExecuteReaderAsync())
             while (await reader.ReadAsync())
