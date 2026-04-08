@@ -52,8 +52,7 @@ CREATE TABLE dsa_problem (
 
 CREATE TABLE dsa_solution (
   id SERIAL,
-  problem_id INT,
-  solution TEXT
+  solution VARCHAR(1000)
 );
 
 CREATE TABLE dsa_postmortem (
@@ -61,6 +60,9 @@ CREATE TABLE dsa_postmortem (
   solution_id INT,
   explanation TEXT
 );
+
+INSERT INTO dsa_solution (solution)
+  VALUES ('this is the solution for Contains Duplicates');
 
 -- todo:rubric
 

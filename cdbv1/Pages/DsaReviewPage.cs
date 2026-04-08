@@ -3,9 +3,12 @@ using cdbv1.Models;
 using Spectre;
 using Spectre.Console;
 
+using cdbv1;
+namespace cdbv1.Pages;
+
 public class DsaReviewPage(List<CompanyInformation> companies, List<JobApplication> jobApplications, List<DsaProblem> dsaProblems)
 {
-    public void Display()
+    public async Task Display()
     {
 
         // navigate
@@ -26,20 +29,20 @@ public class DsaReviewPage(List<CompanyInformation> companies, List<JobApplicati
         {
             Console.WriteLine("err");
         }
-        ReturnToMainMenu();
+        await ReturnToMainMenu();
     }
-    private void ReturnToMainMenu()
+    private async Task ReturnToMainMenu()
     {
         if (AnsiConsole.Confirm("Return to main menu?"))
         {
             AnsiConsole.Clear();
             AnsiConsole.MarkupLine("[gray]Returning to main menu...[/]");
             MainMenuPage mainMenuPage = new MainMenuPage(companies, jobApplications, dsaProblems);
-            mainMenuPage.Display();
+            await mainMenuPage.Display();
 
         }
     }
-    public void NavigateTopicPage()
+    public async Task NavigateTopicPage()
     {
 
     }

@@ -1,13 +1,16 @@
 using System;
-using System.Timers;
 using cdbv1.Models;
 using Spectre;
 using Spectre.Console;
 using cdbv1.Helpers;
+using Npgsql;
+using Microsoft.Extensions.Logging;
+
+using cdbv1.Pages;
+namespace cdbv1.Pages;
 
 public class DsaProblemsPage(List<CompanyInformation> companies, List<JobApplication> jobApplications, List<DsaProblem> dsaProblems)
 {
-    // private static CustomTimer aTimer = new CustomTimer(100);
     public async Task Display()
     {
         AnsiConsole.MarkupLine($"[gray]DSA Problems[/]");
@@ -20,13 +23,12 @@ public class DsaProblemsPage(List<CompanyInformation> companies, List<JobApplica
             where problem.Difficulty == difficultyIso
             where problem.Topic == topicIso
             select problem;
-
         return problemQuery;
     }
     private async Task NavigateDsaProblemsPage()
     {
         AnsiConsole.Clear();
-        var pageOptions = new List<string> {"View Problems", "Solve Problem", "Main Menu" };
+        var pageOptions = new List<string> { "View Problems", "Solve Problem", "Main Menu" };
         var pageChoice = AnsiConsole.Prompt(
             new SelectionPrompt<string>()
                 .Title("Select a page to view:")
@@ -34,17 +36,14 @@ public class DsaProblemsPage(List<CompanyInformation> companies, List<JobApplica
                 .AddChoices(pageOptions));
         if (pageChoice == "View Problems")
         {
-
             AnsiConsole.MarkupLine($"[gray]View Problems[/]");
             DisplayProblemsBarChart();
-            DisplayProblemsTable(dsaProblems, true);
+            DisplayProblemsTable(dsaProblems, false);
         }
         else if (pageChoice == "Solve Problem")
         {
             AnsiConsole.MarkupLine($"[gray]Solve Problems[/]");
-
             IEnumerable<DsaProblem> filteredProblems = DisplaySelectProblemFilter();
-
             if (AnsiConsole.Confirm("Stale only?"))
             {
                 DisplayProblemsTable(filteredProblems, true);
@@ -57,19 +56,33 @@ public class DsaProblemsPage(List<CompanyInformation> companies, List<JobApplica
             {
                 AnsiConsole.Clear();
                 AnsiConsole.MarkupLine("[red] Starting... new problem[/]");
-                Console.WriteLine("Please enter Problem Name");
-                string pName = Console.ReadLine();
-                Console.WriteLine($"Problem Name: {pName}");
-                Console.WriteLine("Please enter your solutuion aglorithm");
-                string solution = Console.ReadLine();
-                Console.WriteLine($"solution: {solution}");
-                // TODO: Create solution db, insert new solution with current date/time
-                ///////////// TIMER /////////////
-                // if (AnsiConsole.Confirm("Start timer?"))
+                // if (filteredProblems.Count() > 0)
                 // {
-                //     AnsiConsole.Clear();
-                //     // AnsiConsole.MarkupLine($"[blue]{.Description}[/]");
-                //     aTimer.SolutionTimer();
+                DsaProblem randomProblem = filteredProblems.ElementAt(0);
+                AnsiConsole.MarkupLine($"Name: [green]{randomProblem.Name}[/]");
+                AnsiConsole.WriteLine("");
+                AnsiConsole.MarkupLine($"Description: [green]{randomProblem.Description}[/]");
+                AnsiConsole.WriteLine("");
+                AnsiConsole.WriteLine("Example:");
+                AnsiConsole.MarkupLine($"[green][/]");
+                // string solution = AnsiConsole.Ask<string>($"[green]Please enter your solution: [/]?");
+                DateTime tdate = DateTime.Today;
+
+                await CreateNewSolution(randomProblem.Id, "solution", tdate);
+
+
+                // CreateNewSolution(randomProblem.Id, "solution", DateTime.Today);
+                // AsyncPrompt helloWorld = new();
+                // DbInfoController dbIc = new();
+
+
+                // string solution = await helloWorld.WaitForInputAsync("enter", "solution");
+                // await CreateNewSolution(randomProblem);
+
+                // }
+                // else
+                // {
+                //     AnsiConsole.MarkupLine("[red]No Problems found. Please Try again.[/]");
                 // }
             }
             else
@@ -80,8 +93,23 @@ public class DsaProblemsPage(List<CompanyInformation> companies, List<JobApplica
         }
         else if (pageChoice == "Main Menu")
         {
-            ReturnToMainMenu();
+            await ReturnToMainMenu();
         }
+    }
+    private async Task CreateNewSolution(int problemId, string solution, DateTime solutionDate)
+    {
+        var connectionString = "Host=localhost;Port=5432;Username=postgres;Password=password;Database=test_db";
+        await using var dataSource = NpgsqlDataSource.Create(connectionString);
+        await using var connection = await dataSource.OpenConnectionAsync();
+        await using var transaction = await connection.BeginTransactionAsync();
+
+        await using var command1 = new NpgsqlCommand("INSERT INTO dsa_solution (solution) VALUES ('a')", connection, transaction);
+        await command1.ExecuteNonQueryAsync();
+
+        await using var command2 = new NpgsqlCommand("INSERT INTO dsa_solution (solution) VALUES ('a')", connection, transaction);
+        await command2.ExecuteNonQueryAsync();
+
+        await transaction.CommitAsync();
     }
     private void DisplayProblemsTable(IEnumerable<DsaProblem> problems, bool staleOnly)
     {
@@ -152,14 +180,14 @@ public class DsaProblemsPage(List<CompanyInformation> companies, List<JobApplica
         return FilterProblems(difficultyFilterSelected, topicFilterSelected);
         // return dsaProblems[0];
     }
-    private void ReturnToMainMenu()
+    private async Task ReturnToMainMenu()
     {
         if (AnsiConsole.Confirm("Return to main menu?"))
         {
             AnsiConsole.Clear();
             AnsiConsole.MarkupLine("[gray]Returning to main menu...[/]");
             MainMenuPage mainMenuPage = new MainMenuPage(companies, jobApplications, dsaProblems);
-            mainMenuPage.Display();
+            await mainMenuPage.Display();
         }
     }
     private List<DsaProblem> FilterProblemSetByDifficulty(string diffuclty)

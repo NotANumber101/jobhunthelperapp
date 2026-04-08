@@ -3,9 +3,15 @@ using cdbv1.Models;
 using Spectre;
 using Spectre.Console;
 
+using cdbv1;
+namespace cdbv1.Pages;
+
 public class MainMenuPage(List<CompanyInformation> companies, List<JobApplication> jobApplications, List<DsaProblem> dsaProblems)
 {
-    public void Display()
+    readonly List<CompanyInformation> companies = companies;
+    readonly List<JobApplication> jobApplications = jobApplications;
+    readonly List<DsaProblem> dsaProblems = dsaProblems;
+    public async Task Display()
     {
         var pageOptions = new List<string> { "Applications", "Network", "DSA Problems", "DSA Review" };
         var pageChoice = AnsiConsole.Prompt(
@@ -16,25 +22,25 @@ public class MainMenuPage(List<CompanyInformation> companies, List<JobApplicatio
         
         if (pageChoice == "Applications")
         {
-            ApplicationsPage applicationsPage = new ApplicationsPage(companies, jobApplications, dsaProblems);
-            applicationsPage.Display();
+            ApplicationsPage applicationsPage = new(companies, jobApplications, dsaProblems);
+            await applicationsPage.Display();
         }
         else if (pageChoice == "Network")
         {
-            NetworkPage networkPage = new NetworkPage(companies, jobApplications, dsaProblems);
-            networkPage.Display();
+            NetworkPage networkPage = new(companies, jobApplications, dsaProblems);
+            await networkPage.Display();
         }
         else if (pageChoice == "DSA Problems")
         {
             // this is what im talking about...
             // repeat on repeat.  gross
-            DsaProblemsPage dsaProblemsPage = new DsaProblemsPage(companies, jobApplications, dsaProblems);
-            dsaProblemsPage.Display();
+            DsaProblemsPage dsaProblemsPage = new(companies, jobApplications, dsaProblems);
+            await dsaProblemsPage.Display();
         }
         else if (pageChoice == "DSA Review")
         {
-            DsaReviewPage dsaReviewPage = new DsaReviewPage(companies, jobApplications, dsaProblems);
-            dsaReviewPage.Display();
+            DsaReviewPage dsaReviewPage = new(companies, jobApplications, dsaProblems);
+            await dsaReviewPage.Display();
         }
         else
         {

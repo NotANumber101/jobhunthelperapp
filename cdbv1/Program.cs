@@ -4,6 +4,8 @@ using Spectre;
 using Npgsql;
 using cdbv1.Helpers;
 using cdbv1.Models;
+using cdbv1.Pages;
+
 using System;
 
 string host = "db";
@@ -30,15 +32,15 @@ var npgsqlDataSourceBuilder = new NpgsqlDataSourceBuilder(connectionString);
 npgsqlDataSourceBuilder
     .EnableParameterLogging(true);
 // uncomment below to enable logging
-    // .UseLoggerFactory(factory);
+// .UseLoggerFactory(factory);
 
 // DATA SOURCE
 await using var dataSource = npgsqlDataSourceBuilder.Build();
 
 // DATA LISTS
-List<CompanyInformation> companies = new List<CompanyInformation>();
-List<JobApplication> jobApplications = new List<JobApplication>();
-List<DsaProblem> dsaProblems = new List<DsaProblem>();
+List<CompanyInformation> companies = [];
+List<JobApplication> jobApplications = [];
+List<DsaProblem> dsaProblems = [];
 // set permanent company ids because these companies will always exist on my list of desired companies. Mayaswell reserve ids for them
 // use uniqu
 // spacexId = 999, anduril 888, palantir 777
@@ -56,6 +58,15 @@ try
     AnsiConsole.MarkupLine("[gray]Fetching data...[/]");
     // TODO: use multiple spinners to visualize fetching data
     // no matter what order or the speed laoded, just have them complete one by one in order
+
+
+
+    // await using var command = dataSource.CreateCommand("INSERT INTO dsa_solution (solution) VALUES ('fsafgdsgsdgsdgsd')");
+    // await command.ExecuteNonQueryAsync();
+    // Console.WriteLine("EXECUTED");
+
+
+
     //////////////////////////////
     //// COMPANY_INFORMATION ////
     ////////VVVVVVVVVVVV/////////
@@ -153,7 +164,7 @@ if (AnsiConsole.Profile.Capabilities.Interactive)
     // AnsiConsole.MarkupLine($"[gray]{pageChoice} page[/]");
 
     MainMenuPage mainMenuPage = new MainMenuPage(companies, jobApplications, dsaProblems);
-    mainMenuPage.Display();
+    await mainMenuPage.Display();
 
     // idea: page navigation option on every footer/header.
     AnsiConsole.MarkupLine($"[red]--------------END PAGE---------------[/]");

@@ -2,29 +2,30 @@ using System;
 using cdbv1.Models;
 using Spectre;
 using Spectre.Console;
-
+using cdbv1;
+namespace cdbv1.Pages;
 public class ApplicationsPage(List<CompanyInformation> companies, List<JobApplication> jobApplications, List<DsaProblem> dsaProblems)
 {
     // Initialize capacity field to a default value of 10:
     private int _capacity = 10;
     private List<CompanyInformation> companies = companies;
     private List<JobApplication> jobApplications = jobApplications;
-    public void Display()
+    public async Task Display()
     {
         // view all companies
         DisplayCompanyInformationTable();
         // view all applications
         DisplayApplicationsTable();
-        ReturnToMainMenu();
+        await ReturnToMainMenu();
     }
-    private void ReturnToMainMenu()
+    private async Task ReturnToMainMenu()
     {
         if (AnsiConsole.Confirm("Return to main menu?"))
         {
             AnsiConsole.Clear();
             AnsiConsole.MarkupLine("[gray]Returning to main menu...[/]");
             MainMenuPage mainMenuPage = new MainMenuPage(companies, jobApplications, dsaProblems);
-            mainMenuPage.Display();
+            await mainMenuPage.Display();
 
         }
     }
