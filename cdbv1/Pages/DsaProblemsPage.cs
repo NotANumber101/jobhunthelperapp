@@ -56,37 +56,29 @@ public class DsaProblemsPage(List<CompanyInformation> companies, List<JobApplica
             {
                 if (filteredProblems.Any())
                 {
-                                    AnsiConsole.Clear();
-                AnsiConsole.MarkupLine("[red] Starting... new problem[/]");
-                // if (filteredProblems.Count() > 0)
-                // {
-                DsaProblem randomProblem = filteredProblems.ElementAt(0);
-                AnsiConsole.MarkupLine($"ProblemID: {randomProblem.Id}Name: [green]{randomProblem.Name}[/]");
-                AnsiConsole.WriteLine("");
-                AnsiConsole.MarkupLine($"Description: [green]{randomProblem.Description}[/]");
-                AnsiConsole.WriteLine("");
-                AnsiConsole.WriteLine("Example:");
-                AnsiConsole.MarkupLine($"[green][/]");
-                string solution = AnsiConsole.Ask<string>($"[green]Please enter your solution: [/]?");
-
-                await CreateNewSolution(randomProblem.Id, solution);
+                    AnsiConsole.Clear();
+                    AnsiConsole.MarkupLine("[red] Starting... new problem[/]");
+                    DsaProblem randomProblem = filteredProblems.ElementAt(0);
+                    AnsiConsole.MarkupLine($"ProblemID: {randomProblem.Id} | Name: [green]{randomProblem.Name}[/]");
+                    AnsiConsole.WriteLine("");
+                    Console.WriteLine($"Description:{randomProblem.Description}");
+                    AnsiConsole.WriteLine("");
+                    AnsiConsole.WriteLine("Example:");
+                    AnsiConsole.MarkupLine($"[green]Data[/]");
+                    string solution = AnsiConsole.Ask<string>($"[green]Please enter your solution: [/]?");
+                    try
+                    {
+                        
+                    } catch (NpgsqlException e)
+                    {
+                        Console.Write(e.Message);
+                    }
+                    await CreateNewSolution(randomProblem.Id, solution);
                 }
-
-
-
-                // CreateNewSolution(randomProblem.Id, "solution", DateTime.Today);
-                // AsyncPrompt helloWorld = new();
-                // DbInfoController dbIc = new();
-
-
-                // string solution = await helloWorld.WaitForInputAsync("enter", "solution");
-                // await CreateNewSolution(randomProblem);
-
-                // }
-                // else
-                // {
-                //     AnsiConsole.MarkupLine("[red]No Problems found. Please Try again.[/]");
-                // }
+                else
+                {
+                    AnsiConsole.MarkupLine("[red]No Problems found. Please Try again.[/]");
+                }
             }
             else
             {
@@ -101,7 +93,7 @@ public class DsaProblemsPage(List<CompanyInformation> companies, List<JobApplica
     }
     private async Task CreateNewSolution(int problemId, string solution)
     {
-        
+
         var connectionString = "Host=localhost;Port=5432;Username=postgres;Password=password;Database=test_db";
         await using var dataSource = NpgsqlDataSource.Create(connectionString);
 
@@ -111,7 +103,7 @@ public class DsaProblemsPage(List<CompanyInformation> companies, List<JobApplica
         DateOnly today = DateOnly.FromDateTime(DateTime.Now);
         await using var command1 = new NpgsqlCommand($"INSERT INTO dsa_solution (problem_id, solution, date_completed) VALUES ({problemId}, '{solution}', '{today}');", connection, transaction);
         await command1.ExecuteNonQueryAsync();
-// var cmd = new NpgsqlCommand("UPDATE foo SET bar=@bar WHERE baz=@baz; UPDATE foo SET bar=@bar WHERE baz=@baz");
+        // var cmd = new NpgsqlCommand("UPDATE foo SET bar=@bar WHERE baz=@baz; UPDATE foo SET bar=@bar WHERE baz=@baz");
         await using var command2 = new NpgsqlCommand($"UPDATE dsa_problem SET date_completed='{today}' WHERE id={problemId}", connection, transaction);
         await command2.ExecuteNonQueryAsync();
 
