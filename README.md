@@ -1,102 +1,41 @@
-README
+  ___           _                           _                   
+ |_ _|  _ __   | |_    ___   _ __  __   __ (_)   ___  __      __
+  | |  | '_ \  | __|  / _ \ | '__| \ \ / / | |  / _ \ \ \ /\ / /
+  | |  | | | | | |_  |  __/ | |     \ V /  | | |  __/  \ V  V / 
+ |___| |_| |_|  \__|  \___| |_|      \_/   |_|  \___|   \_/\_/  
+                                                                
+  _   _          _                       
+ | | | |   ___  | |  _ __     ___   _ __ 
+ | |_| |  / _ \ | | | '_ \   / _ \ | '__|
+ |  _  | |  __/ | | | |_) | |  __/ | |   
+ |_| |_|  \___| |_| | .__/   \___| |_|   
+                    |_|                  
 
 REQUIRMENTS
+    -dotnet 10
+    -docker
 
 INSTALL
+    1. `cd cdbv1/cdbv1`
+    2. execute `dotnet run`
 
-Features
+ROADMAP
 
+    [ ] Feature: Postmortem (active)
 
+    [ ] Feature: Timer
+    [ ] Feature: Testing
+    [ ] Feature: CD/CD Pipeline
+    [ ] Feature: Pagination (Data: DsaProblem)
+        - Problem: Loading too many DsaProblem's creates clutter on the Display
+        - Solution: Load only 5 problems and ask user if they would like to load DsaProblem's
+    [ ] Feature: Pagination (Data: JobApplication)
+        - Problem: Job application can be a very large body of text.
+        - Solution: Load summary. Use AI to Create Summary. JobDescription when JobDescription is inserted.
+                    - Also, present user with option to load origional job description
+    [ ] Feature: Improved Sorting (Data: DsaProblem)
 
-
-
-
-use company name instead of id, thgen i dont need to map.
-
-
-why make it complex
-
-there wont be more than a couple dozen, and their names will be unique anyways.
-
-
-
-
-Projects section
-    - mrp
-    - cdbv1
-
-c# section
-    -
-
-
-
-
-problem page
-
-        problem
-
-        solution input
-
-        postmortem input
-
-
-
-
-
-TESTING
-
-CI/CD
-
-FIX DATE ACROSS APP
-
-
-
-c#
--> record
-    -> when to use
--> enumerations (enum)
-    -> when to use: Use enums when a value must be one of a fixed set of options
--> LINQ
-
-
-
-
-Specific pages should inherit page
-page will have method: return to main menu
-
-
-
-Feature: Pagination
-Line items take up alot of space, so
-implement sorting, and pagination. Load only five
-at a time, then ask user, if they want to load more
-
-
-
-feauture: the job description takes too much space in the table,
-and looks bad. so, i want to only load the first 20 or so characters of the string
-.. if i want to see the whole application, i should clear console, and load it, foramted, not in some table.
-
-
-
-feature 'dotnet run 'page'
-
-
-
-TODO: dsaproblem
-
-descruipt color = blue
-
-
-problem
-    -> most recent solution --> postmoretm
-            --> prev solution --> postmortem
-                --> prev solution --> postmortem
-
-
-
-
-
-Feature: Flashcards
-Feature: Problem Scheduler
-Feature: migrate DB to file
+    [ ] Additional Features:
+        Feature: Flashcards
+        Feature: Problem Scheduler
+        Feature: migrate DB to file
