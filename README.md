@@ -1,15 +1,8 @@
-`  ___           _                           _                   `
-` |_ _|  _ __   | |_    ___   _ __  __   __ (_)   ___  __      __`
-`  | |  | '_ \  | __|  / _ \ | '__| \ \ / / | |  / _ \ \ \ /\ / /`
-`  | |  | | | | | |_  |  __/ | |     \ V /  | | |  __/  \ V  V / `
-` |___| |_| |_|  \__|  \___| |_|      \_/   |_|  \___|   \_/\_/  `
-                                                        `
-  _   _          _                       
- | | | |   ___  | |  _ __     ___   _ __ 
- | |_| |  / _ \ | | | '_ \   / _ \ | '__|
- |  _  | |  __/ | | | |_) | |  __/ | |   
- |_| |_|  \___| |_| | .__/   \___| |_|   
-                    |_|                  
+PURPOSE
+    - to track applications and companies
+    - to review and practice dsa
+    - in-depth post mortem for every solution
+    - all "75 hard" practice problems with difficulty and topic properties
 
 REQUIRMENTS
     -dotnet 10
@@ -41,7 +34,7 @@ ROADMAP
     [ ] Additional Features:
         Feature: Flashcards
         Feature: Problem Scheduler
-        Feature: migrate DB to file
+        Feature: migrate DB to file (persitant storage if volume is deleted)
 
 BUGS
     [ ] DsaProblemPage. Adding solution. If non of the problems are stale, and the table is empty. They problems are still selected.
