@@ -12,7 +12,7 @@ public class DsaReviewPage() : Page
         var DsaReviewPageChoice = AnsiConsole.Prompt(
         new SelectionPrompt<string>()
         .Title("[green]Please select topic[/]")
-        .AddChoices("problem solving boosters", "string", "recursion", "graph", "bigo"));
+        .AddChoices("problem solving boosters", "string"));
 
         AnsiConsole.MarkupLine($"[gray]{DsaReviewPageChoice.ToUpper()} Review[/]");
 
@@ -43,24 +43,35 @@ public class DsaReviewPage() : Page
     }
     public static void StringReviewPage()
     {
-        AnsiConsole.MarkupLine("[red]Reusable Ideas[/]");
+        AnsiConsole.MarkupLine("[red]Reusable Ideas - String[/]");
         AnsiConsole.MarkupLine("[black]Building Strings With Dynamic Arrays[/]");
         AnsiConsole.MarkupLine("[gray]Check if strings are mutable in your language of choice. If you need to build a string character by character, and the strings in your langauge are immutabl;e, put the characters in a dynamic array instead. When you are done, convert the array to a string with the built-in JOIN method.[/]");
     }
     public static void TwoPointersReviewPage()
     {
-        AnsiConsole.MarkupLine("[red]Reusable Ideas[/]");
-        AnsiConsole.MarkupLine("[black]SOME REUSABLE IDEA[/]");
-        AnsiConsole.MarkupLine("[gray]SOME EXPLANATION[/]");
+        AnsiConsole.MarkupLine("[red]Reusable Ideas - Two Pointers[/]");
+        AnsiConsole.MarkupLine("[black]Search With Inward Pointers[/]");
+        AnsiConsole.MarkupLine("[gray]... coming soon[/]");
     }
-    
+        public static void GridsAndMatrices()
+    {
+        AnsiConsole.MarkupLine("[red]Reusable Ideas[/]");
+        AnsiConsole.MarkupLine("[black]... coming soon[/]");
+        AnsiConsole.MarkupLine("[gray]... coming soon[/]");
+    }
+            public static void BinarySearch()
+    {
+        AnsiConsole.MarkupLine("[red]Reusable Ideas[/]");
+        AnsiConsole.MarkupLine("[black]... coming soon[/]");
+        AnsiConsole.MarkupLine("[gray]... coming soon[/]");
+    }
     
     /////// use SomeReviewPage as template to get started when creating new review page.
     public static void SomeReviewPage()
     {
         AnsiConsole.MarkupLine("[red]Reusable Ideas[/]");
-        AnsiConsole.MarkupLine("[black]SOME REUSABLE IDEA[/]");
-        AnsiConsole.MarkupLine("[gray]SOME EXPLANATION[/]");
+        AnsiConsole.MarkupLine("[black]... coming soon[/]");
+        AnsiConsole.MarkupLine("[gray]... coming soon[/]");
     }
     public async Task NavigateTopicPage()
     {
