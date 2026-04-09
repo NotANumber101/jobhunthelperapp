@@ -4,6 +4,10 @@ using Microsoft.Extensions.Logging.Console;
 using Npgsql;
 namespace cdbv1.Helpers;
 
+
+/// https://www.npgsql.org/doc/api/Npgsql.NpgsqlDataSource.html
+
+
 public class DbSourceBuilder(string host)
 {
     readonly string loadBalanaceHosts = "Load Balance Hosts=true;";
@@ -27,3 +31,4 @@ public class DbSourceBuilder(string host)
     }
 
 }
+
