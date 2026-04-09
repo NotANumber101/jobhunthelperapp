@@ -7,6 +7,7 @@ using cdbv1.Helpers;
 using Npgsql;
 
 namespace cdbv1.Pages;
+
 public class ApplicationsPage() : Page
 {
     private List<CompanyInformation> companies = [];
@@ -16,23 +17,32 @@ public class ApplicationsPage() : Page
     {
         // view all companies
         await GetAllCompanies();
-        DisplayCompanyInformationTable();
+
         // view all applications
         await GetAllApplications();
         DisplayApplicationsTable();
+        if (AnsiConsole.Confirm("Add New Application?"))
+        {
+            ClearDisplay();
+            DisplayCompanyInformationTable();
+            AnsiConsole.MarkupLine("[gray]Create new application[/]");
+            string companyName = AnsiConsole.Ask<string>($"[green]Enter Company Name:[/] ");
+            string currentStatus = AnsiConsole.Ask<string>($"[green]Enter Current Status:[/] ");
+            string jobLocation = AnsiConsole.Ask<string>($"[green]Enter Job Location:[/] ");
+            string jobTitle = AnsiConsole.Ask<string>($"[green]Enter Job Title:[/] ");
+            string jobDescription = AnsiConsole.Ask<string>($"[green]Enter Job Description:[/] ");
 
+            await CreateNewApplication(new()
+            {
+                CompanyName = companyName,
+                CurrentStatus = currentStatus,
+                JobLocation = jobLocation,
+                JobTitle = jobTitle,
+                JobDescription = jobDescription
+            });
+        }
         await MainMenuWithConfirm();
-
     }
-    // private void AddNewApplication()
-    // {
-    //     // select company (spectre select)
-    //     // if company not in list
-    //     // add company 
-    //     // else add companyid to application model
-    //     // build application model
-    //     // try push application to db
-    // }
     private async Task GetAllCompanies()
     {
         try
@@ -76,12 +86,15 @@ public class ApplicationsPage() : Page
             await using (var reader = await cmd.ExecuteReaderAsync())
                 while (await reader.ReadAsync())
                 {
-                    JobApplication jobApp = new(
-                        reader.GetInt32(0), reader.GetInt32(1),
-                        reader.GetString(2), reader.GetString(3),
-                        reader.GetString(4), reader.GetString(5),
-                        reader.GetString(6)
-                    );
+                    var jobApp = new JobApplication()
+                    {
+                        CompanyName = reader.GetString(1),
+                        CurrentStatus = reader.GetString(2),
+                        CurrentStatusDate = reader.GetDateTime(3),
+                        JobLocation = reader.GetString(4),
+                        JobTitle = reader.GetString(5),
+                        JobDescription = reader.GetString(6)
+                    };
                     jobApplications.Add(jobApp);
                 }
             AnsiConsole.MarkupLine($"        -> [green]Done. {jobApplications.Count}[/]");
@@ -90,6 +103,33 @@ public class ApplicationsPage() : Page
         {
             Console.WriteLine(e.Message);
         }
+    }
+    private async Task CreateNewApplication(JobApplication jobApplication)
+    {
+        try
+        {
+            DbInfoController dbIc = new();
+            var dbsb = new DbSourceBuilder("localhost");
+            await using var dataSource = dbsb.Builder().Build();
+            AnsiConsole.MarkupLine("[gray]Inserting data...[/]");
+            AnsiConsole.MarkupLine("    -> [gray]Inserting new application...[/]");
+            await using var connection = await dataSource.OpenConnectionAsync();
+            await using var transaction = await connection.BeginTransactionAsync();
+
+            DateOnly today = DateOnly.FromDateTime(DateTime.Now);
+
+            await using var command1 = new NpgsqlCommand("INSERT into application (company_name, current_status, current_status_date, job_location, job_title, job_description)" +
+            $" VALUES ('{jobApplication.CompanyName}', '{jobApplication.CurrentStatus}', '{today}', '{jobApplication.JobLocation}', '{jobApplication.JobTitle}', '{jobApplication.JobDescription}')", connection, transaction);
+            await command1.ExecuteNonQueryAsync();
+
+            await transaction.CommitAsync();
+            AnsiConsole.MarkupLine($"        -> [green]Done.[/][gray]New Application added.[/]");
+        }
+        catch (NpgsqlException e)
+        {
+            Console.WriteLine(e.Message);
+        }
+
     }
     private void DisplayCompanyInformationTable()
     {
@@ -112,8 +152,7 @@ public class ApplicationsPage() : Page
     private void DisplayApplicationsTable()
     {
         var applicationsTable = new Table().ShowRowSeparators();
-        applicationsTable.AddColumn("Id");
-        applicationsTable.AddColumn("CompanyId");
+        applicationsTable.AddColumn("CompanyName");
         applicationsTable.AddColumn("CurrentStatus");
         applicationsTable.AddColumn("CurrentStatusDate");
         applicationsTable.AddColumn("JobLocation");
@@ -123,10 +162,9 @@ public class ApplicationsPage() : Page
         foreach (JobApplication jobApp in jobApplications)
         {
             applicationsTable.AddRow(
-                jobApp.Id.ToString(),
-                jobApp.CompanyId.ToString(),
+                jobApp.CompanyName,
                 jobApp.CurrentStatus,
-                jobApp.CurrentStatusDate,
+                jobApp.CurrentStatusDate.ToString(),
                 jobApp.JobLocation,
                 jobApp.JobTitle,
                 jobApp.JobDescription

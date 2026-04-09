@@ -3,9 +3,9 @@
 -- create a table
 CREATE TABLE application (
   id SERIAL,
-  company_id INT,
+  company_name VARCHAR(100),
   current_status VARCHAR(100),
-  current_status_date VARCHAR(100),
+  current_status_date DATE NOT NULL DEFAULT '1-11-2026',
   job_location VARCHAR(100),
   job_title VARCHAR(100),
   job_description TEXT
@@ -304,13 +304,13 @@ INSERT INTO contact_message (contact_id, title, body, date_of_message, platform)
 
 
 -- spacex
-INSERT INTO application (company_id, current_status, current_status_date, job_location, job_title, job_description) 
-  VALUES (1, 'applied', '3/28/2026', 'REMOTE', 'software application engineer', 'please paste the job posting here');
+INSERT INTO application (company_name, current_status, job_location, job_title, job_description) 
+  VALUES ('spacex', 'applied', 'REMOTE', 'software application engineer', 'please paste the job posting here');
 
 
 -- anduril
-INSERT INTO application (company_id, current_status, current_status_date, job_location, job_title, job_description) 
-  VALUES (2, 'not-applied', 'APRIL 1, 2026', 'COLORADO', 'fulls stack software engineer', 'please paste the job posting here');
+INSERT INTO application (company_name, current_status, job_location, job_title, job_description) 
+  VALUES ('ssss', 'not-applied', 'COLORADO', 'fulls stack software engineer', 'please paste the job posting here');
 
 
 
