@@ -25,6 +25,7 @@ public class ApplicationsPage() : Page
         if (AnsiConsole.Confirm("Add New Application?"))
         {
             ClearDisplay();
+            // instead of a table; load list, select application, and open specific page for one application
             DisplayCompanyInformationTable();
             AnsiConsole.MarkupLine("[gray]Create new application[/]");
             string companyName = AnsiConsole.Ask<string>($"[green]Enter Company Name:[/] ");

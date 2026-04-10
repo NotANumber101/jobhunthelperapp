@@ -6,6 +6,7 @@ namespace cdbv1.Helpers;
 
 
 /// https://www.npgsql.org/doc/api/Npgsql.NpgsqlDataSource.html
+/// https://www.npgsql.org/doc/failover-and-load-balancing.html?tabs=7
 
 
 public class DbSourceBuilder(string host)

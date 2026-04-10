@@ -43,6 +43,7 @@ public class DsaReviewPage() : Page
     }
     public static void StringReviewPage()
     {
+        // https://learn.microsoft.com/en-us/dotnet/csharp/programming-guide/strings/
         AnsiConsole.MarkupLine("[red]Reusable Ideas - String[/]");
         AnsiConsole.MarkupLine("[black]Building Strings With Dynamic Arrays[/]");
         AnsiConsole.MarkupLine("[gray]Check if strings are mutable in your language of choice. If you need to build a string character by character, and the strings in your langauge are immutabl;e, put the characters in a dynamic array instead. When you are done, convert the array to a string with the built-in JOIN method.[/]");

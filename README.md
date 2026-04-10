@@ -19,6 +19,21 @@ RUN interactive terminal
     2. cd into cdbv1/cdbv1 
     3. execute `dotnet run`
 
+
+STACK:
+    1. https://spectreconsole.net
+
+CONTRIBUTE: https://github.com/NotANumber101/jobhunthelperapp
+
+
+Acknowledgments: 75hard questions taken from neetcode.io
+
+
+
+
+
+
+
 TODO: test sequence
 
     after dotnet run, the app will confirm db is OK
@@ -48,8 +63,13 @@ TODO: test sequence
 ROADMAP
     [ ] Feature: Network Messaging (important)
 
+    [ ] Feature: shorten (preview) version of job app description
+        -> solves problem of table looking like shit
+
     [ ] Feature: Postmortem
             -> timing
+
+    [ ] Implement enums where appropriate
 
     [ ] Feature: DSA SOLUTION PAGE (active)
                 -> view all solutions, sorted by most recent
@@ -72,6 +92,7 @@ ROADMAP
         Feature: migrate DB to file (persitant storage if volume is deleted)
 
     [ ] Consider this: create test data for alerting (ie application or message that is 2 weeks old)
+    [ ] DATA: add "list" field to dsa_problem (ie list = blind 75)
 
 BUGS
     [priority] async is totally jacked up. (displays appear sooner than their predecesor)
