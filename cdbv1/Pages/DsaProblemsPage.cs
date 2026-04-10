@@ -163,8 +163,7 @@ public class DsaProblemsPage() : Page
 
             DateOnly today = DateOnly.FromDateTime(DateTime.Now);
             await using var command1 = new NpgsqlCommand(dbIc.CreateNewDsaSolution(problemId, solution), connection, transaction);
-
-            int solutionId = (int)command1.ExecuteScalar();
+            int solutionId = (int)command1.ExecuteScalar()!;
 
             postMortem.SolutionId = solutionId;
 
