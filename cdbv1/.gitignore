@@ -3,4 +3,5 @@
 /bin
 /obj
 
-cdbv1/postgres/init-scripts
+cdbv1/postgres/init-scripts/04_init_my_applications.sql
+/postgres/init-scripts/04_init_my_applications.sql
