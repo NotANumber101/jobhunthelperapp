@@ -9,6 +9,14 @@ public class NetworkPage() : Page
     {
         AnsiConsole.MarkupLine($"[gray]NETWORK PAGE[/]");
         AnsiConsole.MarkupLine($"[gray]Coming soon...[/]");
+
+    // dispaly list of all contacts
+        // select contact to view most recent message
+    
+
+    // display: Bored? Heres how to get network
+    //              1. find contacts
+    //              2. cold outreach
         await MainMenuWithConfirm();
     }
 }

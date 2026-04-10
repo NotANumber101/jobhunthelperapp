@@ -33,9 +33,9 @@ CREATE TABLE contact_message (
 
 -- permanent companies
 INSERT INTO company_information (name, job_board_link, company_description)
-  VALUES ('spacex', 'www.spacex.com/careers', 'an aerospace company');
+  VALUES ('spacex', 'https://www.spacex.com/careers', 'an aerospace company');
 INSERT INTO company_information (name, job_board_link, company_description)
-  VALUES ('anduril', 'https://www.anduril.com/careers', 'a defense company');
+  VALUES ('anduril', 'https://www.anduril.com/open-roles', 'a defense company');
 INSERT INTO company_information (name, job_board_link, company_description)
   VALUES ('apex', 'https://www.apexspace.com/careers#opportunities', 'a space company');
 

@@ -1,3 +1,11 @@
+Idea: 
+    instructions for new applications
+        1. research company (deeply)
+            a.
+            b.
+        2. 
+
+
 PURPOSE
     - to track applications and companies
     - to review and practice dsa

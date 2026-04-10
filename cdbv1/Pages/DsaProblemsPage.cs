@@ -173,7 +173,6 @@ public class DsaProblemsPage() : Page
             await using var command2 = new NpgsqlCommand(dbIc.UpdateDsaProblemDateCompletedTodayId(problemId), connection, transaction);
             await command2.ExecuteNonQueryAsync();
 
-
             await using var command3 = new NpgsqlCommand(
                 "INSERT INTO dsa_postmortem (solution_id, design_time_ms, code_time_ms, mistakes, analysis, rubric_problem_solving_score, rubric_coding_score, rubric_verification_score, rubric_communication_score)" +
                 $" VALUES ({solutionId}, {postMortem.DesignTimeMs}, {postMortem.CodeTimeMs}, '{postMortem.Mistakes}', '{postMortem.Analysis}', {postMortem.RubricCodingScore}, {postMortem.RubricCommunicationScore}, {postMortem.RubricProblemSolvingScore}, {postMortem.RubricVerificationScore});",
@@ -236,6 +235,10 @@ public class DsaProblemsPage() : Page
     }
     private IEnumerable<DsaProblem> DisplaySelectProblemFilter()
     {
+        // TODO: add lazy option
+                // this means that the first option will bypass all other options,
+                // allowing the user to quickly tap, enter, enter, enter to get to a problem.
+        // TODO: add any option
         var difficultyFilterOptions = new List<string> { "easy", "medium", "hard" };
         var difficultyFilterSelected = AnsiConsole.Prompt(
             new SelectionPrompt<string>()
@@ -243,7 +246,8 @@ public class DsaProblemsPage() : Page
                 .PageSize(10)
                 .AddChoices(difficultyFilterOptions));
         // option: select completed with in certain time window
-        // TODO: multi select
+        // TODO: add select multiple option
+        // TODO: add any option
         var topicFilterOptions = new List<string> { "string", "array", "two pointers",
         "sliding window", "stack", "binary search", "linked list",
         "tree", "heap", "backtracking", "tries", "graphs", "1D dynamic programming",

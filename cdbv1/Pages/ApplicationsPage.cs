@@ -24,9 +24,9 @@ public class ApplicationsPage() : Page
         await DisplayApplicationsTable();
         if (AnsiConsole.Confirm("Add New Application?"))
         {
-            ClearDisplay();
+            await ClearDisplay();
             // instead of a table; load list, select application, and open specific page for one application
-            DisplayCompanyInformationTable();
+            await DisplayCompanyInformationTable();
             AnsiConsole.MarkupLine("[gray]Create new application[/]");
             string companyName = AnsiConsole.Ask<string>($"[green]Enter Company Name:[/] ");
             string currentStatus = AnsiConsole.Ask<string>($"[green]Enter Current Status:[/] ");
@@ -104,6 +104,8 @@ public class ApplicationsPage() : Page
     }
     private static async Task CreateNewApplication(JobApplication jobApplication)
     {
+        /////// TODO: abort feature
+        ///     ---> tell user: leave field empty to cancel
         try
         {
             DbInfoController dbIc = new();
@@ -153,15 +155,13 @@ public class ApplicationsPage() : Page
         applicationsTable.AddColumn("CompanyName");
         applicationsTable.AddColumn("CurrentStatus");
         applicationsTable.AddColumn("CurrentStatusDate");
-        applicationsTable.AddColumn("JobDescription");
 
         foreach (JobApplication jobApp in jobApplications)
         {
                 applicationsTable.AddRow(
                     jobApp.CompanyName,
                     jobApp.CurrentStatus,
-                    jobApp.CurrentStatusDate.ToString(),
-                    jobApp.JobDescription
+                    jobApp.CurrentStatusDate.ToString()
                 );
             // }
 
