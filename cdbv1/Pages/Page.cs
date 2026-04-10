@@ -8,20 +8,16 @@ namespace cdbv1.Pages;
 public class Page()
 
 {
-    static Page()
-    {
-        // Console.WriteLine("TeST Page should log every page");
-    }
     public async Task MainMenuWithConfirm()
     {
         if (AnsiConsole.Confirm("Return to main menu?"))
         {
-            ClearDisplay();
+            await ClearDisplay();
             AnsiConsole.MarkupLine("[gray]Returning to main menu...[/]");
             await MainMenu();
         }
     }
-    public static async Task MainMenu()
+    public async Task MainMenu()
     {
         var pageOptions = new List<string> { "Applications", "Network", "DSA Problems", "DSA Review" };
         var pageChoice = AnsiConsole.Prompt(
@@ -55,11 +51,11 @@ public class Page()
             AnsiConsole.MarkupLine($"[gray]Unknown page[/]");
         }
     }
-    public static void HelloWorld()
+    public async Task HelloWorld()
     {
         AnsiConsole.MarkupLine("[red]HELLO WORLD[/], log from Page().HelloWorld()");
     }
-    public static void ClearDisplay()
+    public async Task ClearDisplay()
     {
         AnsiConsole.Clear();
     }

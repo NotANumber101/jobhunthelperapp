@@ -10,7 +10,7 @@ using cdbv1.Pages;
 try
 {
     DbInfoController dbIc = new();
-    var dbsb = new DbSourceBuilder("db,localhost");
+var dbsb = new DbSourceBuilder("db,localhost");
     await using var dataSource = dbsb.Builder().BuildMultiHost();
     // FETCH DATA
     await using var connection = await dataSource.OpenConnectionAsync();

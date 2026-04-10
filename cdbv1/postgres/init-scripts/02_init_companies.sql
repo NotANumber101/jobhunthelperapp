@@ -36,6 +36,8 @@ INSERT INTO company_information (name, job_board_link, company_description)
   VALUES ('spacex', 'www.spacex.com/careers', 'an aerospace company');
 INSERT INTO company_information (name, job_board_link, company_description)
   VALUES ('anduril', 'https://www.anduril.com/careers', 'a defense company');
+INSERT INTO company_information (name, job_board_link, company_description)
+  VALUES ('apex', 'https://www.apexspace.com/careers#opportunities', 'a space company');
 
 -- mock company contact 
 INSERT INTO company_contact (name, company_name)

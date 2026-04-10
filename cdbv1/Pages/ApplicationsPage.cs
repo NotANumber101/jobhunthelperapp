@@ -1,5 +1,5 @@
 using System;
-using System.Threading.Tasks;
+// using System.Threading.Tasks;
 using cdbv1.Models;
 using Spectre;
 using Spectre.Console;
@@ -21,7 +21,7 @@ public class ApplicationsPage() : Page
 
         // view all applications
         await GetAllApplications();
-        DisplayApplicationsTable();
+        await DisplayApplicationsTable();
         if (AnsiConsole.Confirm("Add New Application?"))
         {
             ClearDisplay();
@@ -40,7 +40,7 @@ public class ApplicationsPage() : Page
             });
 
         }
-        MainMenuWithConfirm();
+        await MainMenuWithConfirm();
     }
     private async Task GetAllCompanies()
     {
@@ -126,27 +126,27 @@ public class ApplicationsPage() : Page
         {
             Console.WriteLine(e.Message);
         }
-
     }
-    private void DisplayCompanyInformationTable()
+    private async Task DisplayCompanyInformationTable()
     {
         var companiesTable = new Table().ShowRowSeparators();
         companiesTable.AddColumn("Id");
         companiesTable.AddColumn("Name");
-        companiesTable.AddColumn("Description");
         companiesTable.AddColumn("JobBoardLink");
+        companiesTable.AddColumn("CompanyDescription");
+
         foreach (var company in companies)
         {
             companiesTable.AddRow(
                 company.Id.ToString(),
                 company.Name,
-                company.CompanyDescription,
-                company.JobBoardLink
+                company.JobBoardLink,
+                company.CompanyDescription
             );
         }
         AnsiConsole.Write(companiesTable);
     }
-    private void DisplayApplicationsTable()
+    private async Task DisplayApplicationsTable()
     {
         var applicationsTable = new Table().ShowRowSeparators();
         applicationsTable.AddColumn("CompanyName");
@@ -156,12 +156,14 @@ public class ApplicationsPage() : Page
 
         foreach (JobApplication jobApp in jobApplications)
         {
-            applicationsTable.AddRow(
-                jobApp.CompanyName,
-                jobApp.CurrentStatus,
-                jobApp.CurrentStatusDate.ToString(),
-                jobApp.JobDescription
-            );
+                applicationsTable.AddRow(
+                    jobApp.CompanyName,
+                    jobApp.CurrentStatus,
+                    jobApp.CurrentStatusDate.ToString(),
+                    jobApp.JobDescription
+                );
+            // }
+
         }
         AnsiConsole.Write(applicationsTable);
     }
