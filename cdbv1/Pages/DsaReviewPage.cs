@@ -53,19 +53,19 @@ public class DsaReviewPage() : Page
         AnsiConsole.MarkupLine("[black]Search With Inward Pointers[/]");
         AnsiConsole.MarkupLine("[gray]... coming soon[/]");
     }
-        public static void GridsAndMatrices()
+    public static void GridsAndMatricesReviewPage()
     {
         AnsiConsole.MarkupLine("[red]Reusable Ideas[/]");
         AnsiConsole.MarkupLine("[black]... coming soon[/]");
         AnsiConsole.MarkupLine("[gray]... coming soon[/]");
     }
-            public static void BinarySearch()
+    public static void BinarySearch()
     {
         AnsiConsole.MarkupLine("[red]Reusable Ideas[/]");
         AnsiConsole.MarkupLine("[black]... coming soon[/]");
         AnsiConsole.MarkupLine("[gray]... coming soon[/]");
     }
-    
+
     /////// use SomeReviewPage as template to get started when creating new review page.
     public static void SomeReviewPage()
     {
@@ -73,7 +73,7 @@ public class DsaReviewPage() : Page
         AnsiConsole.MarkupLine("[black]... coming soon[/]");
         AnsiConsole.MarkupLine("[gray]... coming soon[/]");
     }
-    public async Task NavigateTopicPage()
+    public void NavigateTopicPage()
     {
 
     }

@@ -14,10 +14,10 @@ public class DsaProblemsPage() : Page
 
 {
     List<DsaProblem> dsaProblems = [];
+
     public async Task Display()
 
     {
-
         AnsiConsole.MarkupLine($"[gray]DSA Problems[/]");
         await GetAllDsaProblems();
         await NavigateDsaProblemsPage();
@@ -34,7 +34,7 @@ public class DsaProblemsPage() : Page
     private async Task NavigateDsaProblemsPage()
     {
         // AnsiConsole.Clear();
-        HelloWorld();
+        // HelloWorld();
         ///////// TODO
         /// 1. View Solutions page.
         ///           -> Shows list of all problems, select which one, to load solutions for that problem
@@ -79,33 +79,31 @@ public class DsaProblemsPage() : Page
                     string solution = AnsiConsole.Ask<string>($"[green]Please enter your solution: [/]");
                     ////// TODO
                     /// POST MORTEM
-            string pmMistakes = AnsiConsole.Ask<string>($"[green]Post-Mortem | Mistakes:[/] ");
-            string pmAnalysis = AnsiConsole.Ask<string>($"[green]Post-Mortem | Analysis:[/] ");
-            int pmRubricCodingScore = 0;
-            int pmRubricCommunicationScore = 0;
-            int pmRubricProblemSolvingScore = 0;
-            int pmRubricVerificationScore = 0;
+                    string pmMistakes = AnsiConsole.Ask<string>($"[green]Post-Mortem | Mistakes:[/] ");
+                    string pmAnalysis = AnsiConsole.Ask<string>($"[green]Post-Mortem | Analysis:[/] ");
+                    int pmRubricCodingScore = 0;
+                    int pmRubricCommunicationScore = 0;
+                    int pmRubricProblemSolvingScore = 0;
+                    int pmRubricVerificationScore = 0;
 
-            PostMortem postMortem = new()
-            {
-                DesignTimeMs = 10000,
-                CodeTimeMs = 60000,
-                Mistakes = pmMistakes,
-                Analysis = pmAnalysis,
-                RubricCodingScore = pmRubricCodingScore,
-                RubricCommunicationScore = pmRubricCommunicationScore,
-                RubricProblemSolvingScore = pmRubricProblemSolvingScore,
-                RubricVerificationScore = pmRubricVerificationScore
-            };
-                    try
+                    PostMortem postMortem = new()
                     {
-                        await CreateNewSolution(randomProblem.Id, solution, postMortem);
-                        await MainMenuWithConfirm();
-                    }
-                    catch (NpgsqlException e)
-                    {
-                        Console.Write(e.Message);
-                    }
+                        DesignTimeMs = 10000,
+                        CodeTimeMs = 60000,
+                        Mistakes = pmMistakes,
+                        Analysis = pmAnalysis,
+                        RubricCodingScore = pmRubricCodingScore,
+                        RubricCommunicationScore = pmRubricCommunicationScore,
+                        RubricProblemSolvingScore = pmRubricProblemSolvingScore,
+                        RubricVerificationScore = pmRubricVerificationScore
+                    };
+
+
+                    await CreateNewSolution(randomProblem.Id, solution, postMortem);
+                    await MainMenuWithConfirm();
+
+                    // MainMenuWithConfirm();
+
                 }
                 else
                 {
@@ -151,7 +149,7 @@ public class DsaProblemsPage() : Page
             Console.WriteLine(e.Message);
         }
     }
-    private async Task CreateNewSolution(int problemId, string solution, PostMortem postMortem)
+    private static async Task CreateNewSolution(int problemId, string solution, PostMortem postMortem)
     {
         try
         {
@@ -165,6 +163,7 @@ public class DsaProblemsPage() : Page
 
             DateOnly today = DateOnly.FromDateTime(DateTime.Now);
             await using var command1 = new NpgsqlCommand(dbIc.CreateNewDsaSolution(problemId, solution), connection, transaction);
+
             int solutionId = (int)command1.ExecuteScalar();
 
             postMortem.SolutionId = solutionId;
@@ -177,7 +176,7 @@ public class DsaProblemsPage() : Page
 
 
             await using var command3 = new NpgsqlCommand(
-                "INSERT INTO dsa_postmortem (solution_id, design_time_ms, code_time_ms, mistakes, analysis, rubric_problem_solving_score, rubric_coding_score, rubric_verification_score, rubric_communication_score)"+
+                "INSERT INTO dsa_postmortem (solution_id, design_time_ms, code_time_ms, mistakes, analysis, rubric_problem_solving_score, rubric_coding_score, rubric_verification_score, rubric_communication_score)" +
                 $" VALUES ({solutionId}, {postMortem.DesignTimeMs}, {postMortem.CodeTimeMs}, '{postMortem.Mistakes}', '{postMortem.Analysis}', {postMortem.RubricCodingScore}, {postMortem.RubricCommunicationScore}, {postMortem.RubricProblemSolvingScore}, {postMortem.RubricVerificationScore});",
             connection, transaction);
             await command3.ExecuteNonQueryAsync();
@@ -191,7 +190,7 @@ public class DsaProblemsPage() : Page
         }
 
     }
-    private void DisplayProblemsTable(IEnumerable<DsaProblem> problems, bool staleOnly)
+    private static void DisplayProblemsTable(IEnumerable<DsaProblem> problems, bool staleOnly)
     {
         var problemsTable = new Table().ShowRowSeparators();
         problemsTable.AddColumn("Name");
@@ -224,7 +223,7 @@ public class DsaProblemsPage() : Page
         }
         AnsiConsole.Write(problemsTable);
     }
-    private bool IsStale(DsaProblem problem)
+    private static bool IsStale(DsaProblem problem)
     {
         DateTime thisDay = DateTime.Today;
         if (problem != null)

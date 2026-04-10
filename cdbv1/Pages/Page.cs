@@ -21,7 +21,7 @@ public class Page()
             await MainMenu();
         }
     }
-    public async Task MainMenu()
+    public static async Task MainMenu()
     {
         var pageOptions = new List<string> { "Applications", "Network", "DSA Problems", "DSA Review" };
         var pageChoice = AnsiConsole.Prompt(

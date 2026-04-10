@@ -31,14 +31,16 @@ public class ApplicationsPage() : Page
             string currentStatus = AnsiConsole.Ask<string>($"[green]Enter Current Status:[/] ");
             string jobDescription = AnsiConsole.Ask<string>($"[green]Enter Job Description:[/] ");
 
+
             await CreateNewApplication(new()
             {
                 CompanyName = companyName,
                 CurrentStatus = currentStatus,
                 JobDescription = jobDescription
             });
+
         }
-        await MainMenuWithConfirm();
+        MainMenuWithConfirm();
     }
     private async Task GetAllCompanies()
     {
@@ -57,8 +59,8 @@ public class ApplicationsPage() : Page
                     {
                         Id = reader.GetInt32(0),
                         Name = reader.GetString(1),
-                        JobBoardLink = reader.GetString(3),
-                        CompanyDescription = reader.GetString(2)
+                        JobBoardLink = reader.GetString(2),
+                        CompanyDescription = reader.GetString(3)
                     };
                     companies.Add(company);
                 }
@@ -99,7 +101,7 @@ public class ApplicationsPage() : Page
             Console.WriteLine(e.Message);
         }
     }
-    private async Task CreateNewApplication(JobApplication jobApplication)
+    private static async Task CreateNewApplication(JobApplication jobApplication)
     {
         try
         {
