@@ -5,6 +5,7 @@ using Spectre.Console;
 using cdbv1.Helpers;
 using Npgsql;
 using Microsoft.Extensions.Logging;
+using cdbv1.Controllers;
 
 //test commit
 
@@ -13,7 +14,7 @@ namespace cdbv1.Pages;
 public class DsaProblemsPage() : Page
 
 {
-    List<DsaProblem> dsaProblems = [];
+    MyController myController = new();
 
     public async Task Display()
 
@@ -22,8 +23,10 @@ public class DsaProblemsPage() : Page
         await GetAllDsaProblems();
         await NavigateDsaProblemsPage();
     }
-    private IEnumerable<DsaProblem> FilterProblems(string difficultyIso, string topicIso)
+    private async Task<IEnumerable<DsaProblem>> FilterProblems(string difficultyIso, string topicIso)
     {
+        var dsaProblems = await myController.GetAllDsaProblems();
+
         IEnumerable<DsaProblem> problemQuery =
             from problem in dsaProblems
             where problem.Difficulty == difficultyIso
@@ -49,13 +52,14 @@ public class DsaProblemsPage() : Page
         {
             AnsiConsole.MarkupLine($"[gray]View Problems[/]");
             DisplayProblemsBarChart();
+            var dsaProblems = await myController.GetAllDsaProblems(); 
             DisplayProblemsTable(dsaProblems, false);
             await MainMenuWithConfirm();
         }
         else if (pageChoice == "Solve Problem")
         {
             AnsiConsole.MarkupLine($"[gray]Solve Problems[/]");
-            IEnumerable<DsaProblem> filteredProblems = DisplaySelectProblemFilter();
+            IEnumerable<DsaProblem> filteredProblems = await DisplaySelectProblemFilter();
             if (AnsiConsole.Confirm("Stale only?"))
             {
                 DisplayProblemsTable(filteredProblems, true);
@@ -68,38 +72,10 @@ public class DsaProblemsPage() : Page
             {
                 if (filteredProblems.Any())
                 {
-                    AnsiConsole.Clear();
-                    AnsiConsole.MarkupLine("[red] Starting... new problem[/]");
                     DsaProblem randomProblem = filteredProblems.ElementAt(0);
-                    AnsiConsole.MarkupLine($"ProblemID: {randomProblem.Id} | Name: [green]{randomProblem.Name}[/]");
-                    AnsiConsole.MarkupLine($"Difficulty: {randomProblem.Difficulty} | Topic: [green]{randomProblem.Topic}[/]");
-                    AnsiConsole.WriteLine("");
-                    Console.WriteLine($"Description:{randomProblem.Description}");
-                    AnsiConsole.WriteLine("");
-                    string solution = AnsiConsole.Ask<string>($"[green]Please enter your solution: [/]");
-                    ////// TODO
-                    /// POST MORTEM
-                    string pmMistakes = AnsiConsole.Ask<string>($"[green]Post-Mortem | Mistakes:[/] ");
-                    string pmAnalysis = AnsiConsole.Ask<string>($"[green]Post-Mortem | Analysis:[/] ");
-                    int pmRubricCodingScore = 0;
-                    int pmRubricCommunicationScore = 0;
-                    int pmRubricProblemSolvingScore = 0;
-                    int pmRubricVerificationScore = 0;
+                    await DisplayProblem(randomProblem);
 
-                    PostMortem postMortem = new()
-                    {
-                        DesignTimeMs = 10000,
-                        CodeTimeMs = 60000,
-                        Mistakes = pmMistakes,
-                        Analysis = pmAnalysis,
-                        RubricCodingScore = pmRubricCodingScore,
-                        RubricCommunicationScore = pmRubricCommunicationScore,
-                        RubricProblemSolvingScore = pmRubricProblemSolvingScore,
-                        RubricVerificationScore = pmRubricVerificationScore
-                    };
-
-
-                    await CreateNewSolution(randomProblem.Id, solution, postMortem);
+                    await CreateNewSolutionInput(randomProblem.Id);
                     await MainMenuWithConfirm();
 
                     // MainMenuWithConfirm();
@@ -122,71 +98,43 @@ public class DsaProblemsPage() : Page
             await MainMenu();
         }
     }
+    private async Task DisplayProblem(DsaProblem problem)
+    {
+        AnsiConsole.MarkupLine("[red] Starting... new problem[/]");
+        AnsiConsole.MarkupLine($"ProblemID: {problem.Id} | Name: [green]{problem.Name}[/]");
+        AnsiConsole.MarkupLine($"Difficulty: {problem.Difficulty} | Topic: [green]{problem.Topic}[/]");
+        AnsiConsole.WriteLine("");
+        Console.WriteLine($"Description:{problem.Description}");
+        AnsiConsole.WriteLine("");
+    }
     private async Task GetAllDsaProblems()
     {
-        try
-        {
-            DbInfoController dbIc = new();
-            var dbsb = new DbSourceBuilder("localhost");
-            await using var dataSource = dbsb.Builder().Build();
-            AnsiConsole.MarkupLine("[gray]Fetching data...[/]");
-            AnsiConsole.MarkupLine("    -> [gray]Fetching dsa_problems...[/]");
-            await using (var cmd = dataSource.CreateCommand("SELECT * FROM dsa_problem"))
-            await using (var reader = await cmd.ExecuteReaderAsync())
-                while (await reader.ReadAsync())
-                {
-                    DsaProblem dsaProblem = new(
-                        reader.GetInt32(0), reader.GetString(1),
-                        reader.GetString(2), reader.GetString(3),
-                        reader.GetString(4), reader.GetDateTime(5)
-                    );
-                    dsaProblems.Add(dsaProblem);
-                }
-            AnsiConsole.MarkupLine($"        -> [green]Done. {dsaProblems.Count}[/]");
-        }
-        catch (NpgsqlException e)
-        {
-            Console.WriteLine(e.Message);
-        }
+        var res = await myController.GetAllDsaProblems();
     }
-    private static async Task CreateNewSolution(int problemId, string solution, PostMortem postMortem)
+    private async Task CreateNewSolutionInput(int problemId)
     {
-        try
+        string solution = AnsiConsole.Ask<string>($"[green]Please enter your solution: [/]");
+        ////// TODO
+        /// POST MORTEM
+        string pmMistakes = AnsiConsole.Ask<string>($"[green]Post-Mortem | Mistakes:[/] ");
+        string pmAnalysis = AnsiConsole.Ask<string>($"[green]Post-Mortem | Analysis:[/] ");
+        int pmRubricCodingScore = 0;
+        int pmRubricCommunicationScore = 0;
+        int pmRubricProblemSolvingScore = 0;
+        int pmRubricVerificationScore = 0;
+
+        PostMortem postMortem = new()
         {
-            DbInfoController dbIc = new();
-            var dbsb = new DbSourceBuilder("localhost");
-            await using var dataSource = dbsb.Builder().Build();
-            AnsiConsole.MarkupLine("[gray]Inserting data...[/]");
-            AnsiConsole.MarkupLine("    -> [gray]Inserting new solution...[/]");
-            await using var connection = await dataSource.OpenConnectionAsync();
-            await using var transaction = await connection.BeginTransactionAsync();
-
-            DateOnly today = DateOnly.FromDateTime(DateTime.Now);
-            await using var command1 = new NpgsqlCommand(dbIc.CreateNewDsaSolution(problemId, solution), connection, transaction);
-            int solutionId = (int)command1.ExecuteScalar()!;
-
-            postMortem.SolutionId = solutionId;
-
-            Console.WriteLine($"SolutionId: {solutionId} inserted!");
-            // await command1.ExecuteNonQueryAsync();
-            // var cmd = new NpgsqlCommand("UPDATE foo SET bar=@bar WHERE baz=@baz; UPDATE foo SET bar=@bar WHERE baz=@baz");
-            await using var command2 = new NpgsqlCommand(dbIc.UpdateDsaProblemDateCompletedTodayId(problemId), connection, transaction);
-            await command2.ExecuteNonQueryAsync();
-
-            await using var command3 = new NpgsqlCommand(
-                "INSERT INTO dsa_postmortem (solution_id, design_time_ms, code_time_ms, mistakes, analysis, rubric_problem_solving_score, rubric_coding_score, rubric_verification_score, rubric_communication_score)" +
-                $" VALUES ({solutionId}, {postMortem.DesignTimeMs}, {postMortem.CodeTimeMs}, '{postMortem.Mistakes}', '{postMortem.Analysis}', {postMortem.RubricCodingScore}, {postMortem.RubricCommunicationScore}, {postMortem.RubricProblemSolvingScore}, {postMortem.RubricVerificationScore});",
-            connection, transaction);
-            await command3.ExecuteNonQueryAsync();
-
-            await transaction.CommitAsync();
-            AnsiConsole.MarkupLine($"        -> [green]Done.[/][gray]ProblemId:{problemId} has new solution.[/]");
-        }
-        catch (NpgsqlException e)
-        {
-            Console.WriteLine(e.Message);
-        }
-
+            DesignTimeMs = 10000,
+            CodeTimeMs = 60000,
+            Mistakes = pmMistakes,
+            Analysis = pmAnalysis,
+            RubricCodingScore = pmRubricCodingScore,
+            RubricCommunicationScore = pmRubricCommunicationScore,
+            RubricProblemSolvingScore = pmRubricProblemSolvingScore,
+            RubricVerificationScore = pmRubricVerificationScore
+        };
+        await myController.InsertNewSolution(problemId, solution, postMortem);
     }
     private static void DisplayProblemsTable(IEnumerable<DsaProblem> problems, bool staleOnly)
     {
@@ -233,12 +181,13 @@ public class DsaProblemsPage() : Page
         }
         return false;
     }
-    private IEnumerable<DsaProblem> DisplaySelectProblemFilter()
+    private async  Task<IEnumerable<DsaProblem>> DisplaySelectProblemFilter()
     {
         // TODO: add lazy option
-                // this means that the first option will bypass all other options,
-                // allowing the user to quickly tap, enter, enter, enter to get to a problem.
+        // this means that the first option will bypass all other options,
+        // allowing the user to quickly tap, enter, enter, enter to get to a problem.
         // TODO: add any option
+        // var difficultyFilterOptions = new List<string> { "easy", "medium", "hard", "add new"};
         var difficultyFilterOptions = new List<string> { "easy", "medium", "hard" };
         var difficultyFilterSelected = AnsiConsole.Prompt(
             new SelectionPrompt<string>()
@@ -259,33 +208,16 @@ public class DsaProblemsPage() : Page
                 .AddChoices(topicFilterOptions));
         AnsiConsole.MarkupLine($"[blue]Your selected options: {difficultyFilterSelected} | {topicFilterSelected}[/]");
         // hard coded for now
-        return FilterProblems(difficultyFilterSelected, topicFilterSelected);
+        return await FilterProblems(difficultyFilterSelected, topicFilterSelected);
         // return dsaProblems[0];
     }
-    private List<DsaProblem> FilterProblemSetByDifficulty(string diffuclty)
+ 
+    private async Task DisplayProblemsBarChart()
     {
-        List<DsaProblem> difficultSet = new() { };
-        foreach (var problem in dsaProblems)
-        {
-            if (problem != null)
-            {
-                // todo switch enum statement
-                if (problem.Difficulty == diffuclty)
-                {
-                    difficultSet.Add(problem);
-                }
-                else
-                {
-                    continue;
-                }
-            }
-        }
-        return difficultSet;
-    }
-    private void DisplayProblemsBarChart()
-    {
+        var dsaProblems = await myController.GetAllDsaProblems();
         List<DsaProblem> easySet = new() { };
         List<DsaProblem> mediumSet = new() { };
+        List<DsaProblem> hardSet = new() { };
         // testing out this filter method for the hard set.
         // But perhaps it makes more sense to filter in one pass
         // List<DsaProblem> hardSet = FilterProblemSetByDifficulty("hard");
@@ -303,7 +235,7 @@ public class DsaProblemsPage() : Page
             }
             else if (problem.Difficulty.ToLower() == "hard")
             {
-                continue;
+                hardSet.Add(problem);
             }
             else
             {
@@ -314,6 +246,6 @@ public class DsaProblemsPage() : Page
             .Label("[green]Problems[/]")
             .AddItem("Easy", easySet.Count, Color.Green)
             .AddItem("Medium", mediumSet.Count, Color.Yellow)
-            .AddItem("Hard", FilterProblemSetByDifficulty("hard").Count, Color.Red));
+            .AddItem("Hard", hardSet.Count, Color.Red));
     }
 }

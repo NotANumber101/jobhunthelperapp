@@ -12,18 +12,16 @@ namespace cdbv1.Pages;
 
 public class ApplicationsPage() : Page
 {
-    private List<CompanyInformation> companies = [];
-    private List<JobApplication> jobApplications = [];
     private MyController myController = new();
 
     // static ApplicationsPage() {}
     public async Task Display()
     {
         // view all companies
-        await GetAllCompanies();
+        // await GetAllCompanies();
 
         // view all applications
-  ////////////      // await myController.GetAllApplications();
+        //    await myController.GetAllApplications();
 
         await DisplayApplicationsTable();
         await ApplicationPageRedirectMenu();
@@ -95,108 +93,59 @@ public class ApplicationsPage() : Page
     }
     private async Task GetAllCompanies()
     {
-        try
-        {
-            DbInfoController dbIc = new();
-            var dbsb = new DbSourceBuilder("localhost");
-            await using var dataSource = dbsb.Builder().Build();
-            AnsiConsole.MarkupLine("[gray]Fetching data...[/]");
-            AnsiConsole.MarkupLine("    -> [gray]Fetching company_information...[/]");
-            await using (var cmd = dataSource.CreateCommand("SELECT * FROM company_information"))
-            await using (var reader = await cmd.ExecuteReaderAsync())
-                while (await reader.ReadAsync())
-                {
-                    var company = new CompanyInformation()
-                    {
-                        Id = reader.GetInt32(0),
-                        Name = reader.GetString(1),
-                        JobBoardLink = reader.GetString(2),
-                        CompanyDescription = reader.GetString(3)
-                    };
-                    companies.Add(company);
-                }
-            AnsiConsole.MarkupLine($"        -> [green]Done. {companies.Count}[/]");
-        }
-        catch (NpgsqlException e)
-        {
-            Console.WriteLine(e.Message);
-        }
+
+        AnsiConsole.MarkupLine("[gray]Fetching data...[/]");
+        AnsiConsole.MarkupLine("    -> [gray]Fetching company_information...[/]");
+        var res = await myController.GetAllCompanies();
+        AnsiConsole.MarkupLine($"        -> [green]Done. {res.Count}[/]");
+
     }
 
-    // private async Task GetAllApplications()
-    // {
-    //     AnsiConsole.MarkupLine("    -> [gray]Fetching applications...[/]");
-
-    //     // var my controller = new MyController().GetAllApplications();
-    //     // todo implement cache
-    //     var res = await myController.GetAllApplications();
-
-    //     AnsiConsole.MarkupLine($"        -> [green]Done. {res.Count}[/]");
-
-    //     // try
-    //     // {
-    //     //     DbInfoController dbIc = new();
-    //     //     var dbsb = new DbSourceBuilder("localhost");
-    //     //     await using var dataSource = dbsb.Builder().Build();
-    //     //     AnsiConsole.MarkupLine("    -> [gray]Fetching applications...[/]");
-    //     //     await using (var cmd = dataSource.CreateCommand("SELECT * FROM application"))
-    //     //     await using (var reader = await cmd.ExecuteReaderAsync())
-    //     //         while (await reader.ReadAsync())
-    //     //         {
-    //     //             var jobApp = new JobApplication()
-    //     //             {
-    //     //                 CompanyName = reader.GetString(1),
-    //     //                 CurrentStatus = reader.GetString(2),
-    //     //                 CurrentStatusDate = reader.GetDateTime(3),
-    //     //                 JobDescription = reader.GetString(4)
-    //     //             };
-    //     //             jobApplications.Add(jobApp);
-    //     //         }
-    //     //     AnsiConsole.MarkupLine($"        -> [green]Done. {jobApplications.Count}[/]");
-    //     // }
-    //     // catch (NpgsqlException e)
-    //     // {
-    //     //     Console.WriteLine(e.Message);
-    //     // }
-
-    // }
+    private async Task GetAllApplications()
+    {
+        AnsiConsole.MarkupLine("[gray]Fetching data...[/]");
+        AnsiConsole.MarkupLine("    -> [gray]Fetching applications...[/]");
+        var res = await myController.GetAllApplications();
+        AnsiConsole.MarkupLine($"        -> [green]Done. {res.Count}[/]");
+    }
     private static async Task CreateNewApplication(JobApplication jobApplication)
     {
         /////// TODO: abort feature
         ///     ---> tell user: leave field empty to cancel
-        try
-        {
-            DbInfoController dbIc = new();
-            var dbsb = new DbSourceBuilder("localhost");
-            await using var dataSource = dbsb.Builder().Build();
-            AnsiConsole.MarkupLine("[gray]Inserting data...[/]");
-            AnsiConsole.MarkupLine("    -> [gray]Inserting new application...[/]");
-            await using var connection = await dataSource.OpenConnectionAsync();
-            await using var transaction = await connection.BeginTransactionAsync();
+        // try
+        // {
+        //     var dbsb = new DbSourceBuilder("localhost");
+        //     await using var dataSource = dbsb.Builder().Build();
+        //     AnsiConsole.MarkupLine("[gray]Inserting data...[/]");
+        //     AnsiConsole.MarkupLine("    -> [gray]Inserting new application...[/]");
+        //     await using var connection = await dataSource.OpenConnectionAsync();
+        //     await using var transaction = await connection.BeginTransactionAsync();
 
-            DateOnly today = DateOnly.FromDateTime(DateTime.Now);
+        //     DateOnly today = DateOnly.FromDateTime(DateTime.Now);
 
-            await using var command1 = new NpgsqlCommand("INSERT into application (company_name, current_status, current_status_date, job_description)" +
-            $" VALUES ('{jobApplication.CompanyName}', '{jobApplication.CurrentStatus}', '{today}', '{jobApplication.JobDescription}')", connection, transaction);
-            await command1.ExecuteNonQueryAsync();
+        //     await using var command1 = new NpgsqlCommand("INSERT into application (company_name, current_status, current_status_date, job_description)" +
+        //     $" VALUES ('{jobApplication.CompanyName}', '{jobApplication.CurrentStatus}', '{today}', '{jobApplication.JobDescription}')", connection, transaction);
+        //     await command1.ExecuteNonQueryAsync();
 
-            await transaction.CommitAsync();
-            AnsiConsole.MarkupLine($"        -> [green]Done.[/][gray]New Application added.[/]");
-        }
-        catch (NpgsqlException e)
-        {
-            Console.WriteLine(e.Message);
-        }
+        //     await transaction.CommitAsync();
+        //     AnsiConsole.MarkupLine($"        -> [green]Done.[/][gray]New Application added.[/]");
+        // }
+        // catch (NpgsqlException e)
+        // {
+        //     Console.WriteLine(e.Message);
+        // }
     }
     private async Task DisplayCompanyInformationTable()
     {
+        var res = await myController.GetAllCompanies();
+
         var companiesTable = new Table().ShowRowSeparators();
         companiesTable.AddColumn("Id");
         companiesTable.AddColumn("Name");
         companiesTable.AddColumn("JobBoardLink");
         companiesTable.AddColumn("CompanyDescription");
 
-        foreach (var company in companies)
+        foreach (var company in res)
         {
             companiesTable.AddRow(
                 company.Id.ToString(),

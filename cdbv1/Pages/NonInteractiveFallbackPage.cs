@@ -2,48 +2,24 @@ using System;
 using Spectre;
 using Spectre.Console;
 using cdbv1.Helpers;
+using cdbv1.Queries;
 using Npgsql;
+using cdbv1.Controllers;
 
 namespace cdbv1.Pages;
 
 public class NonInteractiveFallbackPage() : Page
 
 {
+    private MyController myController = new();
+
     public async Task Display()
     {
         try
         {
-            DbInfoController dbIc = new();
-            var dbsb = new DbSourceBuilder("db,localhost");
-            await using var dataSource = dbsb.Builder().BuildMultiHost();
-            // Table: Database names
-            var databaseNames = new Table().ShowRowSeparators();
-            databaseNames.AddColumn("Databases", col => col.Centered());
+            var res1 = await myController.GetDbTableNames();
 
-            await using (var cmd = dataSource.CreateCommand(dbIc.GetDbNames()))
-            await using (var reader = await cmd.ExecuteReaderAsync())
-                while (await reader.ReadAsync())
-                {
-                    databaseNames.AddRow(reader.GetString(0));
-                }
-            AnsiConsole.Write(databaseNames);
-            
-            // Tree: Table Names
-            var myDbTree = new Tree("Database Tables Tree...");
-            await using (var getDbTableNames = dataSource.CreateCommand(dbIc.GetDbTableNamesSql()))
-            await using (var tNameReader = await getDbTableNames.ExecuteReaderAsync())
-                while (await tNameReader.ReadAsync())
-                {
-                    var tname = myDbTree.AddNode(tNameReader.GetString(0));
-                    await using (var getTableFieldNames = dataSource
-                        .CreateCommand(dbIc.GetTableFieldNamesSql(tNameReader.GetString(0))))
-                    await using (var fNameReader = await getTableFieldNames.ExecuteReaderAsync())
-                        while (await fNameReader.ReadAsync())
-                        {
-                            tname.AddNode(fNameReader.GetString(0));
-                        }
-                }
-            AnsiConsole.Write(myDbTree);
+            var res2 = await myController.GetTableFieldNames();
         }
         catch (NpgsqlException e)
         {

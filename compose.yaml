@@ -1,0 +1,44 @@
+services:
+  cdbv1:
+    image: cdbv1
+    container_name: cdbv1
+    build:
+      context: .
+      dockerfile: cdbv1/Dockerfile
+    ports: 
+      - "80:8080"
+    depends_on:
+      db:
+        condition: service_healthy
+    networks:
+      - testdb_network
+  db:
+    image: postgres
+    container_name: postgres
+    restart: always
+    ports:
+      - "5432:5432"
+    environment:
+      POSTGRES_USER: postgres
+      POSTGRES_PASSWORD: password
+      POSTGRES_DB: test_db
+    healthcheck:
+      test: [ "CMD-SHELL", 'pg_isready -U "$${POSTGRES_USER:-postgres}" -d "$${POSTGRES_DB:-postgres}" -h localhost || exit 1' ]
+      interval: 30s
+      timeout: 10s
+      retries: 5
+      start_period: 60s
+    stop_grace_period: 100s
+    networks:
+      - testdb_network
+    volumes:
+      - testdb:/var/lib/postgresql:rw
+      - ./cdbv1/postgres/postgres.conf:/etc/postgresql/postgresql.conf:ro
+      - ./cdbv1/postgres/init-scripts:/docker-entrypoint-initdb.d:ro
+    command: [ "postgres", "-c", "config_file=/etc/postgresql/postgresql.conf", "-c", "log_statement=none", "-c", "log_min_duration_statement=1000", "-c", "log_connections=on", "-c", "log_disconnections=on" ]
+
+volumes:
+    testdb:
+      name: testdb
+networks:
+    testdb_network:
