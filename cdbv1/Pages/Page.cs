@@ -32,17 +32,21 @@ public class Page()
             DsaReviewPage dsaReviewPage = new();
             await dsaReviewPage.Display();
         }
-        else if (pageChoice == "Add new application")
+        else if (pageChoice == "Add New Application")
         {
             ApplicationsPage applicationsPage = new();
             await applicationsPage.DisplayAddApplication();
         }
-        else if (pageChoice == "View application details")
+        else if (pageChoice == "View Application Details")
         {
             ApplicationsPage applicationsPage = new();
             await applicationsPage.DisplayApplicationDetails();
         }
-        else
+        else if (pageChoice == "View Application Schedule")
+        {
+            ApplicationsPage applicationsPage = new();
+            await applicationsPage.DisplayApplicationSchedule();
+        } else
         {
             // todo Fallback()?
             AnsiConsole.MarkupLine($"[gray]Unknown page[/]");

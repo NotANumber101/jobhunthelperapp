@@ -27,7 +27,7 @@ public class ApplicationsPage() : Page
     }
     private async Task ApplicationPageRedirectMenu()
     {
-        var applicationPageRedirectOptions = new List<string> { "Add new application", "View application details" };
+        var applicationPageRedirectOptions = new List<string> { "Add New Application", "View Application Details" ,"View Application Schedule"};
         applicationPageRedirectOptions.AddRange(MainMenuRedirectPageOptions);
         var pageName = AnsiConsole.Prompt(
             new SelectionPrompt<string>()
@@ -56,6 +56,11 @@ public class ApplicationsPage() : Page
         {
             await myController.InsertNewApplication(jobApp);
         } else AnsiConsole.MarkupLine("Aborted");
+        await MainMenuWithConfirm();
+    }
+    public async Task DisplayApplicationSchedule()
+    {
+        AnsiConsole.MarkupLine("applications schedule");
         await MainMenuWithConfirm();
     }
     public async Task DisplayApplicationDetails()
