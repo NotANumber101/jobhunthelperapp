@@ -172,7 +172,7 @@ public class ApplicationsPage() : Page
             applicationsTable.AddRow(
                 jobApp.CompanyName,
                 jobApp.CurrentStatus,
-                jobApp.CurrentStatusDate.ToString(),
+                jobApp.CurrentStatusDate.ToShortDateString(),
                 jobApp.JobDescription.Substring(0, previewLength)
             );
         }

@@ -133,7 +133,7 @@ public class DsaProblemsPage() : Page
                         problem.Name,
                         problem.Difficulty,
                         problem.Topic,
-                        problem.DateCompleted.ToString()
+                        problem.DateCompleted.ToShortDateString()
                     );
                 }
             }
@@ -143,7 +143,7 @@ public class DsaProblemsPage() : Page
                     problem.Name,
                     problem.Difficulty,
                     problem.Topic,
-                    problem.DateCompleted.ToString()
+                    problem.DateCompleted.ToShortDateString()
                 );
             }
         }
