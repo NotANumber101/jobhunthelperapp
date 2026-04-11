@@ -10,6 +10,7 @@ namespace cdbv1.Models
         public required string CompanyName { get; set; }
         public required string CurrentStatus { get; set; }
         public DateTime CurrentStatusDate { get; set; }
+        // public DateTime CurrentStatusDate { get; set; }
         public required string JobDescription { get; set; }
     }
     // enum CurrentStatus

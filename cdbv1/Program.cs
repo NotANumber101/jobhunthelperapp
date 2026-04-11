@@ -27,6 +27,17 @@ catch (NpgsqlException e)
 }
 if (AnsiConsole.Profile.Capabilities.Interactive)
 {
+
+await AnsiConsole.Status().Spinner(Spinner.Known.Dots)
+    .SpinnerStyle(Style.Parse("green"))
+    .Start("Welcome!", async ctx =>
+    {
+        Thread.Sleep(1111);
+        ctx.Status("Loading configuration...");
+        Thread.Sleep(1111);
+        ctx.Status("Starting services...");
+        Thread.Sleep(1111);
+    });
     AnsiConsole.MarkupLine("LOG: Interactive mode detected.[green]Input Mode Enabled.[/]");
     HomePage homePage = new();
     await homePage.Display();
@@ -37,6 +48,5 @@ else
     NonInteractiveFallbackPage fallbackPage = new();
     await fallbackPage.Display();
 }
-
 
 

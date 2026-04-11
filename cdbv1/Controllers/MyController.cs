@@ -12,6 +12,39 @@ public class MyController()
     private static readonly string host = "localhost";
     readonly NpgsqlDataSourceBuilder dbBuilder = new DbSourceBuilder(host).Builder();
 
+    public async Task UpdateApplicationStatus(string companyName, string newStatus)
+    {
+        var dbsb = new DbSourceBuilder("localhost");
+
+        await using var dataSource = dbsb.Builder().Build();
+        AnsiConsole.MarkupLine("[gray]Inserting data...[/]");
+
+        await using var connection = await dataSource.OpenConnectionAsync();
+        await using var transaction = await connection.BeginTransactionAsync();
+
+        DateOnly today = DateOnly.FromDateTime(DateTime.Now);
+        AnsiConsole.MarkupLine("    -> [gray]Updating application status![/]");
+
+
+
+
+
+
+
+
+        await using var command2 = new NpgsqlCommand(MyQueries.UpdateApplicationStatusQuery(companyName, newStatus), connection, transaction);
+        await command2.ExecuteNonQueryAsync();
+
+
+
+
+
+
+
+
+        await transaction.CommitAsync();
+        AnsiConsole.MarkupLine($"        -> [green]Done.[/][gray]Application Company:{companyName} status has been updated![/]");
+    }
     public async Task<List<JobApplication>> GetAllApplications()
     {
         List<JobApplication> jobApplications = [];
@@ -84,11 +117,12 @@ public class MyController()
 
             await using var connection = await dataSource.OpenConnectionAsync();
             await using var transaction = await connection.BeginTransactionAsync();
-
+            DateOnly today = DateOnly.FromDateTime(DateTime.Now);
             // DateOnly today = DateOnly.FromDateTime(DateTime.Now);
-            jobApplication.CurrentStatusDate = DateTime.Today;
+            // DateTime today = DateTime.Today;
+            // jobApplication.CurrentStatusDate = today;
 
-            await using var command1 = new NpgsqlCommand(MyQueries.InsertNewApplicationQuery(jobApplication), connection, transaction);
+            await using var command1 = new NpgsqlCommand(MyQueries.InsertNewApplicationQuery(jobApplication, today), connection, transaction);
             await command1.ExecuteNonQueryAsync();
 
             await transaction.CommitAsync();
@@ -173,30 +207,30 @@ public class MyController()
     public async Task InsertNewSolution(int problemId, string solutionText, PostMortem postMortem)
     {
         DbInfoController dbIc = new();
-            var dbsb = new DbSourceBuilder("localhost");
+        var dbsb = new DbSourceBuilder("localhost");
 
-            await using var dataSource = dbsb.Builder().Build();
-            AnsiConsole.MarkupLine("[gray]Inserting data...[/]");
-            AnsiConsole.MarkupLine("    -> [gray]Inserting new solution...[/]");
+        await using var dataSource = dbsb.Builder().Build();
+        AnsiConsole.MarkupLine("[gray]Inserting data...[/]");
+        AnsiConsole.MarkupLine("    -> [gray]Inserting new solution...[/]");
 
-            await using var connection = await dataSource.OpenConnectionAsync();
-            await using var transaction = await connection.BeginTransactionAsync();
+        await using var connection = await dataSource.OpenConnectionAsync();
+        await using var transaction = await connection.BeginTransactionAsync();
 
-            DateOnly today = DateOnly.FromDateTime(DateTime.Now);
-            await using var command1 = new NpgsqlCommand(dbIc.CreateNewDsaSolution(problemId, solutionText), connection, transaction);
-            int solutionId = (int)command1.ExecuteScalar()!;
+        DateOnly today = DateOnly.FromDateTime(DateTime.Now);
+        await using var command1 = new NpgsqlCommand(dbIc.CreateNewDsaSolution(problemId, solutionText), connection, transaction);
+        int solutionId = (int)command1.ExecuteScalar()!;
 
-            postMortem.SolutionId = solutionId;
-            AnsiConsole.MarkupLine("    -> [gray]Updating Dsa Problem: date_completed to today![/]");
+        postMortem.SolutionId = solutionId;
+        AnsiConsole.MarkupLine("    -> [gray]Updating Dsa Problem: date_completed to today![/]");
 
-            await using var command2 = new NpgsqlCommand(dbIc.UpdateDsaProblemDateCompletedTodayId(problemId), connection, transaction);
-            await command2.ExecuteNonQueryAsync();
+        await using var command2 = new NpgsqlCommand(dbIc.UpdateDsaProblemDateCompletedTodayId(problemId), connection, transaction);
+        await command2.ExecuteNonQueryAsync();
 
-            AnsiConsole.MarkupLine("    -> [gray]Inserting New Post-Mortem...[/]");
-            await using var command3 = new NpgsqlCommand(MyQueries.CreateNewPostMortemQuery(solutionId, postMortem), connection, transaction);
-            await command3.ExecuteNonQueryAsync();
+        AnsiConsole.MarkupLine("    -> [gray]Inserting New Post-Mortem...[/]");
+        await using var command3 = new NpgsqlCommand(MyQueries.CreateNewPostMortemQuery(solutionId, postMortem), connection, transaction);
+        await command3.ExecuteNonQueryAsync();
 
-            await transaction.CommitAsync();
-            AnsiConsole.MarkupLine($"        -> [green]Done.[/][gray]ProblemId:{problemId} has new solution[/]");
+        await transaction.CommitAsync();
+        AnsiConsole.MarkupLine($"        -> [green]Done.[/][gray]ProblemId:{problemId} has new solution[/]");
     }
 }

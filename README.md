@@ -1,9 +1,10 @@
 Idea: 
     instructions for new applications
-        1. research company (deeply)
-            a.
+        1. research company
+            a. name, descript,
             b.
-        2. 
+        2. cold network
+            [schedule follow ups]
 
 
 PURPOSE
@@ -38,10 +39,6 @@ Acknowledgments: 75hard questions taken from neetcode.io
 
 
 
-
-
-
-
 TODO: test sequence
 
     after dotnet run, the app will confirm db is OK
@@ -71,13 +68,10 @@ TODO: test sequence
 ROADMAP
     [ ] Feature: Network Messaging (important)
 
-    [ ] Feature: shorten (preview) version of job app description
+    [verification] Feature: shorten (preview) version of job app description
         -> solves problem of table looking like shit
 
-    [ ] Feature: Postmortem
-            -> timing
-
-    [ ] Implement enums where appropriate
+    [ ] Implement enums
 
     [ ] Feature: DSA SOLUTION PAGE (active)
                 -> view all solutions, sorted by most recent
@@ -88,10 +82,10 @@ ROADMAP
     [ ] Feature: Pagination (Data: DsaProblem)
         - Problem: Loading too many DsaProblem's creates clutter on the Display
         - Solution: Load only 5 problems and ask user if they would like to load DsaProblem's
-    [ ] Feature: Pagination (Data: JobApplication)
+    [done] Feature: Pagination (Data: JobApplication)
         - Problem: Job application can be a very large body of text.
-        - Solution: Load summary. Use AI to Create Summary. JobDescription when JobDescription is inserted.
-                    - Also, present user with option to load origional job description
+        - Solution: job application details page
+
     [ ] Feature: Improved Sorting (Data: DsaProblem)
 
     [ ] Additional Features:
@@ -102,14 +96,16 @@ ROADMAP
     [ ] Consider this: create test data for alerting (ie application or message that is 2 weeks old)
     [ ] DATA: add "list" field to dsa_problem (ie list = blind 75)
 
-    [ ] page navigator function. input name, output page
+    [done] page navigator function. input name, output page
+    [ ] https://spectreconsole.net/console/how-to/writing-exceptions
 
 BUGS
     [fixed] async is totally jacked up. (displays appear sooner than their predecesor)
-    [ ] DsaProblemPage. Adding solution. If non of the problems are stale, and the table is empty. They problems are still selected.
-        So instead of erroring out, it picks a non stale. This behaviour is actually agreeable.
-
-    [ ] Parameters
+    [ ] DsaProblemPage. Adding solution. If non of the problems are stale, and the table is empty.
+        - They problems are still selected.
+        - So instead of erroring out, it picks a non stale. This behaviour is actually agreeable,
+            - but user should be notifed of whats happening.
+    [ ] Parameters @p are faster?
 
 
 

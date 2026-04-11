@@ -18,10 +18,10 @@ namespace cdbv1.Queries
         {
             return "SELECT * FROM application;";
         }
-        public static string InsertNewApplicationQuery(Models.JobApplication jobApplication)
+        public static string InsertNewApplicationQuery(JobApplication jobApplication, DateOnly dateUpdated)
         {
             return "INSERT into application (company_name, current_status, current_status_date, job_description)" +
-            $" VALUES ('{jobApplication.CompanyName}', '{jobApplication.CurrentStatus}', '{jobApplication.CurrentStatusDate}', '{jobApplication.JobDescription}');";
+            $" VALUES ('{jobApplication.CompanyName}', '{jobApplication.CurrentStatus}', '{dateUpdated}', '{jobApplication.JobDescription}');";
         }
         public static string GetDbTableNamesQuery()
         {
@@ -54,6 +54,11 @@ namespace cdbv1.Queries
         {
             DateOnly today = DateOnly.FromDateTime(DateTime.Now);
             return $"UPDATE dsa_problem SET date_completed='{today}' WHERE id={problemId};";
+        }
+        public static string UpdateApplicationStatusQuery(string companyName, string newStatus)
+        {
+            DateOnly today = DateOnly.FromDateTime(DateTime.Now);
+            return $"UPDATE application SET current_status='{newStatus}' WHERE company_name='{companyName}';";
         }
     }
 }
