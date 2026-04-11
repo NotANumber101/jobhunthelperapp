@@ -21,7 +21,26 @@ public class ApplicationsPage() : Page
 
         // view all applications
         await GetAllApplications();
+        
         await DisplayApplicationsTable();
+        await ApplicationPageRedirectMenu();
+
+    }
+    private async Task ApplicationPageRedirectMenu()
+    {
+        // var mainMenuPageRedirectOptions = MainMenuRedirectPageOptions;
+        // var pageOptions = Page.PageOptions; ? is this better? with using Page;
+        var applicationPageRedirectOptions = new List<string> { "add new application", "view application details" };
+        applicationPageRedirectOptions.AddRange(MainMenuRedirectPageOptions);
+        var pageName = AnsiConsole.Prompt(
+            new SelectionPrompt<string>()
+                .Title("Select page")
+                .PageSize(10)
+                .AddChoices(applicationPageRedirectOptions));
+        await PageRedirect(pageName);
+    }
+    public async Task DisplayAddApplication()
+    {
         if (AnsiConsole.Confirm("Add New Application?"))
         {
             await ClearDisplay();
@@ -39,9 +58,14 @@ public class ApplicationsPage() : Page
                 CurrentStatus = currentStatus,
                 JobDescription = jobDescription
             });
-
         }
         await MainMenuWithConfirm();
+    }
+    public async Task DisplayApplicationDetails()
+    {
+        AnsiConsole.MarkupLine("APPLICATION DETAILS");
+        // iterate all applications and turn each application into a page redirect
+        // when clickling the appname/link, show page with job deescription
     }
     private async Task GetAllCompanies()
     {
@@ -158,11 +182,11 @@ public class ApplicationsPage() : Page
 
         foreach (JobApplication jobApp in jobApplications)
         {
-                applicationsTable.AddRow(
-                    jobApp.CompanyName,
-                    jobApp.CurrentStatus,
-                    jobApp.CurrentStatusDate.ToString()
-                );
+            applicationsTable.AddRow(
+                jobApp.CompanyName,
+                jobApp.CurrentStatus,
+                jobApp.CurrentStatusDate.ToString()
+            );
             // }
 
         }

@@ -103,13 +103,13 @@ ROADMAP
     [ ] DATA: add "list" field to dsa_problem (ie list = blind 75)
 
 BUGS
-    [priority] async is totally jacked up. (displays appear sooner than their predecesor)
+    [fixed] async is totally jacked up. (displays appear sooner than their predecesor)
     [ ] DsaProblemPage. Adding solution. If non of the problems are stale, and the table is empty. They problems are still selected.
         So instead of erroring out, it picks a non stale. This behaviour is actually agreeable.
 
     [ ] Parameters
 
-////////////////
+//////////////// TO DO --- PERFORMANCE FEATURE /////////////////
 From the docs... When sending data values to the database, always consider using parameters rather than including the values in the SQL as follows:
 
 await using var cmd = new NpgsqlCommand("INSERT INTO table (col1) VALUES ($1), ($2)", conn)
@@ -123,11 +123,6 @@ await using var cmd = new NpgsqlCommand("INSERT INTO table (col1) VALUES ($1), (
 
 await cmd.ExecuteNonQueryAsync();
 ///////////////////////
-
-
-
-
-design_time_ms code_time_ms mistakes analysis rubric_problem_solving_score rubric_coding_score rubric_verification_score rubric_communication_score
 
 
 

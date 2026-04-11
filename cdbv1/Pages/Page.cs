@@ -8,6 +8,45 @@ namespace cdbv1.Pages;
 public class Page()
 
 {
+    public List<string> MainMenuRedirectPageOptions = ["Applications", "Network", "DSA Problems", "DSA Review"];
+    public async Task PageRedirect(string pageChoice)
+    {
+        if (pageChoice == "Applications")
+        {
+            ApplicationsPage applicationsPage = new();
+            await applicationsPage.Display();
+        }
+        else if (pageChoice == "Network")
+        {
+            NetworkPage networkPage = new();
+            await networkPage.Display();
+        }
+        else if (pageChoice == "DSA Problems")
+        {
+            DsaProblemsPage dsaProblemsPage = new();
+            await dsaProblemsPage.Display();
+        }
+        else if (pageChoice == "DSA Review")
+        {
+            DsaReviewPage dsaReviewPage = new();
+            await dsaReviewPage.Display();
+        }
+        else if (pageChoice == "add new application")
+        {
+            ApplicationsPage applicationsPage = new();
+            await applicationsPage.DisplayAddApplication();
+        }
+        else if (pageChoice == "view application details")
+        {
+            ApplicationsPage applicationsPage = new();
+            await applicationsPage.DisplayApplicationDetails();
+        }
+        else
+        {
+            // todo Fallback()
+            AnsiConsole.MarkupLine($"[gray]Unknown page[/]");
+        }
+    }
     public async Task MainMenuWithConfirm()
     {
         if (AnsiConsole.Confirm("Return to main menu?"))
