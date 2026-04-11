@@ -13,6 +13,7 @@ public class ApplicationsPage() : Page
 {
     private List<CompanyInformation> companies = [];
     private List<JobApplication> jobApplications = [];
+
     // static ApplicationsPage() {}
     public async Task Display()
     {
@@ -71,10 +72,7 @@ public class ApplicationsPage() : Page
         else
         {
             var jobApplicationRedirectOptions = new List<string> { };
-            // Object jobApplicationDescriptionMap = new();
-            // var items = new List<int> { 1, 2, 2, 3, 3, 3 };
             var jobApplicationDescriptionMap = new Dictionary<string, List<string>>();
-
             foreach (var jobApp in jobApplications)
             {
                 jobApplicationRedirectOptions.Add(jobApp.CompanyName);
@@ -86,9 +84,12 @@ public class ApplicationsPage() : Page
                     .PageSize(10)
                     .AddChoices(jobApplicationRedirectOptions));
 
-            AnsiConsole.MarkupLine("APPLICATION DETAILS");
+            AnsiConsole.MarkupLine("[blue]APPLICATION DETAILS[/]");
+            AnsiConsole.MarkupLine($"Company Name[blue]{companyName}[/]");
+            AnsiConsole.MarkupLine($"Company Description:");
             AnsiConsole.MarkupLine($"{jobApplicationDescriptionMap[companyName][0]}");
         }
+        await MainMenuWithConfirm();
     }
     private async Task GetAllCompanies()
     {
@@ -202,16 +203,19 @@ public class ApplicationsPage() : Page
         applicationsTable.AddColumn("CompanyName");
         applicationsTable.AddColumn("CurrentStatus");
         applicationsTable.AddColumn("CurrentStatusDate");
+        applicationsTable.AddColumn("JobDescription");
+
 
         foreach (JobApplication jobApp in jobApplications)
         {
+            // pick smallest to display in table
+            int previewLength = Math.Min(jobApp.JobDescription.Length, 20);
             applicationsTable.AddRow(
                 jobApp.CompanyName,
                 jobApp.CurrentStatus,
-                jobApp.CurrentStatusDate.ToString()
+                jobApp.CurrentStatusDate.ToString(),
+                jobApp.JobDescription.Substring(0, previewLength)
             );
-            // }
-
         }
         AnsiConsole.Write(applicationsTable);
     }
