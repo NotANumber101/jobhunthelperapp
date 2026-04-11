@@ -1,6 +1,7 @@
 using System;
 using Spectre;
 using Spectre.Console;
+using cdbv1;
 
 namespace cdbv1.Pages;
 public class NetworkPage() : Page

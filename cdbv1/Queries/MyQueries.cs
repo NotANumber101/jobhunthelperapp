@@ -1,3 +1,5 @@
+using cdbv1.Models;
+
 namespace cdbv1.Queries
 {
     // internal class?
@@ -37,7 +39,16 @@ namespace cdbv1.Queries
         public static string CreateNewDsaSolutionQuery(int problemId, string solution)
         {
             DateOnly today = DateOnly.FromDateTime(DateTime.Now);
-            return $"INSERT INTO dsa_solution (problem_id, solution, date_completed) VALUES ({problemId}, '{solution}', '{today}') RETURNING id;";
+            return (
+                "INSERT INTO dsa_solution (problem_id, solution, date_completed) "
+                + "VALUES ({problemId}, '{solution}', '{today}') "
+                + "RETURNING id;"
+            );
+        }
+        public static string CreateNewPostMortemQuery(int solutionId, PostMortem postMortem)
+        {
+            return "INSERT INTO dsa_postmortem (solution_id, design_time_ms, code_time_ms, mistakes, analysis, rubric_problem_solving_score, rubric_coding_score, rubric_verification_score, rubric_communication_score)" +
+            $" VALUES ({solutionId}, {postMortem.DesignTimeMs}, {postMortem.CodeTimeMs}, '{postMortem.Mistakes}', '{postMortem.Analysis}', {postMortem.RubricCodingScore}, {postMortem.RubricCommunicationScore}, {postMortem.RubricProblemSolvingScore}, {postMortem.RubricVerificationScore});";
         }
         public static string UpdateDsaProblemDateCompletedTodayIdQuery(int problemId)
         {

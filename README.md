@@ -135,4 +135,18 @@ https://www.npgsql.org/doc/basic-usage.html
 
 https://www.npgsql.org/doc/api/Npgsql.NpgsqlDataSource.html
 
-https://gui-cs.github.io/Terminal.Gui/
+https://gui-cs.github.io/Terminal.Gui/'
+
+
+
+thought:
+
+so there could be two approahces to data.
+1. load all of it at the start of the app, i think this would reduce the need for async functions, which outweighs the small data set
+2. load data only when it is needed, which means shorter start up time but perhaps slower over-all.
+
+
+
+
+goals section. motivators, reminders, etc MITs
+I wishI could afford professional dog grroming at least monthly. and also i could afford to give my money to pay some nice local person

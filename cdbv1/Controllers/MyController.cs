@@ -10,36 +10,37 @@ namespace cdbv1.Controllers;
 public class MyController()
 {
     private static readonly string host = "localhost";
-    NpgsqlDataSourceBuilder dbBuilder = new DbSourceBuilder(host).Builder();
+    readonly NpgsqlDataSourceBuilder dbBuilder = new DbSourceBuilder(host).Builder();
 
     public async Task<List<JobApplication>> GetAllApplications()
     {
         List<JobApplication> jobApplications = [];
         try
         {
-            // var dbsb = new DbSourceBuilder(host);
-            // await using var dataSource = dbsb.Builder().Build();
             await using var dataSource = dbBuilder.Build();
-            // AnsiConsole.MarkupLine("    -> [gray]Fetching applications...[/]");
-            await using (var cmd = dataSource.CreateCommand(MyQueries.GetAllApplicationsQuery()))
-            await using (var reader = await cmd.ExecuteReaderAsync())
-                while (await reader.ReadAsync())
+            AnsiConsole.MarkupLine("[gray]Fetching data...[/]");
+            AnsiConsole.MarkupLine("    -> [gray]Fetching applications...[/]");
+
+            await using var cmd = dataSource.CreateCommand(MyQueries.GetAllApplicationsQuery());
+            await using var reader = await cmd.ExecuteReaderAsync();
+            while (await reader.ReadAsync())
+            {
+                var jobApp = new JobApplication()
                 {
-                    var jobApp = new JobApplication()
-                    {
-                        CompanyName = reader.GetString(1),
-                        CurrentStatus = reader.GetString(2),
-                        CurrentStatusDate = reader.GetDateTime(3),
-                        JobDescription = reader.GetString(4)
-                    };
-                    jobApplications.Add(jobApp);
-                }
-            // AnsiConsole.MarkupLine($"        -> [green]Done. {jobApplications.Count}[/]");
+                    CompanyName = reader.GetString(1),
+                    CurrentStatus = reader.GetString(2),
+                    CurrentStatusDate = reader.GetDateTime(3),
+                    JobDescription = reader.GetString(4)
+                };
+                jobApplications.Add(jobApp);
+            }
         }
         catch (NpgsqlException e)
         {
+            Console.WriteLine("Failed to fetch applications");
             Console.WriteLine(e.Message);
         }
+        AnsiConsole.MarkupLine($"        -> [green]Done. {jobApplications.Count}[/]");
         return jobApplications;
     }
     public async Task<List<CompanyInformation>> GetAllCompanies()
@@ -48,28 +49,29 @@ public class MyController()
         try
         {
             await using var dataSource = dbBuilder.Build();
+            AnsiConsole.MarkupLine("[gray]Fetching data...[/]");
+            AnsiConsole.MarkupLine("    -> [gray]Fetching company_information...[/]");
 
-            // AnsiConsole.MarkupLine("[gray]Fetching data...[/]");
-            // AnsiConsole.MarkupLine("    -> [gray]Fetching company_information...[/]");
-            await using (var cmd = dataSource.CreateCommand(MyQueries.GetAllCompanies()))
-            await using (var reader = await cmd.ExecuteReaderAsync())
-                while (await reader.ReadAsync())
+            await using var cmd = dataSource.CreateCommand(MyQueries.GetAllCompanies());
+            await using var reader = await cmd.ExecuteReaderAsync();
+            while (await reader.ReadAsync())
+            {
+                var company = new CompanyInformation()
                 {
-                    var company = new CompanyInformation()
-                    {
-                        Id = reader.GetInt32(0),
-                        Name = reader.GetString(1),
-                        JobBoardLink = reader.GetString(2),
-                        CompanyDescription = reader.GetString(3)
-                    };
-                    companies.Add(company);
-                }
-            // AnsiConsole.MarkupLine($"        -> [green]Done. {companies.Count}[/]");
+                    Id = reader.GetInt32(0),
+                    Name = reader.GetString(1),
+                    JobBoardLink = reader.GetString(2),
+                    CompanyDescription = reader.GetString(3)
+                };
+                companies.Add(company);
+            }
         }
         catch (NpgsqlException e)
         {
+            Console.WriteLine("Failed to fetch companies");
             Console.WriteLine(e.Message);
         }
+        AnsiConsole.MarkupLine($"        -> [green]Done. {companies.Count}[/]");
         return companies;
     }
     public async Task InsertNewApplication(JobApplication jobApplication)
@@ -77,9 +79,9 @@ public class MyController()
         try
         {
             await using var dataSource = dbBuilder.Build();
+            AnsiConsole.MarkupLine("[gray]Inserting data...[/]");
+            AnsiConsole.MarkupLine("    -> [gray]Inserting new application...[/]");
 
-            // AnsiConsole.MarkupLine("[gray]Inserting data...[/]");
-            // AnsiConsole.MarkupLine("    -> [gray]Inserting new application...[/]");
             await using var connection = await dataSource.OpenConnectionAsync();
             await using var transaction = await connection.BeginTransactionAsync();
 
@@ -90,13 +92,13 @@ public class MyController()
             await command1.ExecuteNonQueryAsync();
 
             await transaction.CommitAsync();
-            // AnsiConsole.MarkupLine($"        -> [green]Done.[/][gray]New Application added.[/]");
         }
         catch (NpgsqlException e)
         {
+            Console.WriteLine("Failed to insert application");
             Console.WriteLine(e.Message);
         }
-
+        AnsiConsole.MarkupLine($"        -> [green]Done.[/][gray]New Application added.[/]");
     }
     public async Task<List<string>> GetDbTableNames()
     {
@@ -149,9 +151,11 @@ public class MyController()
         List<DsaProblem> res = [];
         DbInfoController dbIc = new();
         var dbsb = new DbSourceBuilder("localhost");
+
         await using var dataSource = dbsb.Builder().Build();
         AnsiConsole.MarkupLine("[gray]Fetching data...[/]");
         AnsiConsole.MarkupLine("    -> [gray]Fetching dsa_problems...[/]");
+
         await using (var cmd = dataSource.CreateCommand("SELECT * FROM dsa_problem"))
         await using (var reader = await cmd.ExecuteReaderAsync())
             while (await reader.ReadAsync())
@@ -170,9 +174,11 @@ public class MyController()
     {
         DbInfoController dbIc = new();
             var dbsb = new DbSourceBuilder("localhost");
+
             await using var dataSource = dbsb.Builder().Build();
             AnsiConsole.MarkupLine("[gray]Inserting data...[/]");
             AnsiConsole.MarkupLine("    -> [gray]Inserting new solution...[/]");
+
             await using var connection = await dataSource.OpenConnectionAsync();
             await using var transaction = await connection.BeginTransactionAsync();
 
@@ -181,20 +187,16 @@ public class MyController()
             int solutionId = (int)command1.ExecuteScalar()!;
 
             postMortem.SolutionId = solutionId;
+            AnsiConsole.MarkupLine("    -> [gray]Updating Dsa Problem: date_completed to today![/]");
 
-            Console.WriteLine($"SolutionId: {solutionId} inserted!");
-            // await command1.ExecuteNonQueryAsync();
-            // var cmd = new NpgsqlCommand("UPDATE foo SET bar=@bar WHERE baz=@baz; UPDATE foo SET bar=@bar WHERE baz=@baz");
             await using var command2 = new NpgsqlCommand(dbIc.UpdateDsaProblemDateCompletedTodayId(problemId), connection, transaction);
             await command2.ExecuteNonQueryAsync();
 
-            await using var command3 = new NpgsqlCommand(
-                "INSERT INTO dsa_postmortem (solution_id, design_time_ms, code_time_ms, mistakes, analysis, rubric_problem_solving_score, rubric_coding_score, rubric_verification_score, rubric_communication_score)" +
-                $" VALUES ({solutionId}, {postMortem.DesignTimeMs}, {postMortem.CodeTimeMs}, '{postMortem.Mistakes}', '{postMortem.Analysis}', {postMortem.RubricCodingScore}, {postMortem.RubricCommunicationScore}, {postMortem.RubricProblemSolvingScore}, {postMortem.RubricVerificationScore});",
-            connection, transaction);
+            AnsiConsole.MarkupLine("    -> [gray]Inserting New Post-Mortem...[/]");
+            await using var command3 = new NpgsqlCommand(MyQueries.CreateNewPostMortemQuery(solutionId, postMortem), connection, transaction);
             await command3.ExecuteNonQueryAsync();
 
             await transaction.CommitAsync();
-            AnsiConsole.MarkupLine($"        -> [green]Done.[/][gray]ProblemId:{problemId} has new solution.[/]");
+            AnsiConsole.MarkupLine($"        -> [green]Done.[/][gray]ProblemId:{problemId} has new solution[/]");
     }
 }

@@ -39,7 +39,7 @@ public class DsaProblemsPage() : Page
         if (pageChoice == "View Problems")
         {
             AnsiConsole.MarkupLine($"[gray]View Problems[/]");
-            DisplayProblemsBarChart();
+            await DisplayProblemsBarChart();
             var dsaProblems = await myController.GetAllDsaProblems(); 
             DisplayProblemsTable(dsaProblems, false);
             await MainMenuWithConfirm();

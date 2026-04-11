@@ -27,7 +27,7 @@ public class ApplicationsPage() : Page
     }
     private async Task ApplicationPageRedirectMenu()
     {
-        var applicationPageRedirectOptions = new List<string> { "Add New Application", "View Application Details" ,"View Application Schedule"};
+        var applicationPageRedirectOptions = new List<string> { "Add New Application", "View Application Details", "View Application Schedule" };
         applicationPageRedirectOptions.AddRange(MainMenuRedirectPageOptions);
         var pageName = AnsiConsole.Prompt(
             new SelectionPrompt<string>()
@@ -47,15 +47,16 @@ public class ApplicationsPage() : Page
         string currentStatus = AnsiConsole.Ask<string>($"[green]Enter Current Status:[/] ");
         string jobDescription = AnsiConsole.Ask<string>($"[green]Enter Job Description:[/] ");
         JobApplication jobApp = new JobApplication()
-            {
-                CompanyName = companyName,
-                CurrentStatus = currentStatus,
-                JobDescription = jobDescription
-            };
+        {
+            CompanyName = companyName,
+            CurrentStatus = currentStatus,
+            JobDescription = jobDescription
+        };
         if (AnsiConsole.Confirm("Save new application?"))
         {
             await myController.InsertNewApplication(jobApp);
-        } else AnsiConsole.MarkupLine("Aborted");
+        }
+        else AnsiConsole.MarkupLine("Aborted");
         await MainMenuWithConfirm();
     }
     public async Task DisplayApplicationSchedule()
@@ -84,28 +85,25 @@ public class ApplicationsPage() : Page
                     .Title("[green]Select an application to view in detail[/]")
                     .PageSize(10)
                     .AddChoices(jobApplicationRedirectOptions));
-
-            AnsiConsole.MarkupLine("[blue]APPLICATION DETAILS[/]");
+            // await ClearDisplay();
+            var header = new FigletText("App Details");
+            AnsiConsole.Write(header);
             AnsiConsole.MarkupLine($"Company Name[blue]{companyName}[/]");
             AnsiConsole.MarkupLine($"Company Description:");
             AnsiConsole.MarkupLine($"{jobApplicationDescriptionMap[companyName][0]}");
         }
+        AnsiConsole.WriteLine(" ");
         await MainMenuWithConfirm();
     }
     private async Task GetAllCompanies()
     {
-        AnsiConsole.MarkupLine("[gray]Fetching data...[/]");
-        AnsiConsole.MarkupLine("    -> [gray]Fetching company_information...[/]");
         var res = await myController.GetAllCompanies();
-        AnsiConsole.MarkupLine($"        -> [green]Done. {res.Count}[/]");
     }
 
     private async Task GetAllApplications()
     {
-        AnsiConsole.MarkupLine("[gray]Fetching data...[/]");
-        AnsiConsole.MarkupLine("    -> [gray]Fetching applications...[/]");
+
         var res = await myController.GetAllApplications();
-        AnsiConsole.MarkupLine($"        -> [green]Done. {res.Count}[/]");
     }
     private static async Task CreateNewApplication(JobApplication jobApplication)
     {
