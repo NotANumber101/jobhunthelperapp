@@ -102,6 +102,8 @@ ROADMAP
     [ ] Consider this: create test data for alerting (ie application or message that is 2 weeks old)
     [ ] DATA: add "list" field to dsa_problem (ie list = blind 75)
 
+    [ ] page navigator function. input name, output page
+
 BUGS
     [fixed] async is totally jacked up. (displays appear sooner than their predecesor)
     [ ] DsaProblemPage. Adding solution. If non of the problems are stale, and the table is empty. They problems are still selected.

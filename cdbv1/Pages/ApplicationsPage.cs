@@ -64,25 +64,31 @@ public class ApplicationsPage() : Page
     public async Task DisplayApplicationDetails()
     {
         await GetAllApplications();
-        var jobApplicationRedirectOptions = new List<string> {};
-        // Object jobApplicationDescriptionMap = new();
-        // var items = new List<int> { 1, 2, 2, 3, 3, 3 };
-        var jobApplicationDescriptionMap = new Dictionary<string, List<string>>();
-
-        foreach (var jobApp in jobApplications)
+        if (jobApplications.Count <= 0)
         {
-            jobApplicationRedirectOptions.Add(jobApp.CompanyName);
-            jobApplicationDescriptionMap[jobApp.CompanyName] = [jobApp.JobDescription];
+            AnsiConsole.MarkupLine("[red]no applications[/]");
         }
+        else
+        {
+            var jobApplicationRedirectOptions = new List<string> { };
+            // Object jobApplicationDescriptionMap = new();
+            // var items = new List<int> { 1, 2, 2, 3, 3, 3 };
+            var jobApplicationDescriptionMap = new Dictionary<string, List<string>>();
 
-        var companyName = AnsiConsole.Prompt(
-            new SelectionPrompt<string>()
-                .Title("[green]Select application to view requirments[/]")
-                .PageSize(10)
-                .AddChoices(jobApplicationRedirectOptions));
+            foreach (var jobApp in jobApplications)
+            {
+                jobApplicationRedirectOptions.Add(jobApp.CompanyName);
+                jobApplicationDescriptionMap[jobApp.CompanyName] = [jobApp.JobDescription];
+            }
+            var companyName = AnsiConsole.Prompt(
+                new SelectionPrompt<string>()
+                    .Title("[green]Select application to view requirments[/]")
+                    .PageSize(10)
+                    .AddChoices(jobApplicationRedirectOptions));
 
-        AnsiConsole.MarkupLine("APPLICATION DETAILS");
-        AnsiConsole.MarkupLine($"{jobApplicationDescriptionMap[companyName][0]}");
+            AnsiConsole.MarkupLine("APPLICATION DETAILS");
+            AnsiConsole.MarkupLine($"{jobApplicationDescriptionMap[companyName][0]}");
+        }
     }
     private async Task GetAllCompanies()
     {
