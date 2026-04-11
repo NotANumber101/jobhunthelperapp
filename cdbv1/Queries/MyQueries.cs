@@ -58,7 +58,9 @@ namespace cdbv1.Queries
         public static string UpdateApplicationStatusQuery(string companyName, string newStatus)
         {
             DateOnly today = DateOnly.FromDateTime(DateTime.Now);
-            return $"UPDATE application SET current_status='{newStatus}' WHERE company_name='{companyName}';";
+            // return $"UPDATE application SET current_status='{newStatus}' WHERE company_name='{companyName}';";
+            return $"UPDATE application SET current_status='{newStatus}', current_status_date='{today}' WHERE company_name='{companyName}';";
+
         }
     }
 }
