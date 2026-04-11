@@ -1,9 +1,10 @@
 using System;
 // using System.Threading.Tasks;
 using cdbv1.Models;
+using cdbv1;
 using Spectre;
 using Spectre.Console;
-using cdbv1;
+using cdbv1.Controllers;
 using cdbv1.Helpers;
 using Npgsql;
 
@@ -13,6 +14,7 @@ public class ApplicationsPage() : Page
 {
     private List<CompanyInformation> companies = [];
     private List<JobApplication> jobApplications = [];
+    private MyController myController = new();
 
     // static ApplicationsPage() {}
     public async Task Display()
@@ -21,7 +23,7 @@ public class ApplicationsPage() : Page
         await GetAllCompanies();
 
         // view all applications
-        await GetAllApplications();
+  ////////////      // await myController.GetAllApplications();
 
         await DisplayApplicationsTable();
         await ApplicationPageRedirectMenu();
@@ -45,7 +47,7 @@ public class ApplicationsPage() : Page
         if (AnsiConsole.Confirm("Add New Application?"))
         {
             await ClearDisplay();
-            // instead of a table; load list, select application, and open specific page for one application
+            await GetAllCompanies();
             await DisplayCompanyInformationTable();
             AnsiConsole.MarkupLine("[gray]Create new application[/]");
             string companyName = AnsiConsole.Ask<string>($"[green]Enter Company Name:[/] ");
@@ -64,8 +66,8 @@ public class ApplicationsPage() : Page
     }
     public async Task DisplayApplicationDetails()
     {
-        await GetAllApplications();
-        if (jobApplications.Count <= 0)
+        var res = await myController.GetAllApplications();
+        if (res.Count <= 0)
         {
             AnsiConsole.MarkupLine("[red]no applications[/]");
         }
@@ -73,7 +75,7 @@ public class ApplicationsPage() : Page
         {
             var jobApplicationRedirectOptions = new List<string> { };
             var jobApplicationDescriptionMap = new Dictionary<string, List<string>>();
-            foreach (var jobApp in jobApplications)
+            foreach (var jobApp in res)
             {
                 jobApplicationRedirectOptions.Add(jobApp.CompanyName);
                 jobApplicationDescriptionMap[jobApp.CompanyName] = [jobApp.JobDescription];
@@ -119,37 +121,45 @@ public class ApplicationsPage() : Page
         {
             Console.WriteLine(e.Message);
         }
-
     }
 
-    private async Task GetAllApplications()
-    {
-        try
-        {
-            DbInfoController dbIc = new();
-            var dbsb = new DbSourceBuilder("localhost");
-            await using var dataSource = dbsb.Builder().Build();
-            AnsiConsole.MarkupLine("    -> [gray]Fetching applications...[/]");
-            await using (var cmd = dataSource.CreateCommand("SELECT * FROM application"))
-            await using (var reader = await cmd.ExecuteReaderAsync())
-                while (await reader.ReadAsync())
-                {
-                    var jobApp = new JobApplication()
-                    {
-                        CompanyName = reader.GetString(1),
-                        CurrentStatus = reader.GetString(2),
-                        CurrentStatusDate = reader.GetDateTime(3),
-                        JobDescription = reader.GetString(4)
-                    };
-                    jobApplications.Add(jobApp);
-                }
-            AnsiConsole.MarkupLine($"        -> [green]Done. {jobApplications.Count}[/]");
-        }
-        catch (NpgsqlException e)
-        {
-            Console.WriteLine(e.Message);
-        }
-    }
+    // private async Task GetAllApplications()
+    // {
+    //     AnsiConsole.MarkupLine("    -> [gray]Fetching applications...[/]");
+
+    //     // var my controller = new MyController().GetAllApplications();
+    //     // todo implement cache
+    //     var res = await myController.GetAllApplications();
+
+    //     AnsiConsole.MarkupLine($"        -> [green]Done. {res.Count}[/]");
+
+    //     // try
+    //     // {
+    //     //     DbInfoController dbIc = new();
+    //     //     var dbsb = new DbSourceBuilder("localhost");
+    //     //     await using var dataSource = dbsb.Builder().Build();
+    //     //     AnsiConsole.MarkupLine("    -> [gray]Fetching applications...[/]");
+    //     //     await using (var cmd = dataSource.CreateCommand("SELECT * FROM application"))
+    //     //     await using (var reader = await cmd.ExecuteReaderAsync())
+    //     //         while (await reader.ReadAsync())
+    //     //         {
+    //     //             var jobApp = new JobApplication()
+    //     //             {
+    //     //                 CompanyName = reader.GetString(1),
+    //     //                 CurrentStatus = reader.GetString(2),
+    //     //                 CurrentStatusDate = reader.GetDateTime(3),
+    //     //                 JobDescription = reader.GetString(4)
+    //     //             };
+    //     //             jobApplications.Add(jobApp);
+    //     //         }
+    //     //     AnsiConsole.MarkupLine($"        -> [green]Done. {jobApplications.Count}[/]");
+    //     // }
+    //     // catch (NpgsqlException e)
+    //     // {
+    //     //     Console.WriteLine(e.Message);
+    //     // }
+
+    // }
     private static async Task CreateNewApplication(JobApplication jobApplication)
     {
         /////// TODO: abort feature
@@ -205,8 +215,9 @@ public class ApplicationsPage() : Page
         applicationsTable.AddColumn("CurrentStatusDate");
         applicationsTable.AddColumn("JobDescription");
 
+        var res = await myController.GetAllApplications();
 
-        foreach (JobApplication jobApp in jobApplications)
+        foreach (JobApplication jobApp in res)
         {
             // pick smallest to display in table
             int previewLength = Math.Min(jobApp.JobDescription.Length, 20);

@@ -111,6 +111,8 @@ BUGS
 
     [ ] Parameters
 
+
+
 //////////////// TO DO --- PERFORMANCE FEATURE /////////////////
 From the docs... When sending data values to the database, always consider using parameters rather than including the values in the SQL as follows:
 
@@ -128,6 +130,7 @@ await cmd.ExecuteNonQueryAsync();
 
 
 
+just some stuff i think is interesting:
 https://www.npgsql.org/doc/basic-usage.html
 
 https://www.npgsql.org/doc/api/Npgsql.NpgsqlDataSource.html
