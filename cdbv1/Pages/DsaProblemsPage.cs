@@ -1,13 +1,7 @@
 using System;
 using cdbv1.Models;
-using Spectre;
 using Spectre.Console;
-using cdbv1.Helpers;
-using Npgsql;
-using Microsoft.Extensions.Logging;
 using cdbv1.Controllers;
-
-//test commit
 
 namespace cdbv1.Pages;
 
@@ -36,12 +30,6 @@ public class DsaProblemsPage() : Page
     }
     private async Task NavigateDsaProblemsPage()
     {
-        // AnsiConsole.Clear();
-        // HelloWorld();
-        ///////// TODO
-        /// 1. View Solutions page.
-        ///           -> Shows list of all problems, select which one, to load solutions for that problem
-        ///           -> Solutions also show post mortem
         var pageOptions = new List<string> { "View Problems", "Solve Problem", "Main Menu" };
         var pageChoice = AnsiConsole.Prompt(
             new SelectionPrompt<string>()
@@ -74,12 +62,8 @@ public class DsaProblemsPage() : Page
                 {
                     DsaProblem randomProblem = filteredProblems.ElementAt(0);
                     await DisplayProblem(randomProblem);
-
                     await CreateNewSolutionInput(randomProblem.Id);
                     await MainMenuWithConfirm();
-
-                    // MainMenuWithConfirm();
-
                 }
                 else
                 {
@@ -90,13 +74,12 @@ public class DsaProblemsPage() : Page
             else
             {
                 await NavigateDsaProblemsPage();
-                // AnsiConsole.MarkupLine("[red]returning to problem selection tool...[/]");
             }
         }
         else if (pageChoice == "Main Menu")
         {
             await MainMenu();
-        }
+        } else Console.WriteLine("oop");
     }
     private async Task DisplayProblem(DsaProblem problem)
     {
@@ -114,15 +97,12 @@ public class DsaProblemsPage() : Page
     private async Task CreateNewSolutionInput(int problemId)
     {
         string solution = AnsiConsole.Ask<string>($"[green]Please enter your solution: [/]");
-        ////// TODO
-        /// POST MORTEM
         string pmMistakes = AnsiConsole.Ask<string>($"[green]Post-Mortem | Mistakes:[/] ");
         string pmAnalysis = AnsiConsole.Ask<string>($"[green]Post-Mortem | Analysis:[/] ");
         int pmRubricCodingScore = 0;
         int pmRubricCommunicationScore = 0;
         int pmRubricProblemSolvingScore = 0;
         int pmRubricVerificationScore = 0;
-
         PostMortem postMortem = new()
         {
             DesignTimeMs = 10000,
@@ -183,20 +163,13 @@ public class DsaProblemsPage() : Page
     }
     private async  Task<IEnumerable<DsaProblem>> DisplaySelectProblemFilter()
     {
-        // TODO: add lazy option
-        // this means that the first option will bypass all other options,
-        // allowing the user to quickly tap, enter, enter, enter to get to a problem.
-        // TODO: add any option
-        // var difficultyFilterOptions = new List<string> { "easy", "medium", "hard", "add new"};
         var difficultyFilterOptions = new List<string> { "easy", "medium", "hard" };
         var difficultyFilterSelected = AnsiConsole.Prompt(
             new SelectionPrompt<string>()
                 .Title("Select difficulty")
                 .PageSize(10)
                 .AddChoices(difficultyFilterOptions));
-        // option: select completed with in certain time window
-        // TODO: add select multiple option
-        // TODO: add any option
+
         var topicFilterOptions = new List<string> { "string", "array", "two pointers",
         "sliding window", "stack", "binary search", "linked list",
         "tree", "heap", "backtracking", "tries", "graphs", "1D dynamic programming",
@@ -206,22 +179,18 @@ public class DsaProblemsPage() : Page
                 .Title("Select topic")
                 .PageSize(10)
                 .AddChoices(topicFilterOptions));
+
         AnsiConsole.MarkupLine($"[blue]Your selected options: {difficultyFilterSelected} | {topicFilterSelected}[/]");
-        // hard coded for now
+
         return await FilterProblems(difficultyFilterSelected, topicFilterSelected);
-        // return dsaProblems[0];
     }
  
     private async Task DisplayProblemsBarChart()
     {
         var dsaProblems = await myController.GetAllDsaProblems();
-        List<DsaProblem> easySet = new() { };
-        List<DsaProblem> mediumSet = new() { };
-        List<DsaProblem> hardSet = new() { };
-        // testing out this filter method for the hard set.
-        // But perhaps it makes more sense to filter in one pass
-        // List<DsaProblem> hardSet = FilterProblemSetByDifficulty("hard");
-        // sort problems 
+        List<DsaProblem> easySet = [];
+        List<DsaProblem> mediumSet = [];
+        List<DsaProblem> hardSet = [];
         foreach (var problem in dsaProblems)
         {
             // todo switch enum statement
@@ -248,4 +217,5 @@ public class DsaProblemsPage() : Page
             .AddItem("Medium", mediumSet.Count, Color.Yellow)
             .AddItem("Hard", hardSet.Count, Color.Red));
     }
+    // todo dashboard, select how to break down problems, view by diff, by list, by topic, by age, etc
 }

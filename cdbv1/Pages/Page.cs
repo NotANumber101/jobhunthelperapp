@@ -11,6 +11,7 @@ public class Page()
     public List<string> MainMenuRedirectPageOptions = ["Applications", "Network", "DSA Problems", "DSA Review"];
     public async Task PageRedirect(string pageChoice)
     {
+        AnsiConsole.MarkupLine("redirecting...");
         if (pageChoice == "Applications")
         {
             ApplicationsPage applicationsPage = new();
@@ -31,19 +32,19 @@ public class Page()
             DsaReviewPage dsaReviewPage = new();
             await dsaReviewPage.Display();
         }
-        else if (pageChoice == "add new application")
+        else if (pageChoice == "Add new application")
         {
             ApplicationsPage applicationsPage = new();
             await applicationsPage.DisplayAddApplication();
         }
-        else if (pageChoice == "view application details")
+        else if (pageChoice == "View application details")
         {
             ApplicationsPage applicationsPage = new();
             await applicationsPage.DisplayApplicationDetails();
         }
         else
         {
-            // todo Fallback()
+            // todo Fallback()?
             AnsiConsole.MarkupLine($"[gray]Unknown page[/]");
         }
     }
@@ -64,35 +65,7 @@ public class Page()
                 .Title("[green]Select a page to view:[/]")
                 .PageSize(10)
                 .AddChoices(pageOptions));
-
-        if (pageChoice == "Applications")
-        {
-            ApplicationsPage applicationsPage = new();
-            await applicationsPage.Display();
-        }
-        else if (pageChoice == "Network")
-        {
-            NetworkPage networkPage = new();
-            await networkPage.Display();
-        }
-        else if (pageChoice == "DSA Problems")
-        {
-            DsaProblemsPage dsaProblemsPage = new();
-            await dsaProblemsPage.Display();
-        }
-        else if (pageChoice == "DSA Review")
-        {
-            DsaReviewPage dsaReviewPage = new();
-            await dsaReviewPage.Display();
-        }
-        else
-        {
-            AnsiConsole.MarkupLine($"[gray]Unknown page[/]");
-        }
-    }
-    public async Task HelloWorld()
-    {
-        AnsiConsole.MarkupLine("[red]HELLO WORLD[/], log from Page().HelloWorld()");
+        await PageRedirect(pageChoice);
     }
     public async Task ClearDisplay()
     {

@@ -51,7 +51,7 @@ public class MyController()
 
             // AnsiConsole.MarkupLine("[gray]Fetching data...[/]");
             // AnsiConsole.MarkupLine("    -> [gray]Fetching company_information...[/]");
-            await using (var cmd = dataSource.CreateCommand("SELECT * FROM company_information"))
+            await using (var cmd = dataSource.CreateCommand(MyQueries.GetAllCompanies()))
             await using (var reader = await cmd.ExecuteReaderAsync())
                 while (await reader.ReadAsync())
                 {

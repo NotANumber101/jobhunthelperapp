@@ -8,20 +8,18 @@ using cdbv1.Controllers;
 using cdbv1.Helpers;
 using Npgsql;
 
+//// todo view schedule (upcomijg interviews)
+
+
+
 namespace cdbv1.Pages;
 
 public class ApplicationsPage() : Page
 {
     private MyController myController = new();
-
-    // static ApplicationsPage() {}
+    // private List<string> applicationPageRedirectOptions = ["add new application", "view application details"];
     public async Task Display()
     {
-        // view all companies
-        // await GetAllCompanies();
-
-        // view all applications
-        //    await myController.GetAllApplications();
 
         await DisplayApplicationsTable();
         await ApplicationPageRedirectMenu();
@@ -29,37 +27,35 @@ public class ApplicationsPage() : Page
     }
     private async Task ApplicationPageRedirectMenu()
     {
-        // var mainMenuPageRedirectOptions = MainMenuRedirectPageOptions;
-        // var pageOptions = Page.PageOptions; ? is this better? with using Page;
-        var applicationPageRedirectOptions = new List<string> { "add new application", "view application details" };
+        var applicationPageRedirectOptions = new List<string> { "Add new application", "View application details" };
         applicationPageRedirectOptions.AddRange(MainMenuRedirectPageOptions);
         var pageName = AnsiConsole.Prompt(
             new SelectionPrompt<string>()
-                .Title("Select page")
+                .Title("Job Applications Navigation Menu")
                 .PageSize(10)
                 .AddChoices(applicationPageRedirectOptions));
         await PageRedirect(pageName);
     }
     public async Task DisplayAddApplication()
     {
-        if (AnsiConsole.Confirm("Add New Application?"))
-        {
-            await ClearDisplay();
-            await GetAllCompanies();
-            await DisplayCompanyInformationTable();
-            AnsiConsole.MarkupLine("[gray]Create new application[/]");
-            string companyName = AnsiConsole.Ask<string>($"[green]Enter Company Name:[/] ");
-            string currentStatus = AnsiConsole.Ask<string>($"[green]Enter Current Status:[/] ");
-            string jobDescription = AnsiConsole.Ask<string>($"[green]Enter Job Description:[/] ");
+        await ClearDisplay();
+        await GetAllCompanies();
+        await DisplayCompanyInformationTable();
 
-
-            await CreateNewApplication(new()
+        AnsiConsole.MarkupLine("[gray]Create new application[/]");
+        string companyName = AnsiConsole.Ask<string>($"[green]Enter Company Name:[/] ");
+        string currentStatus = AnsiConsole.Ask<string>($"[green]Enter Current Status:[/] ");
+        string jobDescription = AnsiConsole.Ask<string>($"[green]Enter Job Description:[/] ");
+        JobApplication jobApp = new JobApplication()
             {
                 CompanyName = companyName,
                 CurrentStatus = currentStatus,
                 JobDescription = jobDescription
-            });
-        }
+            };
+        if (AnsiConsole.Confirm("Save new application?"))
+        {
+            await myController.InsertNewApplication(jobApp);
+        } else AnsiConsole.MarkupLine("Aborted");
         await MainMenuWithConfirm();
     }
     public async Task DisplayApplicationDetails()
@@ -67,7 +63,7 @@ public class ApplicationsPage() : Page
         var res = await myController.GetAllApplications();
         if (res.Count <= 0)
         {
-            AnsiConsole.MarkupLine("[red]no applications[/]");
+            AnsiConsole.MarkupLine("[red]Err: no applications[/]");
         }
         else
         {
@@ -80,7 +76,7 @@ public class ApplicationsPage() : Page
             }
             var companyName = AnsiConsole.Prompt(
                 new SelectionPrompt<string>()
-                    .Title("[green]Select application to view requirments[/]")
+                    .Title("[green]Select an application to view in detail[/]")
                     .PageSize(10)
                     .AddChoices(jobApplicationRedirectOptions));
 
@@ -93,12 +89,10 @@ public class ApplicationsPage() : Page
     }
     private async Task GetAllCompanies()
     {
-
         AnsiConsole.MarkupLine("[gray]Fetching data...[/]");
         AnsiConsole.MarkupLine("    -> [gray]Fetching company_information...[/]");
         var res = await myController.GetAllCompanies();
         AnsiConsole.MarkupLine($"        -> [green]Done. {res.Count}[/]");
-
     }
 
     private async Task GetAllApplications()

@@ -1,31 +1,28 @@
-using System;
-using System.Collections.Generic;
-using System.Text;
-using cdbv1.Models;
-
 namespace cdbv1.Queries
 {
     // internal class?
     public class MyQueries()
 
     {
+        public static string GetAllCompanies()
+        {
+            return "SELECT * FROM company_information;";
+        }
         public static string GetDbNamesQuery()
         {
-            // Get all database names
             return "SELECT datname FROM pg_database WHERE datistemplate = false;";
         }
         public static string GetAllApplicationsQuery()
         {
-            return "SELECT * FROM application";
+            return "SELECT * FROM application;";
         }
-        public static string InsertNewApplicationQuery(JobApplication jobApplication)
+        public static string InsertNewApplicationQuery(Models.JobApplication jobApplication)
         {
             return "INSERT into application (company_name, current_status, current_status_date, job_description)" +
-            $" VALUES ('{jobApplication.CompanyName}', '{jobApplication.CurrentStatus}', '{jobApplication.CurrentStatusDate}', '{jobApplication.JobDescription}')";
+            $" VALUES ('{jobApplication.CompanyName}', '{jobApplication.CurrentStatus}', '{jobApplication.CurrentStatusDate}', '{jobApplication.JobDescription}');";
         }
         public static string GetDbTableNamesQuery()
         {
-        // Get db table names and table fields 
             return "SELECT table_name, table_type "
                 + "FROM information_schema.tables WHERE table_schema "
                 + "NOT IN ('pg_catalog', 'information_schema') "
@@ -45,7 +42,7 @@ namespace cdbv1.Queries
         public static string UpdateDsaProblemDateCompletedTodayIdQuery(int problemId)
         {
             DateOnly today = DateOnly.FromDateTime(DateTime.Now);
-            return $"UPDATE dsa_problem SET date_completed='{today}' WHERE id={problemId}";
+            return $"UPDATE dsa_problem SET date_completed='{today}' WHERE id={problemId};";
         }
     }
 }
