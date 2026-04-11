@@ -21,7 +21,7 @@ public class ApplicationsPage() : Page
 
         // view all applications
         await GetAllApplications();
-        
+
         await DisplayApplicationsTable();
         await ApplicationPageRedirectMenu();
 
@@ -63,9 +63,26 @@ public class ApplicationsPage() : Page
     }
     public async Task DisplayApplicationDetails()
     {
+        await GetAllApplications();
+        var jobApplicationRedirectOptions = new List<string> {};
+        // Object jobApplicationDescriptionMap = new();
+        // var items = new List<int> { 1, 2, 2, 3, 3, 3 };
+        var jobApplicationDescriptionMap = new Dictionary<string, List<string>>();
+
+        foreach (var jobApp in jobApplications)
+        {
+            jobApplicationRedirectOptions.Add(jobApp.CompanyName);
+            jobApplicationDescriptionMap[jobApp.CompanyName] = [jobApp.JobDescription];
+        }
+
+        var companyName = AnsiConsole.Prompt(
+            new SelectionPrompt<string>()
+                .Title("[green]Select application to view requirments[/]")
+                .PageSize(10)
+                .AddChoices(jobApplicationRedirectOptions));
+
         AnsiConsole.MarkupLine("APPLICATION DETAILS");
-        // iterate all applications and turn each application into a page redirect
-        // when clickling the appname/link, show page with job deescription
+        AnsiConsole.MarkupLine($"{jobApplicationDescriptionMap[companyName][0]}");
     }
     private async Task GetAllCompanies()
     {
